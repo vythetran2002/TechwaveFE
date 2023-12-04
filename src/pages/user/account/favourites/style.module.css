@@ -1,0 +1,162 @@
+.profile-edit-card-container {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-edit-card-wrapper {
+  display: flex;
+  width: 80%;
+  height: fit-content;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 2px #ddd;
+  background: #fff;
+  margin-bottom: 60px;
+  margin-top: 20px;
+  min-height: 650px;
+}
+.profile-edit-form-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  width: 30%;
+}
+.profile-left-edit-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+.profile-avatar-container {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #d7d7d7;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #7f7f7f;
+}
+.profile-avatar-wrapper {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+  font-size: 15px;
+}
+.avatar {
+  max-width: 50px;
+  max-height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.name-phone-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.profile-right-edit-form-wrapper {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  font-weight: 300;
+  padding: 20px 20px 20px 0;
+  box-sizing: border-box;
+}
+.nav-list-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+.nav-item-container {
+  display: flex;
+  flex-direction: row;
+  padding: 10px 12px 10px 12px;
+  box-sizing: border-box;
+  align-items: center;
+  text-decoration: none;
+  color: #606060;
+  border-radius: 5px;
+  font-size: 16px;
+  gap: 10px;
+}
+.nav-item-container:hover {
+  color: #0079f2;
+  background-color: #f8f8f8;
+}
+.active {
+  background-color: #f8f8f8;
+  color: #0079f2;
+}
+.profile-title-container {
+  width: 100%;
+  border-bottom: 1px solid #d7d7d7;
+  padding: 20px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.product-nav-item-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+.product-nav-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  padding: 10px 12px 10px 12px;
+  box-sizing: border-box;
+}
+.checkbox-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0.45;
+}
+.remain-detail-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+.overflow-y {
+  max-height: 515px;
+  overflow-y: scroll;
+  position: relative;
+}
+.product-purchase-item-container {
+  width: 100%;
+  max-height: 515px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.follow-shop-item-container {
+  width: 100%;
+  max-height: 515px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.follow-shop-item-wrapper {
+  width: 100%;
+}
+.follow-shop-item-container::-webkit-scrollbar {
+  width: 5px; /* Chiều rộng của thanh cuộn */
+}
+.follow-shop-item-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Màu nền của vùng track */
+}
+.follow-shop-item-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Màu nền của thanh cuộn */
+  border-radius: 4px; /* Bo tròn các góc của thanh cuộn */
+}

@@ -1,0 +1,114 @@
+.shop-info-container {
+  width: 100%;
+  display: flex;
+  padding: 20px 0 20px 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(245, 245, 245);
+}
+.shop-info-wrapper {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  height: 160px;
+}
+.shop-info-card-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 35%;
+  border-radius: 5px;
+  background-position: 80%;
+  justify-content: space-between;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(./../../../assets/images/shop/dc2a8ae5803b2531c9a537ae6432ce08.jpg);
+}
+.shop-avatar-name-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-bottom: 5px;
+}
+.shop-avatar-wrapper {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shop-avatar {
+  width: 78px;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.shop-name {
+  font-weight: 500;
+  font-size: 20px;
+  color: white;
+}
+.shop-follow-button {
+  width: 100%;
+  border: 1px solid #fff;
+  font-weight: 400;
+  padding: 5px 0 5px 0;
+  transition: 300ms;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+}
+.shop-follow-button:hover {
+  background-color: #fff;
+  color: black;
+}
+.shop-overview-container {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding-left: 25px;
+}
+.icon-tile-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shop-overview-item {
+  height: 50%;
+  width: 35%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: rgb(50, 50, 50);
+}
+.shop-unfollow-button {
+  width: 100%;
+  border: 1px solid #fff;
+  font-weight: 400;
+  background-color: #fff;
+  padding: 5px 0 5px 0;
+  transition: 300ms;
+  border-radius: 5px;
+  cursor: pointer;
+  color: black;
+}
+.shop-unfollow-button:hover {
+  color: white;
+  background-color: rgb(20, 116, 207);
+  border: none;
+}
+.report-container {
+  cursor: pointer;
+  width: fit-content;
+  transition: 300ms;
+}
+.report-container:hover {
+  color: red;
+}

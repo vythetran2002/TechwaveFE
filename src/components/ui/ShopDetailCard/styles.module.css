@@ -1,0 +1,83 @@
+.shop-card-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.shop-card-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 70%;
+
+  padding: 25px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+  background: rgb(255, 255, 255);
+}
+.shop-avatar-name-container {
+  display: flex;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  padding-right: 25px;
+  box-sizing: border-box;
+  width: 30%;
+}
+.shop-avatar-container {
+  width: 80px;
+  height: 80px;
+  width: 35%;
+}
+.shop-avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.shop-name-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 60%;
+}
+.shop-name {
+  width: 100%;
+  font-size: 19px;
+}
+.shop-forward-button {
+  color: #555;
+  flex-direction: row;
+  display: flex;
+  width: fit-content;
+  padding: 5px 15px 5px 15px;
+  box-sizing: border-box;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.03);
+  gap: 10px;
+  text-decoration: none;
+}
+.shop-forward-button:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.shop-info-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 100px;
+  padding-left: 30px;
+  box-sizing: border-box;
+}
+.shop-info-item {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  width: 30%;
+}
+.shop-info-item-title {
+  color: rgba(0, 0, 0, 0.4);
+}

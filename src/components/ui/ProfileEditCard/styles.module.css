@@ -1,0 +1,21 @@
+.profile-edit-card-container {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-edit-card-container {
+  display: flex;
+  width: 70%;
+  height: fit-content;
+}
+.profile-edit-form-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+}
+.profile-left-edit-form-wrapper {
+  display: flex;
+  flex-direction: column;
+}

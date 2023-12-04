@@ -1,0 +1,41 @@
+.payment-item-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+.name-img-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+.img-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+.img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+.dot {
+  width: 20px;
+  height: 20px;
+  background-color: var(--header-bg-top);
+  border-radius: 50%;
+  font-size: 10px;
+  position: absolute;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -7px;
+  right: -9px;
+}

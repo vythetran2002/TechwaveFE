@@ -1,0 +1,27 @@
+.validate-message {
+  color: red;
+}
+.input {
+  width: 100%;
+  height: 45px;
+  margin-bottom: 25px;
+  position: relative;
+}
+.input {
+  width: 100%;
+  background-color: #88a3d2;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 0 20px;
+  color: var(--white);
+  font-size: 17px;
+}
+.input::placeholder {
+  color: white;
+  opacity: 0.5;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+}

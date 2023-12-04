@@ -1,0 +1,13 @@
+.map-container {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background-color: #e3e3e342;
+  box-shadow: 0px 0px 3px #dfdfdf;
+  box-sizing: border-box;
+  height: 487px;
+  margin-top: 40px;
+}

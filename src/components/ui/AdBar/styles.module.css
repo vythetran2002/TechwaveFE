@@ -1,0 +1,19 @@
+.adbar-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  position: relative;
+}
+.adbar-wrapper {
+  display: flex;
+  height: 100% !important;
+  width: 70%;
+  flex-direction: row;
+  background-color: aquamarine;
+  flex-wrap: wrap;
+}
+.ad-img-wrapper {
+  width: 100%;
+}

@@ -1,0 +1,100 @@
+.Dialog-Title {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgb(51, 51, 51);
+  line-height: 22px;
+  cursor: text;
+}
+.button-wrapper {
+  padding: 0;
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border-radius: 0px 0px 12px 12px;
+}
+.button-card {
+  width: 100%;
+  justify-content: right;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-huy {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0px 16px;
+  display: inline-flex;
+  margin-right: 4px;
+  margin-left: 0px px;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  transition: background-color 0.3s ease 0s;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  color: rgb(102, 102, 102);
+  background-color: rgb(244, 244, 247);
+  border: 1px solid rgb(244, 244, 247);
+  font-size: 14px;
+  height: 40px;
+  line-height: 20px;
+  outline: none !important;
+}
+.btn-huy:hover {
+  background-color: rgb(233, 233, 242);
+  border: 1px solid rgb(233, 233, 242);
+}
+.btn-luu {
+  display: block;
+  margin-left: 4px;
+  margin-right: 0px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0px 16px;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  transition: background-color 0.3s ease 0s;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  height: 40px;
+  line-height: 20px;
+  outline: none !important;
+  color: rgb(255, 255, 255) !important;
+  background-color: rgb(255, 125, 85) !important;
+  border: 1px solid rgb(255, 125, 85) !important;
+}
+.btn-luu:hover {
+  background-color: rgb(253, 99, 51) !important;
+  border: 1px solid rgb(253, 99, 51) !important;
+}
+
+.avatar-preview-wrapper {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  margin: -15px;
+}
+.edit-img-wrapper {
+  flex: 3;
+}
+.preview-img-wrapper {
+  flex: 1;
+  text-align: center;
+}
+.custom-previewImg-label {
+  font-family: Inter, Arial, sans-serif;
+  margin: 0 0 8px 0;
+  cursor: text;
+  text-align: center;
+}
+.img {
+  width: 90;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+}
