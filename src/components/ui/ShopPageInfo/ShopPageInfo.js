@@ -56,7 +56,7 @@ function ShopPageInfo(props) {
                       <Image
                         width={50}
                         height={50}
-                        src={store.info.info.picture}
+                        src={images.nonAvatar}
                         alt=""
                         className={Styles["shop-avatar"]}
                       />

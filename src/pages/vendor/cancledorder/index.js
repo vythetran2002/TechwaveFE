@@ -5,25 +5,41 @@ import Styles from "../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 // import dynamic from "next/dynamic";
 // import { Button } from "antd";
-import { Badge } from "antd";
-import CancledOrderList from "@/components/ui/vendor/order/cancledOrder/CancledOrderList";
+import { Select } from "antd";
+import OrderList from "@/components/ui/vendor/order/OrderList";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import OrderPreview from "@/components/ui/vendor/order/preview-dialog/OrderPreview";
 // import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-// import AddCateDialog from "@/components/ui/admin/dialog/addCate/AddCateDialog";
+// import AddCateDialog from "@/componentss/ui/admin/dialog/addCate/AddCateDialog";
 // import EditCateDialog from "@/components/ui/admin/dialog/editCate/EditUserDialog";
 // import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
 // import images from "@/assets/images";
 import Link from "next/link";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import { Pagination } from "@mui/material";
+
 function Index() {
   // states
-  //   const [isOpenAddCateDialog, setIsOpenAddCateDialog] = useState(false);
-  //   const [isOpenEditCateDialog, setIsOpenEditCaterDialog] = useState(false);
-  //   const [isOpenEditImgDialog, setIsOpenEditImgDialog] = useState(false);
-  //   const [avatarSrc, setAvatarSrc] = useState(images.empty);
 
-  const handlingOpenAddCateDialog = () => {
-    setIsOpenAddCateDialog(true);
+  const [open, setOpen] = useState(false);
+  const [order, setOrder] = useState({});
+  const [quantity, setQuantity] = useState(5);
+  const [page, setPage] = useState(1);
+  const [max, setMax] = useState();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handlingUpdateOrder = (value) => {
+    let temp = { ...value };
+    setOrder(temp);
   };
 
   // const handlingCloseAddCateDialog = () => {
@@ -46,6 +62,18 @@ function Index() {
   //   setIsOpenEditImgDialog(false);
   // };
 
+  const updateQuantity = (value) => {
+    setQuantity(value);
+  };
+
+  const handlePaging = async (value, pageSize) => {
+    await setPage(pageSize);
+  };
+
+  const updateMax = (value) => {
+    setMax(value);
+  };
+
   return (
     <>
       <Head>
@@ -54,7 +82,7 @@ function Index() {
       <VendorLayout path="/order">
         <div className={Styles["user-managemnent-container"]}>
           <span style={{ fontWeight: "800", fontSize: "22px" }}>
-            QUẢN LÝ ĐƠN HÀNG YÊU CẦU HUỶ
+            QUẢN LÝ ĐƠN HÀNG BỊ HUỶ
           </span>
           <div className={Styles["user-search-add-container"]}>
             <div className={Styles["user-search-filter-container"]}>
@@ -77,48 +105,82 @@ function Index() {
               </button>
             </div>
             <div className={Styles["report-nav-container"]}>
-              <Badge count={2}>
-                <Link
-                  href={"/vendor/pendingorder"}
-                  className={Styles["user-filter-button-wrapper"]}
-                  style={{ height: "100%" }}
-                >
-                  <span>Đơn hàng chưa được duyệt</span>
-                </Link>
-              </Badge>
-              <Badge count={2}>
-                <Link
-                  href={"/vendor/shippedorder"}
-                  className={Styles["user-filter-button-wrapper"]}
-                  style={{ height: "100%" }}
-                >
-                  <span>Đơn hàng đã được duyệt</span>
-                </Link>
-              </Badge>
-              <Badge count={1}>
-                <Link
-                  href={"/vendor/cancledorder"}
-                  className={`${Styles["user-filter-button-wrapper"]}
+              <Link
+                href={"/vendor/pendingorder"}
+                className={Styles["user-filter-button-wrapper"]}
+                style={{ height: "100%" }}
+              >
+                <span>Đơn hàng chưa được duyệt</span>
+              </Link>
+
+              <Link
+                href={"/vendor/shippedorder"}
+                className={Styles["user-filter-button-wrapper"]}
+                style={{ height: "100%" }}
+              >
+                <span>Đơn hàng đã được duyệt</span>
+              </Link>
+
+              <Link
+                href={"/vendor/cancledorder"}
+                className={`${Styles["user-filter-button-wrapper"]}
                    ${Styles["report-nav-active"]}`}
-                  style={{ height: "100%" }}
-                >
-                  <span>Đơn hàng yêu cầu huỷ</span>
-                </Link>
-              </Badge>
+                style={{ height: "100%" }}
+              >
+                <span>Đơn hàng bị huỷ</span>
+              </Link>
             </div>
           </div>
           <div className={Styles["markup-container"]}>
-            <div className={Styles["markup-item"]}>
+            {/* <div className={Styles["markup-item"]}>
               <span>Foundation</span>
               <ClearOutlinedIcon className={Styles["markup-icon"]} />
             </div>
             <div className={Styles["markup-item"]}>
               <span>HaTHH</span>
               <ClearOutlinedIcon className={Styles["markup-icon"]} />
-            </div>
+            </div> */}
+            <Select
+              onChange={updateQuantity}
+              defaultValue={quantity}
+              style={{ width: 100 }}
+              options={[
+                { value: 1, label: "1" },
+                { value: 2, label: "2" },
+                { value: 3, label: "3" },
+                { value: 4, label: "4" },
+                { value: 5, label: "5" },
+                { value: 6, label: "6" },
+                { value: 7, label: "7" },
+              ]}
+            />
           </div>
 
-          <CancledOrderList />
+          <OrderList
+            updateMax={updateMax}
+            limit={quantity}
+            page={page}
+            status={2}
+            updateOrder={handlingUpdateOrder}
+            handleOpen={handleOpen}
+          />
+          <Dialog
+            fullWidth={true}
+            maxWidth="md"
+            open={open}
+            onClose={handleClose}
+          >
+            <DialogContent>
+              <OrderPreview order={order} />
+            </DialogContent>
+          </Dialog>
+          <div
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            {page && (
+              <Pagination onChange={handlePaging} count={max} size="large" />
+            )}
+          </div>
         </div>
       </VendorLayout>
     </>

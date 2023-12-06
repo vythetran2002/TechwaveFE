@@ -77,7 +77,7 @@ export default function AddProductDialog(props) {
   const [open, setOpen] = React.useState(false);
   const [genderValue, setGenderValue] = useState(1);
   const [checked, setChecked] = useState(false);
-  const categories = useFetch("http://localhost:3000/api/category/");
+  const categories = useFetch("http://localhost:3000/api/category");
   const [product, setProduct] = useState({});
   const [avatarSrc, setAvatarSrc] = useState(null);
   const [categoryChild, setCategoryChild] = useState(null);

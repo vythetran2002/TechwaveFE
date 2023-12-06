@@ -250,7 +250,11 @@ function ProductDetail(props) {
                   |<span>{product.haveSales} đã bán</span>
                 </div>
                 <span className={Styles["row-container"]}>
-                  Trạng thái: Hết hàng
+                  {product.quantity - product.haveSales == 0 ? (
+                    <>Trạng thái: Hết hàng</>
+                  ) : (
+                    <>Trạng thái: Còn hàng</>
+                  )}
                 </span>
                 <span className={Styles["row-container"]}>Số lượt xem: 4</span>
                 <div className={Styles["product-price-container"]}>

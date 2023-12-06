@@ -19,7 +19,7 @@ function UserHeader() {
     removeCookie("token");
     console.log(message);
     route.push("/auth/login");
-    toast.success("Logged out");
+    // toast.success("Logged out");
   };
 
   return (

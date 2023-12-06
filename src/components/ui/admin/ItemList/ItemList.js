@@ -12,6 +12,10 @@ function ItemList(props) {
   const account = useFetchAccount(status, page, limit, token);
   console.log(account);
 
+  const handleReload = () => {
+    account.reload();
+  };
+
   useEffect(() => {
     if (account.data) {
       console.log("---");
@@ -69,6 +73,7 @@ function ItemList(props) {
                       updateId={props.updateId}
                       status={props.status}
                       account={account}
+                      handleReload={handleReload}
                       handleOpenDialog={props.handleOpenDialog}
                       handleCloseDialog={props.handleCloseDialog}
                       handleOpenDetailDialog={props.handleOpenDetailDialog}

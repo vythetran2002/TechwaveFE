@@ -90,7 +90,7 @@ const roboto = Roboto({
 
 export default function EditProductDialog(props) {
   const categories = useFetch("http://localhost:3000/api/category");
-  console.log(categories);
+  // console.log(categories);
 
   const [open, setOpen] = React.useState(false);
   const [genderValue, setGenderValue] = useState(1);
@@ -265,7 +265,7 @@ export default function EditProductDialog(props) {
                     style={{ backgroundColor: "white" }}
                     type="file"
                     accept=".jpg, .png, image/jpeg, image/png"
-                    maxlength="1048576"
+                    maxLength="1048576"
                     onChange={handleFileUpload}
                   ></input>
                   <div className={Styles["img-container"]}>

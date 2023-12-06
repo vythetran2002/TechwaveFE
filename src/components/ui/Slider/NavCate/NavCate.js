@@ -15,14 +15,12 @@ const NavCate = (props) => {
           props.data.map((cate, index) => {
             return (
               <React.Fragment key={"nav-cate" + index}>
-                <div className={Styles["nav-cate-item"]}>
-                  <Link
-                    href={`/cate/` + cate.category_id}
-                    className={Styles["link"]}
-                  >
-                    {cate.name}
-                  </Link>
-                </div>
+                <Link
+                  href={`/cate/` + cate.category_id}
+                  className={Styles["nav-cate-item"]}
+                >
+                  <span className={Styles["link"]}>{cate.name}</span>
+                </Link>
               </React.Fragment>
             );
           })}

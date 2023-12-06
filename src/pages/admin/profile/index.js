@@ -46,7 +46,7 @@ function checkEmptyFields(userProfile) {
 }
 
 function Home() {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies, setCookie, removeCookie] = useCookies();
   const user = useFetchAdminProfile();
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
@@ -152,7 +152,7 @@ function Home() {
       } else {
         // update profile
         console.log("--------------------------------");
-        console.log(userProfile);
+        // console.log(userProfile);
         messageRef.current.style.display = "none";
         const {
           fullname,
@@ -177,7 +177,7 @@ function Home() {
 
         let tempDOB = dayjs(temp.dob).format("YYYY/MM/DD");
         let result = { ...temp, dob: tempDOB };
-        // console.log(result);
+        console.log(result);
         const message = EditProfile(result, cookies["token"]);
         console.log(message);
         window.location.reload();
@@ -215,7 +215,7 @@ function Home() {
           };
           let tempDOB = dayjs(reqUser.dob).format("YYYY/MM/DD");
           let result = { ...reqUser, dob: tempDOB };
-          // console.log(result);
+          console.log(result);
           messageRef.current.style.display = "none";
           const message = EditProfile(result, cookies["token"]);
           console.log(message);

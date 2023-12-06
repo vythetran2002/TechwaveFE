@@ -16,6 +16,7 @@ import { PutProductDesc } from "@/api/vendor/PutProductDesc";
 import { Toaster } from "react-hot-toast";
 import useFetchProductDesc from "@/api/vendor/useFetchProductDesc";
 import { useCookies } from "react-cookie";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -31,7 +32,7 @@ function Index() {
   const product = useFetchProductDesc(slug);
   const [value, setValue] = useState(null);
 
-  console.log(product);
+  // console.log(product0);
 
   const handlingUpdateDesc = async () => {
     try {
@@ -80,10 +81,10 @@ function Index() {
   };
 
   useEffect(() => {
-    if (product.data) {
-      setValue(product.data.data.content);
+    if (product0.data) {
+      setValue(product0.data.content);
     }
-  }, [product.data]);
+  }, [product0.data]);
 
   if (product.isLoading) {
     return <>Loading</>;
@@ -99,6 +100,27 @@ function Index() {
         <VendorLayout path="/product">
           <Toaster />
           <div className={Styles["user-managemnent-container"]}>
+            <div>
+              <Link
+                href={"/vendor/product/detail/" + product0.data.product_id}
+                className="detail-product-button-container"
+              >
+                <div
+                  className={Styles["user-filter-button-wrapper"]}
+                  style={{
+                    fontWeight: "400",
+                    fontSize: "15px",
+                    padding: "10px",
+                    width: "fit-object",
+                  }}
+                >
+                  <ArrowBackIosIcon />
+                  <span>
+                    Quay trở về chi tiết sản phẩm {product0.data.name}
+                  </span>
+                </div>
+              </Link>
+            </div>
             <div className={Styles["product-edit-desc-conatiner"]}>
               <div
                 className={Styles["product-left-edit-desc-conatiner"]}

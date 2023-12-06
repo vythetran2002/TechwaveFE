@@ -128,10 +128,10 @@ function Header(props) {
   const handlingClickDelete = () => {
     let temp = select;
     console.log(temp);
-    // setSetlectedItem(null);
-    // if (temp) {
-    //   handlingDeleteCartItem(temp.id, temp.quantity, temp.price);
-    // }
+    setSetlectedItem(null);
+    if (temp) {
+      handlingDeleteCartItem(temp.id, temp.quantity, temp.price);
+    }
     console.log(temp);
   };
 
@@ -177,7 +177,7 @@ function Header(props) {
             <div className={Styles["phone-mail-wrapper"]}>
               <div className={Styles["phone-container"]}>
                 <CallOutlinedIcon sx={{ color: "white", marginRight: "1px" }} />
-                <span>0123.456.789</span>
+                <span>0816.789.439</span>
               </div>
               <div
                 className={Styles["mail-container"]}
@@ -186,7 +186,7 @@ function Header(props) {
                 <MailOutlineOutlinedIcon
                   style={{ color: "white", marginRight: "3px" }}
                 />
-                <span>techwavteute@gmail.com</span>
+                <span>techwaveute@gmail.com</span>
               </div>
             </div>
             <div className={Styles["phone-mail-wrapper"]}>
@@ -304,7 +304,7 @@ function Header(props) {
                   style={{ fontSize: "10px !important" }}
                 />
                 <span style={{ flex: "1", textAlign: "start" }}>
-                  0123.456.789
+                  0816.789.439
                 </span>
               </button>
               <button className={Styles["cart-button"]} onClick={showDrawer}>

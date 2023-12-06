@@ -34,19 +34,19 @@ function Footer() {
               </div>
               <div className={Styles["row"]}>
                 <span>
-                  Địa chỉ: 473/8B Lê Văn Quới, Phường Bình Trị Đông A, Quận Bình
-                  Tân, Thành phố Hồ Chí Minh
+                  Địa chỉ: 01 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí
+                  Minh
                 </span>
               </div>
               <div className={Styles["row"]}>
-                <span>Hỗ trợ kỹ thuật: (028) 36 36 1080 - Ext: 104 - 105</span>
+                <span>Hỗ trợ kỹ thuật: 0816789439 - 0336289854</span>
               </div>
               <div className={Styles["row"]}>
-                <span>Email: info@webso.vn / webso.vn@gmail.com</span>
+                <span>Email: techwaveute@gmail.com</span>
               </div>
-              <div className={Styles["row"]}>
+              {/* <div className={Styles["row"]}>
                 <span>Mã số thuế: 0311177962</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

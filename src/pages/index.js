@@ -26,7 +26,8 @@ function Index() {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const cateList01 = useFetchProductByCateId(2);
-  const cateList02 = useFetchProductByCateId(3);
+  // console.log(cateList01);
+  const cateList02 = useFetchProductByCateId(5);
   const cateList03 = useFetchProductByCateId(4);
   const route = useRouter();
 

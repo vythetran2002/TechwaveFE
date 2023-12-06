@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Styles from "./style.module.css";
 import Link from "next/link";
 import Head from "next/head";
@@ -17,6 +17,7 @@ import { addCartItem } from "@/api/user/addCartItem";
 import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
+import useFetchCateListByPage from "@/api/user/useFetchCateListByPage";
 
 function Index() {
   const [cookies] = useCookies();
@@ -24,7 +25,12 @@ function Index() {
   const router = useRouter();
   const slug = router.query.slug;
   const [detailItem, setDeTailItem] = useState(null);
-  const listItem = useFetch("http://localhost:3000/api/category/" + slug);
+  const [quantity, setQuantity] = useState(5);
+  const [page, setPage] = useState(1);
+  const [max, setMax] = useState();
+  // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
+  const listItem = useFetchCateListByPage(slug, page, 10, cookies["token"]);
+
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const handlingOpenDialog = () => {
@@ -57,6 +63,27 @@ function Index() {
       router.push("/auth/login");
     }
   };
+
+  const updateQuantity = (value) => {
+    setQuantity(value);
+  };
+
+  const handlePaging = async (value, pageSize) => {
+    await setPage(pageSize);
+  };
+
+  const updateMax = (value) => {
+    setMax(value);
+  };
+
+  useEffect(() => {
+    if (listItem.data) {
+      console.log("---");
+      if (listItem.data.data) {
+        updateMax(listItem.data.data.total);
+      }
+    }
+  }, [listItem.data]);
 
   if (cateList.isError) return <>Error</>;
   if (cateList.isLoading) return <>Loading</>;
@@ -125,7 +152,7 @@ function Index() {
               </div>
               <div className={Styles["filter-item-list-container"]}>
                 {listItem.data && listItem.data.data ? (
-                  listItem.data.data.map((item, index) => {
+                  listItem.data.data.results.map((item, index) => {
                     return (
                       <React.Fragment key={"item-card" + index}>
                         <Item
@@ -152,7 +179,13 @@ function Index() {
                 /> */}
               </div>
               <div className={Styles["pagination-container"]}>
-                <Pagination size="large" count={10} shape="rounded" />
+                {page && (
+                  <Pagination
+                    onChange={handlePaging}
+                    count={max}
+                    size="large"
+                  />
+                )}
               </div>
               <div></div>
             </div>

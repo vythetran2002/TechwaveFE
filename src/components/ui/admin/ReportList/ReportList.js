@@ -5,6 +5,7 @@ import ReportItem from "./ReportItem";
 import { useEffect } from "react";
 import { Pagination } from "@mui/material";
 import useFetchReport from "@/api/vendor/useFetchReports";
+import { Empty } from "antd";
 
 function ReportList(props) {
   const { limit, page, updateMax } = props;
@@ -63,7 +64,16 @@ function ReportList(props) {
               );
             })
           ) : (
-            <>Empty</>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                padding: "20px 0 20px 0",
+              }}
+            >
+              <Empty />
+            </div>
           )}
         </div>
         {/* <div className={Styles["item-pagination-container"]}>

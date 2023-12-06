@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 import { Pagination } from "@mui/material";
 
 function Index() {
-  const [cookies] = useCookies(["token"]);
+  const [cookies] = useCookies();
   // console.log(router.query);
   // states
   const [isOpenAddUserDialog, setIsOpenAddUserDialog] = useState(false);

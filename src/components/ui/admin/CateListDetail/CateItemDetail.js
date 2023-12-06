@@ -15,7 +15,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { DeleteCategory } from "@/api/admin/DeleteCategory";
 import Link from "next/link";
 
-function CateItem(props) {
+function CateItemDetail(props) {
   const menuRef = useRef(null);
   const { cate } = props;
 
@@ -88,7 +88,8 @@ function CateItem(props) {
             className={Styles["list-item-option-list-container"]}
             ref={menuRef}
           >
-            <Link
+            {/* <Link
+              target="_blank"
               href={"/admin/cate-detail/" + cate.category_id}
               className={Styles["list-item-option-edit-user-container"]}
               // onClick={handleOpenDetailDialog}
@@ -96,14 +97,14 @@ function CateItem(props) {
             >
               <InfoIcon />
               <span>Xem chi tiết danh mục</span>
-            </Link>
+            </Link> */}
 
             <div
               className={Styles["list-item-option-edit-user-container"]}
               onClick={handleOpenDialog}
             >
               <EditIcon />
-              <span>Chỉnh sửa danh mục</span>
+              <span>Chỉnh sửa danh mục {cate.name}</span>
             </div>
 
             <div
@@ -129,4 +130,4 @@ function CateItem(props) {
   );
 }
 
-export default CateItem;
+export default CateItemDetail;

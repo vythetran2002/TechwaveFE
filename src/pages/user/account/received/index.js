@@ -26,7 +26,7 @@ import useFetchReceivedProducts from "@/api/user/useFetchRecievedProduct";
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchReceivedProducts();
-  console.log(orders);
+  // console.log(orders);
   //Refs
   const iconRef = useRef();
   const orderingItem = useRef();
@@ -177,14 +177,7 @@ function Index() {
                       orders.data.map((oderItem, index) => {
                         return (
                           <React.Fragment key={"oderItem" + index}>
-                            <PurchaseItemCard
-                              status={oderItem.status}
-                              quantity={oderItem.cart_id.quantity}
-                              price={oderItem.totalBill}
-                              name={oderItem.cart_id.product.name}
-                              option={oderItem.cart_id.option.name}
-                              img={oderItem.cart_id.option.image}
-                            />
+                            <PurchaseItemCard oderItem={oderItem} />
                           </React.Fragment>
                         );
                       })

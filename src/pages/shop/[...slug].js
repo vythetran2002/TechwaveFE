@@ -17,6 +17,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import ReportForm from "@/components/ui/ReportForm/ReportForm";
 import { useCookies } from "react-cookie";
+import ShopItemList from "@/components/ui/ShopItemList/ShopItemList";
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10) + 1;
@@ -30,6 +31,9 @@ function ShopIndex() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
+  const [quantity, setQuantity] = useState(5);
+  const [page, setPage] = useState(1);
+  const [max, setMax] = useState();
   const slug = router.query.slug;
   let id0 = null;
   let id1 = null;
@@ -41,6 +45,7 @@ function ShopIndex() {
   // console.log(id0);
   // console.log(id1);
   const store = useFetchShopById(id0);
+  // console.log(store);
   // console.log(store);
 
   const handleOpenDialog = () => {
@@ -78,6 +83,18 @@ function ShopIndex() {
 
   const handlingCloseDialog = () => {
     setIsOpenDialog(false);
+  };
+
+  const updateQuantity = (value) => {
+    setQuantity(value);
+  };
+
+  const handlePaging = async (value, pageSize) => {
+    await setPage(pageSize);
+  };
+
+  const updateMax = (value) => {
+    setMax(value);
   };
 
   // useState(() => {
@@ -170,45 +187,26 @@ function ShopIndex() {
                 {/* {
                 store.data ? store.data.
               } */}
-                <div className={Styles["filter-item-list-container"]}>
-                  {store.data ? (
-                    store.data.data &&
-                    store.data.data[id1] &&
-                    store.data.data[id1].product.map((product, index) => {
-                      console.log(product);
-                      return (
-                        <React.Fragment key={"productItem" + index}>
-                          <Item
-                            item={product}
-                            setDeTailItem={setDeTailItem}
-                            handlingOpenDialog={handlingOpenDialog}
-                          />
-                        </React.Fragment>
-                      );
-                    })
-                  ) : (
-                    <>Loading</>
-                  )}
-                  {/* <Item />
-                <Item />
-                <Item /> */}
-                  {/* <Item />
-                <Item />
-                <Item />
-                <Item />
-                <Item />
-                <Item />
-                <Item />
-                <Item />
-                {/* <Item />  */}
-                </div>
+                <ShopItemList
+                  page={page}
+                  id={id0}
+                  cateId={id1}
+                  updateMax={updateMax}
+                />
                 <div className={Styles["pagination-container"]}>
-                  <Pagination size="large" count={10} shape="rounded" />
+                  {page && (
+                    <Pagination
+                      onChange={handlePaging}
+                      count={max}
+                      size="large"
+                    />
+                  )}
                 </div>
               </div>
             </div>
           </div>
           <ItemDetail
+            setDeTailItem={setDeTailItem}
             item={detailItem}
             isOpenDialog={isOpenDialog}
             handlingOpenDialog={handlingOpenDialog}

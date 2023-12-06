@@ -29,6 +29,8 @@ function AdminHeader() {
             {profile.data.avatar != null ? (
               <>
                 <Image
+                  width={200}
+                  height={200}
                   src={profile.data.avatar}
                   alt=""
                   priority={true}
@@ -38,6 +40,8 @@ function AdminHeader() {
             ) : (
               <>
                 <Image
+                  width={200}
+                  height={200}
                   src={images.nonAvatar}
                   alt=""
                   priority={true}
@@ -88,6 +92,8 @@ function AdminHeader() {
                     {profile.data.avatar != null ? (
                       <>
                         <Image
+                          width={200}
+                          height={200}
                           src={profile.data.avatar}
                           alt=""
                           priority={true}
@@ -97,6 +103,8 @@ function AdminHeader() {
                     ) : (
                       <>
                         <Image
+                          width={200}
+                          height={200}
                           src={images.nonAvatar}
                           alt=""
                           priority={true}
@@ -120,6 +128,8 @@ function AdminHeader() {
                 <div className={Styles["notify-item-container"]}>
                   <div className={Styles["notify-item-atavar-container"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       alt=""
                       priority={true}
@@ -141,6 +151,8 @@ function AdminHeader() {
                 <div className={Styles["notify-item-container"]}>
                   <div className={Styles["notify-item-atavar-container"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       alt=""
                       priority={true}

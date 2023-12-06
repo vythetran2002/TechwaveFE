@@ -17,7 +17,7 @@ import { ActiveAccount } from "@/api/admin/ActiveAccount";
 import { ApproveAccount } from "@/api/admin/ApproveAccount";
 
 function ListItem(props) {
-  const { account } = props;
+  const { account, handleReload } = props;
 
   const menuRef = useRef(null);
 
@@ -34,12 +34,13 @@ function ListItem(props) {
   const handleSoftDelete = () => {
     const message = DeleteSoftAccount(account.account_id, props.token);
     console.log(message);
+    window.location.reload();
   };
 
   const handleDelteAccount = () => {
     const message = DeleteAccount(account.account_id, props.token);
     console.log(message);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleOpenDetailDialog = () => {
@@ -51,6 +52,8 @@ function ListItem(props) {
   const handlingActiveAccount = () => {
     const message = ActiveAccount(account.account_id, props.token);
     console.log(message);
+    handleReload();
+    // window.location.reload();
   };
 
   const handlineApproveAccount = () => {

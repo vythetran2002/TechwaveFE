@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
-const useFetchShopByPage = (id) => {
+const useFetchShopById = (id, page, limit) => {
   const [cookies] = useCookies();
   // console.log(cookies);
   const url = "http://localhost:3000/api/store/" + id;
@@ -22,9 +22,11 @@ const useFetchShopByPage = (id) => {
     headers.Authorization = ` ${token}`;
   }
 
+  const queryParams = `page=${page}&limit=${limit}`;
+
   const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/store/${id}` : null,
-    () => fetcher(url, headers)
+    id && page && limit ? `${url}?${queryParams}` : null,
+    () => fetcher(`${url}?${queryParams}`, headers)
   );
 
   return {
@@ -36,4 +38,4 @@ const useFetchShopByPage = (id) => {
   };
 };
 
-export default useFetchShopByPage;
+export default useFetchShopById;

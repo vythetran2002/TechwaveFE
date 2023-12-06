@@ -36,7 +36,7 @@
 .phone-mail-container {
   height: 100%;
   display: flex;
-  width: 70%;
+  width: 80%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -338,7 +338,7 @@
 }
 .avatar-dropdown-container {
   position: absolute;
-  top: 111%;
+  top: 100%;
   right: 13px;
   width: 200px;
   background-color: white;
@@ -347,6 +347,7 @@
   border: 1px solid #ddd;
   border-radius: 2px;
   display: none;
+  transition: 300ms;
 }
 
 .phone-mail-wrapper:hover .avatar-dropdown-container {

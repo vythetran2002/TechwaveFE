@@ -1,0 +1,8 @@
+.filter-item-list-container {
+  display: flex;
+  flex-direction: row;
+  box-shadow: 0 0 8px 0 #ddd;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  box-sizing: border-box;
+}

@@ -14,6 +14,7 @@ import StyleOutlinedIcon from "@mui/icons-material/StyleOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import { Rating } from "@mui/material";
 import Link from "next/link";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 function HtmlContent({ htmlString }) {
   return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
@@ -24,7 +25,7 @@ function Index() {
   const slug = router.query.slug;
   const product = useFetchDetailProduct(slug);
 
-  console.log(product);
+  // console.log(product);
 
   // states
   const [isOpenAddProductDialog, setIsOpenAddProductDialog] = useState(false);
@@ -117,13 +118,28 @@ function Index() {
                             <div
                               className={Styles["product-detail-option-item"]}
                             >
-                              <Image
-                                src={option.image}
-                                height={100}
-                                width={100}
-                                priority
-                                alt=""
-                              ></Image>
+                              {option.image ? (
+                                <>
+                                  <Image
+                                    src={option.image}
+                                    height={100}
+                                    width={100}
+                                    priority
+                                    alt=""
+                                  ></Image>
+                                </>
+                              ) : (
+                                <>
+                                  <Image
+                                    src={images.nonImg}
+                                    height={100}
+                                    width={100}
+                                    priority
+                                    alt=""
+                                  ></Image>
+                                </>
+                              )}
+
                               <span>{option.name}</span>
                             </div>
                           </React.Fragment>
@@ -177,31 +193,49 @@ function Index() {
               <Col className="gutter-row" span={12}>
                 <Row
                   className="gutter-row"
-                  style={{ display: "flex", flexDirection: "row-reverse" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <Link
-                    href={
-                      "/vendor/product/edit-option/" + product.data.product_id
-                    }
-                    className="detail-product-button-container"
-                  >
-                    <div className={Styles["user-filter-button-wrapper"]}>
-                      <StyleOutlinedIcon />
-                      <span>Chỉnh sửa loại sản phẩm</span>
-                    </div>
-                  </Link>
-                  <div className="detail-product-button-container">
+                  <div style={{ display: "flex" }}>
                     <Link
                       href={
-                        "/vendor/product/edit-description/" +
-                        product.data.product_id
+                        "/vendor/product/edit-option/" + product.data.product_id
                       }
-                      className={Styles["user-filter-button-wrapper"]}
+                      className="detail-product-button-container"
                     >
-                      <DescriptionOutlinedIcon />
-                      <span>Chỉnh sửa mô tả</span>
+                      <div className={Styles["user-filter-button-wrapper"]}>
+                        <StyleOutlinedIcon />
+                        <span>Chỉnh sửa loại sản phẩm</span>
+                      </div>
                     </Link>
+                    <div className="detail-product-button-container">
+                      <Link
+                        href={
+                          "/vendor/product/edit-description/" +
+                          product.data.product_id
+                        }
+                        className={Styles["user-filter-button-wrapper"]}
+                      >
+                        <DescriptionOutlinedIcon />
+                        <span>Chỉnh sửa mô tả</span>
+                      </Link>
+                    </div>
                   </div>
+                  <Link
+                    href={"/vendor/product/"}
+                    className="detail-product-button-container"
+                  >
+                    <div
+                      className={Styles["user-filter-button-wrapper"]}
+                      style={{ backgroundColor: "EE4D2D" }}
+                    >
+                      <ArrowBackIosIcon />
+                    </div>
+                  </Link>
                 </Row>
 
                 <Divider />
@@ -270,7 +304,7 @@ function Index() {
                     <span className={Styles["detail-product-property"]}>
                       <span style={{ marginRight: "20px" }}>Đánh giá: </span>
                       <Rating
-                        value={product.data.rating}
+                        value={parseInt(product.data.rating)}
                         precision={0.5}
                         readOnly
                         size="lg"

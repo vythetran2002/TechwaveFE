@@ -14,7 +14,7 @@ function PurchaseItemCard(props) {
   const router = useRouter();
   const { oderItem } = props;
 
-  console.log(oderItem);
+  // console.log(oderItem);
 
   const handleClickPay = (value) => {
     router.push(value);

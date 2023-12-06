@@ -24,7 +24,6 @@ import { Radio, DatePicker, Checkbox, Input } from "antd";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import ProfileEditCard from "@/components/ui/ProfileEditCard/ProfileEditCard";
 import useFetch from "@/api/useFetch";
-import moment from "moment";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
@@ -59,7 +58,7 @@ function checkEmptyFields(userProfile) {
 }
 
 function Index() {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies] = useCookies();
   const user = useFetchUserProfile();
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
@@ -203,6 +202,7 @@ function Index() {
         console.log(temp);
         const message = sendPostRequestWithToken(temp, cookies["token"]);
         console.log(message);
+        window.location.reload();
       }
     } else if (oldPass != "" && newPass != "") {
       if (oldPass != newPass) {
@@ -239,6 +239,7 @@ function Index() {
           messageRef.current.style.display = "none";
           const message = sendPostRequestWithToken(temp, cookies["token"]);
           console.log(message);
+          window.location.reload();
         }
       } else {
         messageRef.current.style.display = "block";

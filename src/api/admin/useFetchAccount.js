@@ -21,13 +21,19 @@ const useFetchAccount = (status, page, limit, myToken) => {
   const { data, error, mutate, isValidating } = useSWR(
     page && limit ? `${url}?${queryParams}` : null,
     () => fetcher(`${url}?${queryParams}`, headers)
+    // { refreshInterval: 1000 }
   );
+
+  const reload = () => {
+    mutate();
+  };
 
   return {
     data,
     isLoading: !error && !data,
     isError: error,
     mutate,
+    reload,
     isValidating,
   };
 };

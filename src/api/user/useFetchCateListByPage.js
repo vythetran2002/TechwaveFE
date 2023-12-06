@@ -5,11 +5,10 @@ import { useCookies } from "react-cookie";
 const fetcher = (url, headers) =>
   axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
 
-const useFetchDetailProduct = (id) => {
-  const [cookies] = useCookies();
-  const url = "http://localhost:3000/api/vendor/product/" + id;
+const useFetchCateListByPage = (id, page, limit, myToken) => {
+  const url = "http://localhost:3000/api/category/" + id;
 
-  const token = "Bearer " + cookies["token"];
+  const token = "Bearer " + myToken;
 
   const headers = {
     Accept: "application/json",
@@ -17,9 +16,11 @@ const useFetchDetailProduct = (id) => {
     Authorization: `${token}`,
   };
 
+  const queryParams = `page=${page}&limit=${limit}`;
+
   const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/vendor/product/${id}` : null,
-    () => fetcher(url, headers)
+    page && limit ? `${url}?${queryParams}` : null,
+    () => fetcher(`${url}?${queryParams}`, headers)
   );
 
   return {
@@ -31,4 +32,4 @@ const useFetchDetailProduct = (id) => {
   };
 };
 
-export default useFetchDetailProduct;
+export default useFetchCateListByPage;

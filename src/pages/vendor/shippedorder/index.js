@@ -122,13 +122,13 @@ function Index() {
                 <span>Đơn hàng đã được duyệt</span>
               </Link>
 
-              {/* <Link
+              <Link
                 href={"/vendor/cancledorder"}
                 className={Styles["user-filter-button-wrapper"]}
                 style={{ height: "100%" }}
               >
-                <span>Đơn hàng yêu cầu huỷ</span>
-              </Link> */}
+                <span>Đơn hàng bị huỷ</span>
+              </Link>
             </div>
           </div>
           <div className={Styles["markup-container"]}>

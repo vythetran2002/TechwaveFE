@@ -120,6 +120,8 @@ function Index() {
                   {admin.data.avatar != null ? (
                     <>
                       <Image
+                        width={200}
+                        height={200}
                         src={admin.data.avatar}
                         alt=""
                         priority={true}
@@ -129,6 +131,8 @@ function Index() {
                   ) : (
                     <>
                       <Image
+                        width={200}
+                        height={200}
                         src={images.nonAvatar}
                         alt=""
                         priority={true}
@@ -150,6 +154,8 @@ function Index() {
                 <div className={Styles["right-new-account-list-container"]}>
                   <div className={Styles["right-new-account-item"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       className={Styles["account-avatar"]}
                       alt=""
@@ -162,6 +168,8 @@ function Index() {
                   </div>
                   <div className={Styles["right-new-account-item"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       className={Styles["account-avatar"]}
                       alt=""
@@ -181,6 +189,8 @@ function Index() {
                 <div className={Styles["right-new-account-list-container"]}>
                   <div className={Styles["right-new-account-item"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       className={Styles["account-avatar"]}
                       alt=""
@@ -193,6 +203,8 @@ function Index() {
                   </div>
                   <div className={Styles["right-new-account-item"]}>
                     <Image
+                      width={200}
+                      height={200}
                       src={images.monster}
                       className={Styles["account-avatar"]}
                       alt=""

@@ -18,6 +18,7 @@ import OptionList from "@/components/ui/vendor/option/OptionList";
 import AddOptionDialog from "@/components/ui/vendor/dialog/addOption/AddOptionDialog";
 import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
 import EditOptionDialog from "@/components/ui/vendor/dialog/editOption/EditOptionDialog";
 function Index() {
   const [cookies] = useCookies();
@@ -79,15 +80,34 @@ function Index() {
           <Toaster />
           <div className={Styles["user-managemnent-container"]}>
             {product.data ? (
-              <span
+              <div
                 style={{
                   fontWeight: "800",
                   fontSize: "22px",
                   textTransform: "uppercase",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                QUẢN LÝ PHÂN LOẠI SẢN PHẨM: {product.data.name}
-              </span>
+                <span>QUẢN LÝ PHÂN LOẠI SẢN PHẨM: {product.data.name}</span>
+                <Link
+                  href={"/vendor/product/detail/" + product.data.product_id}
+                  className="detail-product-button-container"
+                >
+                  <div
+                    className={Styles["user-filter-button-wrapper"]}
+                    style={{
+                      fontWeight: "400",
+                      fontSize: "15px",
+                      padding: "10px",
+                    }}
+                  >
+                    <span>
+                      Quay trở về chi tiết sản phẩm {product.data.name}
+                    </span>
+                  </div>
+                </Link>
+              </div>
             ) : (
               <>Loading</>
             )}
