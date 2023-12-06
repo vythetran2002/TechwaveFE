@@ -229,9 +229,11 @@ function PurchaseItemCard(props) {
                 <span style={{ marginLeft: "10px" }}>Đơn hàng đã giao</span>
               </div>
               <div>
-                <Button type="primary" onClick={handleGoToComment}>
-                  Đánh giá đơn hàng
-                </Button>
+                {oderItem.cart_id && (
+                  <Button type="primary" onClick={handleGoToComment}>
+                    Đánh giá đơn hàng
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -266,18 +268,29 @@ function PurchaseItemCard(props) {
           <div className={Styles["item-info-container"]}>
             <div className={Styles["img-name-container"]}>
               <div className={Styles["img-wrapper"]}>
-                {oderItem.cart_id.option ? (
-                  oderItem.cart_id.option.image ? (
-                    <>
-                      <Image
-                        width={80}
-                        height={80}
-                        src={oderItem.cart_id.option.image}
-                        alt=""
-                        priority={true}
-                        className={Styles["img"]}
-                      />
-                    </>
+                {oderItem.cart_id ? (
+                  oderItem.cart_id.option ? (
+                    oderItem.cart_id.option.image ? (
+                      <>
+                        <Image
+                          width={80}
+                          height={80}
+                          src={oderItem.cart_id.option.image}
+                          alt=""
+                          priority={true}
+                          className={Styles["img"]}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          src={images.nonImg}
+                          alt=""
+                          priority={true}
+                          className={Styles["img"]}
+                        />
+                      </>
+                    )
                   ) : (
                     <>
                       <Image

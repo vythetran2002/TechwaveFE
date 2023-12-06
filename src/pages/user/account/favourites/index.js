@@ -33,6 +33,8 @@ function Index() {
   const user = useFetchUserProfile();
   const products = useFetchUserFavProduct();
 
+  console.log(products);
+
   const handlingDeleteFavouriteProduct = async (id) => {
     // try {
     console.log("----");
@@ -78,35 +80,58 @@ function Index() {
     }
   };
 
-  return (
-    <>
-      <Head>
-        <title>Danh sách yêu thích</title>
-      </Head>
-      <UserLayout>
-        <Toaster />
-        <div className={Styles["profile-edit-card-container"]}>
-          <div className={Styles["profile-edit-card-wrapper"]}>
-            <div className={Styles["profile-edit-form-wrapper"]}>
-              <div className={Styles["profile-left-edit-form-wrapper"]}>
-                <div className={Styles["profile-avatar-container"]}>
-                  {user && user.data ? (
-                    user.data.avatar ? (
-                      <>
-                        <div className={Styles["profile-avatar-wrapper"]}>
-                          <Image
-                            width={100}
-                            height={100}
-                            src={user.data.avatar}
-                            className={Styles["avatar"]}
-                            alt=""
-                          />
-                        </div>
-                        <div className={Styles["name-phone-container"]}>
-                          <span>{user.data.fullname}</span>
-                          <span>{user.data.phone}</span>
-                        </div>
-                      </>
+  if (products.isLoading) {
+    return <>Loading</>;
+  }
+  if (products.isError) {
+    return <>Error</>;
+  } else
+    return (
+      <>
+        <Head>
+          <title>Danh sách yêu thích</title>
+        </Head>
+        <UserLayout>
+          <Toaster />
+          <div className={Styles["profile-edit-card-container"]}>
+            <div className={Styles["profile-edit-card-wrapper"]}>
+              <div className={Styles["profile-edit-form-wrapper"]}>
+                <div className={Styles["profile-left-edit-form-wrapper"]}>
+                  <div className={Styles["profile-avatar-container"]}>
+                    {user && user.data ? (
+                      user.data.avatar ? (
+                        <>
+                          <div className={Styles["profile-avatar-wrapper"]}>
+                            <Image
+                              width={100}
+                              height={100}
+                              src={user.data.avatar}
+                              className={Styles["avatar"]}
+                              alt=""
+                            />
+                          </div>
+                          <div className={Styles["name-phone-container"]}>
+                            <span>{user.data.fullname}</span>
+                            <span>{user.data.phone}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className={Styles["profile-avatar-wrapper"]}>
+                            <Image
+                              width={100}
+                              height={100}
+                              src={images.nonAvatar}
+                              className={Styles["avatar"]}
+                              alt=""
+                            />
+                          </div>
+                          <div className={Styles["name-phone-container"]}>
+                            <span>{user.data.fullname}</span>
+                            <span>{user.data.phone}</span>
+                          </div>
+                        </>
+                      )
                     ) : (
                       <>
                         <div className={Styles["profile-avatar-wrapper"]}>
@@ -119,159 +144,142 @@ function Index() {
                           />
                         </div>
                         <div className={Styles["name-phone-container"]}>
-                          <span>{user.data.fullname}</span>
-                          <span>{user.data.phone}</span>
+                          <span>Loading</span>
+                          <span>Loading</span>
                         </div>
                       </>
-                    )
-                  ) : (
-                    <>
-                      <div className={Styles["profile-avatar-wrapper"]}>
-                        <Image
-                          width={100}
-                          height={100}
-                          src={images.nonAvatar}
-                          className={Styles["avatar"]}
-                          alt=""
+                    )}
+                  </div>
+                  <div className={Styles["nav-list-container"]}>
+                    <Link
+                      href={"/user/account/profile"}
+                      className={`${Styles["nav-item-container"]}`}
+                    >
+                      <AccountCircleIcon />
+                      <span>Thông tin tài khoản</span>
+                    </Link>
+                    <Link
+                      href={"/user/account/favourites"}
+                      className={`${Styles["nav-item-container"]} ${Styles["active"]}`}
+                    >
+                      <FavoriteBorderIcon />
+                      <span>Danh sách yêu thích</span>
+                    </Link>
+                    <div
+                      // href={"/user/account/purchase/1"}
+                      className="nav-order-item-container "
+                      onClick={handlingClickQLDH}
+                      ref={itemRef}
+                    >
+                      <div className="al-center">
+                        <InventoryIcon />
+                        <span>Quản lý đơn hàng</span>
+                        <KeyboardArrowDownIcon
+                          className="ml-120 "
+                          ref={iconRef}
                         />
                       </div>
-                      <div className={Styles["name-phone-container"]}>
-                        <span>Loading</span>
-                        <span>Loading</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className={Styles["nav-list-container"]}>
-                  <Link
-                    href={"/user/account/profile"}
-                    className={`${Styles["nav-item-container"]}`}
-                  >
-                    <AccountCircleIcon />
-                    <span>Thông tin tài khoản</span>
-                  </Link>
-                  <Link
-                    href={"/user/account/favourites"}
-                    className={`${Styles["nav-item-container"]} ${Styles["active"]}`}
-                  >
-                    <FavoriteBorderIcon />
-                    <span>Danh sách yêu thích</span>
-                  </Link>
-                  <div
-                    // href={"/user/account/purchase/1"}
-                    className="nav-order-item-container "
-                    onClick={handlingClickQLDH}
-                    ref={itemRef}
-                  >
-                    <div className="al-center">
-                      <InventoryIcon />
-                      <span>Quản lý đơn hàng</span>
-                      <KeyboardArrowDownIcon
-                        className="ml-120 "
-                        ref={iconRef}
-                      />
+                      <Link
+                        href={"/user/account/order"}
+                        className="drop-down-item"
+                        ref={orderingItem}
+                      >
+                        <LocalShippingIcon />
+                        <span>Đơn hàng của tôi</span>
+                      </Link>
+                      <Link
+                        href={"/user/account/received"}
+                        className="drop-down-item"
+                        ref={orderedItem}
+                      >
+                        <DoneIcon />
+                        <span>Đơn hàng đã nhận</span>
+                      </Link>
                     </div>
                     <Link
-                      href={"/user/account/order"}
-                      className="drop-down-item"
-                      ref={orderingItem}
+                      href={"/user/account/report"}
+                      className={Styles["nav-item-container"]}
                     >
-                      <LocalShippingIcon />
-                      <span>Đơn hàng của tôi</span>
+                      <OutlinedFlagRoundedIcon />
+                      <span>Báo cáo</span>
                     </Link>
                     <Link
-                      href={"/user/account/received"}
-                      className="drop-down-item"
-                      ref={orderedItem}
+                      href={"/user/account/follow"}
+                      className={Styles["nav-item-container"]}
                     >
-                      <DoneIcon />
-                      <span>Đơn hàng đã nhận</span>
+                      <BookmarkOutlinedIcon />
+                      <span>Theo dõi</span>
                     </Link>
                   </div>
-                  <Link
-                    href={"/user/account/report"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <OutlinedFlagRoundedIcon />
-                    <span>Báo cáo</span>
-                  </Link>
-                  <Link
-                    href={"/user/account/follow"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <BookmarkOutlinedIcon />
-                    <span>Theo dõi</span>
-                  </Link>
                 </div>
               </div>
-            </div>
-            <div className={Styles["profile-right-edit-form-wrapper"]}>
-              <div className={Styles["profile-title-container"]}>
-                <span style={{ fontWeight: "400", fontSize: "20px" }}>
-                  Danh sách yêu thích của tôi
-                </span>
-                <span>Quản lý danh sách yêu thích</span>
-              </div>
-              <div className={Styles["product-nav-item-container"]}>
-                <div className={Styles["product-nav-container"]}>
-                  <div className={Styles["checkbox-name-wrapper"]}>
-                    <Checkbox
-                      className="flex03 center"
-                      checked={topAllCheckBox}
-                      onChange={handlingChangeTopAllCheckBox}
-                    />
-                    <span className="flex1 center">Sản phẩm</span>
-                  </div>
-                  <div className={Styles["remain-detail-wrapper"]}>
-                    <span className="flex1 center">Đơn giá</span>
-                    <span className="flex1 center">Số lượng</span>
-                    <span className="flex1 center">Số tiền</span>
-                    <span className="flex1 center">Thao tác</span>
-                  </div>
+              <div className={Styles["profile-right-edit-form-wrapper"]}>
+                <div className={Styles["profile-title-container"]}>
+                  <span style={{ fontWeight: "400", fontSize: "20px" }}>
+                    Danh sách yêu thích của tôi
+                  </span>
+                  <span>Quản lý danh sách yêu thích</span>
                 </div>
-                <div className={Styles["overflow-y"]}>
-                  {products.data ? (
-                    products.data.data ? (
-                      products.data.map((product, index) => {
-                        if (product.product) {
-                          return (
-                            <React.Fragment key={"productItem" + index}>
-                              <FavouriteItemCard
-                                onClickDelete={handlingDeleteFavouriteProduct}
-                                checked={topAllCheckBox}
-                                product={product}
-                              />
-                            </React.Fragment>
-                          );
-                        }
-                      })
+                <div className={Styles["product-nav-item-container"]}>
+                  <div className={Styles["product-nav-container"]}>
+                    <div className={Styles["checkbox-name-wrapper"]}>
+                      <Checkbox
+                        className="flex03 center"
+                        checked={topAllCheckBox}
+                        onChange={handlingChangeTopAllCheckBox}
+                      />
+                      <span className="flex1 center">Sản phẩm</span>
+                    </div>
+                    <div className={Styles["remain-detail-wrapper"]}>
+                      <span className="flex1 center">Đơn giá</span>
+                      <span className="flex1 center">Số lượng</span>
+                      <span className="flex1 center">Số tiền</span>
+                      <span className="flex1 center">Thao tác</span>
+                    </div>
+                  </div>
+                  <div className={Styles["overflow-y"]}>
+                    {products.data ? (
+                      products.data ? (
+                        products.data.map((product, index) => {
+                          if (product.product) {
+                            return (
+                              <React.Fragment key={"productItem" + index}>
+                                <FavouriteItemCard
+                                  onClickDelete={handlingDeleteFavouriteProduct}
+                                  checked={topAllCheckBox}
+                                  product={product}
+                                />
+                              </React.Fragment>
+                            );
+                          }
+                        })
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            width: "100%",
+                            justifyContent: "center",
+                            padding: "20px",
+                          }}
+                        >
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </div>
+                      )
                     ) : (
-                      <div
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          justifyContent: "center",
-                          padding: "20px",
-                        }}
-                      >
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                      </div>
-                    )
-                  ) : (
-                    <>Loading</>
-                  )}
-                </div>
-                {/* <FavouriteCardPopUp
+                      <>Loading</>
+                    )}
+                  </div>
+                  {/* <FavouriteCardPopUp
                   checked={topAllCheckBox}
                   handlingChange={handlingChangeTopAllCheckBox}
                 /> */}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </UserLayout>
-    </>
-  );
+        </UserLayout>
+      </>
+    );
 }
 
 export default Index;

@@ -65,6 +65,10 @@ const calculateTotalValue = (arr) => {
   }
 };
 
+function isObjectEmpty(obj) {
+  return obj !== null && Object.keys(obj).length === 0;
+}
+
 function hasToken(obj) {
   return (
     obj.hasOwnProperty("token") && obj.token !== null && obj.token !== undefined
@@ -326,13 +330,13 @@ function Header(props) {
                 </div>
                 <div className={Styles["cart-icon-container"]}>
                   <ShoppingCartOutlinedIcon />
-                  <div className={Styles["amount-cart-item-wrapper"]}>
-                    {cart.data && (
+                  {cart.data && !isObjectEmpty(cart.data) && (
+                    <div className={Styles["amount-cart-item-wrapper"]}>
                       <div className={Styles["amount-cart-item"]}>
                         {cart.data.length}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </button>
             </div>
@@ -388,7 +392,7 @@ function Header(props) {
               </div>
             </div>
             <div className={Styles["cart-item-list-container"]}>
-              {cart.data ? (
+              {cart.data && !isObjectEmpty(cart.data) ? (
                 cart.data.map((cartItem, index) => {
                   if (cartItem.product) {
                     return (
