@@ -27,6 +27,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.pinimg.com",
       },
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
   compiler: {
