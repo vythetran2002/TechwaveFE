@@ -52,7 +52,8 @@ function Index() {
     try {
       const message = RemoveFollowVendor(id, cookies["token"]);
       console.log(message);
-      toast.success("Unfollowed");
+      // toast.success("Unfollowed");
+      window.location.reload();
     } catch (error) {
       toast.error("error");
       console.log(error);
@@ -161,7 +162,7 @@ function Index() {
                       <span>Đơn hàng của tôi</span>
                     </Link>
                     <Link
-                      href={"/user/account/received/1"}
+                      href={"/user/account/received"}
                       className="drop-down-item"
                       ref={orderedItem}
                     >

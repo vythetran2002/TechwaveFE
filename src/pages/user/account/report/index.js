@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import UserLayout from "@/components/layout/UserLayout";
 import Layout from "@/components/layout/Layout";
@@ -23,10 +23,22 @@ import FavouriteCardPopUp from "@/components/ui/FavouriteItemCard/FavouriteCardP
 import useFetchAllReport from "@/api/user/useFetchAllReport";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import dayjs from "dayjs";
-
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import ReportDetailUser from "@/components/ui/ReportDetailUser/ReportDetailUser";
 function Index() {
   const reports = useFetchAllReport();
   const user = useFetchUserProfile();
+  const [rpId, setRpId] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsOpen(false);
+  };
 
   console.log(reports);
 
@@ -42,6 +54,10 @@ function Index() {
     orderedItem.current.classList.toggle("appear");
     itemRef.current.classList.toggle("show");
     orderingItem.current.classList.toggle("appear");
+  };
+
+  const updateId = (value) => {
+    setRpId(value);
   };
 
   return (
@@ -187,6 +203,9 @@ function Index() {
                         return (
                           <React.Fragment key={"reportItem" + index}>
                             <ReportItemCard
+                              updateId={updateId}
+                              id={reportItem.report_id}
+                              handleOpenDialog={handleOpenDialog}
                               status={reportItem.status}
                               date={reportItem.createAt}
                               avatar={reportItem.account_report.avatar}
@@ -205,6 +224,16 @@ function Index() {
               </div>
             </div>
           </div>
+          <Dialog
+            fullWidth={true}
+            maxWidth="sm"
+            open={isOpen}
+            onClose={handleCloseDialog}
+          >
+            <DialogContent>
+              <ReportDetailUser id={rpId} />
+            </DialogContent>
+          </Dialog>
         </div>
       </UserLayout>
     </>

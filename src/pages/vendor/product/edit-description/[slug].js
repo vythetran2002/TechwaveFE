@@ -29,6 +29,7 @@ function Index() {
   const [cookies] = useCookies();
   const slug = router.query.slug;
   const product0 = useFetchDetailProduct(slug);
+  console.log(product0);
   const product = useFetchProductDesc(slug);
   const [value, setValue] = useState(null);
 
@@ -86,10 +87,10 @@ function Index() {
     }
   }, [product0.data]);
 
-  if (product.isLoading) {
+  if (product.isLoading || product0.isLoading) {
     return <>Loading</>;
   }
-  if (product.isError) {
+  if (product.isError || product0.isError) {
     return <>Error</>;
   } else
     return (

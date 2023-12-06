@@ -1,14 +1,10 @@
 const axios = require("axios");
 import toast from "react-hot-toast";
 
-export const DeleteCartItem = async (id, quantity, price, token) => {
+export const DeleteCartItem = async (id, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
-    },
-    data: {
-      quantity: quantity,
-      price: price,
     },
   };
 

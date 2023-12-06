@@ -130,3 +130,8 @@
   flex-direction: column;
   justify-content: space-between;
 }
+.img-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -76,7 +76,7 @@ function Index() {
         try {
           const message = MakeShipPayment(temp, cookie["token"]);
           console.log(message);
-          toast.success("Thanh toán thành công");
+          // toast.success("Thanh toán thành công");
           router.push("/user/account/order");
         } catch (error) {
           console.log(error);

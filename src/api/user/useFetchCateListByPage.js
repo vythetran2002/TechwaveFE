@@ -13,8 +13,12 @@ const useFetchCateListByPage = (id, page, limit, myToken) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `${token}`,
+    // Authorization: `${token}`,
   };
+
+  if (myToken) {
+    headers.Authorization = `${token}`;
+  }
 
   const queryParams = `page=${page}&limit=${limit}`;
 

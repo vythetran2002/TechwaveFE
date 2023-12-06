@@ -25,12 +25,14 @@ import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
 import { useCookies } from "react-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { Delete } from "@mui/icons-material";
+import { Empty } from "antd";
 
 function Index() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const user = useFetchUserProfile();
   const products = useFetchUserFavProduct();
+
   const handlingDeleteFavouriteProduct = async (id) => {
     // try {
     console.log("----");
@@ -229,7 +231,7 @@ function Index() {
                 </div>
                 <div className={Styles["overflow-y"]}>
                   {products.data ? (
-                    products.data ? (
+                    products.data.data ? (
                       products.data.map((product, index) => {
                         if (product.product) {
                           return (
@@ -244,7 +246,16 @@ function Index() {
                         }
                       })
                     ) : (
-                      <>Empty</>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          justifyContent: "center",
+                          padding: "20px",
+                        }}
+                      >
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                      </div>
                     )
                   ) : (
                     <>Loading</>

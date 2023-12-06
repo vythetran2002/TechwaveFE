@@ -25,6 +25,10 @@ function ReportForm(props) {
   //Refs
   const messageRef = useRef();
 
+  const handleCloseDialog = () => {
+    props.handlingCloseDialog();
+  };
+
   function handleFileUpload(event) {
     const file = event.target.files[0];
     console.log(file);
@@ -59,6 +63,7 @@ function ReportForm(props) {
         picture: imgSrc,
       };
       PostReport(temp, token);
+      handleCloseDialog();
     } else {
       messageRef.current.style.display = "block";
     }

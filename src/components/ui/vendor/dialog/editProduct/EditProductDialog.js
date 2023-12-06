@@ -229,7 +229,7 @@ export default function EditProductDialog(props) {
       >
         <DialogTitle className={Styles["add-User-dialog-title-container"]}>
           <span className={Styles["add-User-dialog-title-wrapper"]}>
-            Thêm Sản phẩm
+            CHỈNH SỬA SẢN PHẨM
           </span>
           <div
             className={Styles["close-icon-wrapper"]}

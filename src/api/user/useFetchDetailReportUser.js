@@ -3,12 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 
-const fetcher = (url, headers) =>
-  axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
-
-const useFetchCart = () => {
+const useFetchReportDetailUser = (id) => {
   const [cookies] = useCookies();
-  const url = "http://localhost:3000/api/user/cart";
+  const url = "http://localhost:3000/api/user/report/" + id;
 
   const token = "Bearer " + cookies["token"];
 
@@ -18,8 +15,12 @@ const useFetchCart = () => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(url, () =>
-    fetcher(url, headers)
+  const fetcher = (url, headers) =>
+    axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
+
+  const { data, error, mutate, isValidating } = useSWR(
+    id ? { url } : null,
+    () => fetcher(url, headers)
   );
 
   return {
@@ -31,4 +32,4 @@ const useFetchCart = () => {
   };
 };
 
-export default useFetchCart;
+export default useFetchReportDetailUser;

@@ -192,6 +192,7 @@ function Index() {
           </div>
         </div>
         <ItemDetail
+          addCartItem={handlingAddCartItem}
           item={detailItem}
           isOpenDialog={isOpenDialog}
           handlingOpenDialog={handlingOpenDialog}

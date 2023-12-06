@@ -142,7 +142,7 @@ function Index() {
                   )}
 
                   <div>
-                    <h2>TW.Admin</h2>
+                    <h2>{admin.data.username}</h2>
                     <p style={{ margin: "0" }}>ADMIN</p>
                   </div>
                 </div>

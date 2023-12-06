@@ -9,15 +9,35 @@ import FileDownloadDoneOutlinedIcon from "@mui/icons-material/FileDownloadDoneOu
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { Empty } from "antd";
 import { useRouter } from "next/router";
+import { HandleReceiveOrder } from "@/api/user/handleReceiveOrder";
+import OrderItem from "../vendor/order/OrderItem";
+import { HandleCancleOrder } from "@/api/user/handleCancleOrder";
+import Link from "next/link";
 
 function PurchaseItemCard(props) {
   const router = useRouter();
   const { oderItem } = props;
 
-  // console.log(oderItem);
+  console.log(oderItem);
 
   const handleClickPay = (value) => {
     router.push(value);
+  };
+
+  const handleGoToComment = () => {
+    router.push("/product/" + oderItem.cart_id.product.product_id);
+  };
+
+  const handleReceive = () => {
+    const message = HandleReceiveOrder(oderItem.bill_id, props.token);
+    console.log(message);
+    router.push("/user/account/received");
+  };
+
+  const handleCancle = () => {
+    const message = HandleCancleOrder(oderItem.bill_id, props.token);
+    console.log(message);
+    window.location.reload();
   };
 
   if (oderItem.payment_id) {
@@ -84,10 +104,12 @@ function PurchaseItemCard(props) {
           {oderItem.payment_id.status === 2 && (
             <div className={Styles["item-status-container"]}>
               <div className={Styles["item-status-wrapper"]}>
-                <span className={Styles["item-status-wrapper"]}>
-                  <FileDownloadDoneOutlinedIcon />
-                </span>
-                <span style={{ marginLeft: "10px" }}>Đơn hàng đã giao</span>
+                <div>
+                  <span className={Styles["item-status-wrapper"]}>
+                    <FileDownloadDoneOutlinedIcon />
+                  </span>
+                  <span style={{ marginLeft: "10px" }}>Đơn hàng đã giao</span>
+                </div>
               </div>
             </div>
           )}
@@ -108,7 +130,7 @@ function PurchaseItemCard(props) {
           <div className={Styles["item-info-container"]}>
             <div className={Styles["img-name-container"]}>
               <div className={Styles["img-wrapper"]}>
-                {oderItem.cart_id.option ? (
+                {oderItem.cart_id ? (
                   oderItem.cart_id.option.image ? (
                     <>
                       <Image
@@ -141,15 +163,21 @@ function PurchaseItemCard(props) {
                   </>
                 )}
               </div>
-              <div className={Styles["name-wrapper"]}>
-                <span>{oderItem.cart_id.product.name}</span>
-                {oderItem.cart_id.product.option && (
-                  <span>Phân loại: {props.option.name}</span>
-                )}
-                <span style={{ marginTop: "20px" }}>
-                  x {oderItem.cart_id.quantity}
-                </span>
-              </div>
+              {oderItem.cart_id && (
+                <div className={Styles["name-wrapper"]}>
+                  <Link
+                    href={"/product/" + oderItem.cart_id.product.product_id}
+                  >
+                    {oderItem.cart_id.product.name}
+                  </Link>
+                  {oderItem.cart_id.product.option && (
+                    <span>Phân loại: {props.option.name}</span>
+                  )}
+                  <span style={{ marginTop: "20px" }}>
+                    x {oderItem.cart_id.quantity}
+                  </span>
+                </div>
+              )}
             </div>
             <div className={Styles["price-container"]}>
               <span>{oderItem.totalBill}đ</span>
@@ -164,7 +192,7 @@ function PurchaseItemCard(props) {
         <div className={Styles["purchase-item-container"]}>
           {oderItem.status === 0 && (
             <div className={Styles["item-status-container"]}>
-              <Button type="primary" danger>
+              <Button type="primary" danger onClick={handleCancle}>
                 Huỷ đơn hàng
               </Button>
               <div className={Styles["item-status-wrapper"]}>
@@ -179,7 +207,9 @@ function PurchaseItemCard(props) {
           )}
           {oderItem.status === 1 && (
             <div className={Styles["item-status-container"]}>
-              <Button type="primary">Đã nhận được hàng</Button>
+              <Button onClick={handleReceive} type="primary">
+                Đã nhận được hàng
+              </Button>
               <div className={Styles["item-status-wrapper"]}>
                 <span className={Styles["item-status-wrapper"]}>
                   <LocalShippingIcon />
@@ -198,6 +228,11 @@ function PurchaseItemCard(props) {
                 </span>
                 <span style={{ marginLeft: "10px" }}>Đơn hàng đã giao</span>
               </div>
+              <div>
+                <Button type="primary" onClick={handleGoToComment}>
+                  Đánh giá đơn hàng
+                </Button>
+              </div>
             </div>
           )}
           {oderItem.status === 3 && (
@@ -211,6 +246,20 @@ function PurchaseItemCard(props) {
                   <CloseOutlinedIcon />
                 </span>
                 <span style={{ marginLeft: "10px" }}>Đơn hàng đã bị huỷ</span>
+              </div>
+            </div>
+          )}
+          {oderItem.status === 4 && (
+            <div className={Styles["item-status-container"]}>
+              <div></div>
+              <div
+                className={Styles["item-status-wrapper"]}
+                style={{ color: "black" }}
+              >
+                <span className={Styles["item-status-wrapper"]}>
+                  <CloseOutlinedIcon />
+                </span>
+                <span style={{ marginLeft: "10px" }}>Đã huỷ đơn hàng</span>
               </div>
             </div>
           )}
@@ -250,15 +299,21 @@ function PurchaseItemCard(props) {
                   </>
                 )}
               </div>
-              <div className={Styles["name-wrapper"]}>
-                <span>{oderItem.cart_id.product.name}</span>
-                {oderItem.cart_id.product.option && (
-                  <span>Phân loại: {props.option.name}</span>
-                )}
-                <span style={{ marginTop: "20px" }}>
-                  x {oderItem.cart_id.quantity}
-                </span>
-              </div>
+              {oderItem.cart_id && (
+                <div className={Styles["name-wrapper"]}>
+                  <Link
+                    href={"/product/" + oderItem.cart_id.product.product_id}
+                  >
+                    {oderItem.cart_id.product.name}
+                  </Link>
+                  {oderItem.cart_id.product.option && (
+                    <span>Phân loại: {props.option.name}</span>
+                  )}
+                  <span style={{ marginTop: "20px" }}>
+                    x {oderItem.cart_id.quantity}
+                  </span>
+                </div>
+              )}
             </div>
             <div className={Styles["price-container"]}>
               <span>{oderItem.totalBill}đ</span>

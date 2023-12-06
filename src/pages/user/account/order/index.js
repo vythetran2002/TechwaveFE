@@ -26,11 +26,12 @@ import OrderItem from "@/components/ui/vendor/order/OrderItem";
 import { useRouter } from "next/router";
 import useFetchTestPayment from "@/api/user/testPayment";
 import { Toaster } from "react-hot-toast";
+import { useCookies } from "react-cookie";
 
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchAllOrders();
-
+  const [cookie] = useCookies();
   // const router = useRouter();
   // const { query } = router;
 
@@ -192,7 +193,10 @@ function Index() {
                         orders.data.map((oderItem, index) => {
                           return (
                             <React.Fragment key={"oderItem" + index}>
-                              <PurchaseItemCard oderItem={oderItem} />
+                              <PurchaseItemCard
+                                token={cookie["token"]}
+                                oderItem={oderItem}
+                              />
                             </React.Fragment>
                           );
                         })

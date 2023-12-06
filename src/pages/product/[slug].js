@@ -26,7 +26,8 @@ function Index() {
   const [cookies] = useCookies();
   const router = useRouter();
   const slug = router.query.slug;
-  const product = useFetchProductById(slug);
+  const product = useFetchProductById(slug, cookies["token"]);
+  console.log(product);
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState();
 
@@ -105,7 +106,7 @@ function Index() {
             </div>
           </div>
           <Blog content={product.data.content} />
-          <div className={Styles["nav-container"]}>
+          <div id="comment" className={Styles["nav-container"]}>
             <div className={Styles["nav-wrapper"]}>
               <span
                 href={"/"}
@@ -123,6 +124,7 @@ function Index() {
             review={product.data.review}
             productId={product.data.product_id}
             token={cookies["token"]}
+            status={product.data.statusReview}
           />
           <Dialog
             fullWidth={true}

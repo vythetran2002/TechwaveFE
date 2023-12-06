@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 
 function UserHeader() {
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const route = useRouter();
   const logout = async () => {
     const message = LogOutAccount(cookies["token"]);

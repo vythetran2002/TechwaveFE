@@ -11,10 +11,22 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useFetchAdminProfile from "@/api/admin/useFetchAdminProfile";
 import { useCookies } from "react-cookie";
+import { LogOutAccount } from "@/api/auth/LogOutAcount";
+import { useRouter } from "next/router";
 
 function AdminHeader() {
   const profile = useFetchAdminProfile();
   // console.log(profile);
+  const route = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies();
+
+  const handlingLogout = async () => {
+    const message = LogOutAccount(cookies["token"]);
+    await removeCookie("token");
+    console.log(message);
+    route.push("/auth/login");
+    // toast.success("logged out");
+  };
 
   if (profile.isLoading) {
     return <>Loading</>;
@@ -55,23 +67,32 @@ function AdminHeader() {
                 <span className={Styles["info-email"]}>hcmute@hotmail.com</span>
               </div>
               <div className={Styles["nav-avt-list"]}>
-                <Link href={"/admin"} className={Styles["nav-avatar-item"]}>
+                <Link
+                  href={"/admin/profile"}
+                  className={Styles["nav-avatar-item"]}
+                >
                   <AccountCircleOutlinedIcon />
                   <span>Tài khoản của tôi</span>
                 </Link>
-                <Link href={"/admin"} className={Styles["nav-avatar-item"]}>
+                <Link
+                  href={"/admin/profile"}
+                  className={Styles["nav-avatar-item"]}
+                >
                   <EditNoteOutlinedIcon />
                   <span>Đổi mật khẩu</span>
                 </Link>
-                <Link href={"/admin"} className={Styles["nav-avatar-item"]}>
+                {/* <Link href={"/admin"} className={Styles["nav-avatar-item"]}>
                   <SettingsOutlinedIcon />
                   <span>Cài đặt</span>
-                </Link>
+                </Link> */}
               </div>
-              <Link href={"/admin"} className={Styles["nav-avt-logout"]}>
+              <div
+                onClick={handlingLogout}
+                className={Styles["nav-avt-logout"]}
+              >
                 <PowerSettingsNewOutlinedIcon />
                 <span>Đăng xuất</span>
-              </Link>
+              </div>
             </div>
           </div>
           <div className={Styles["help-container"]}>

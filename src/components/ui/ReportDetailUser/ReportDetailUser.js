@@ -6,6 +6,7 @@ import images from "@/assets/images";
 import useFetchReportById from "@/api/admin/useFetchReportById";
 import dayjs from "dayjs";
 import { Empty } from "antd";
+import useFetchReportDetailUser from "@/api/user/useFetchDetailReportUser";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -22,10 +23,10 @@ const handleStatus = (status) => {
   }
 };
 
-function ReportDetailDialog(props) {
+function ReportDetailUser(props) {
   const { id } = props;
-  const report = useFetchReportById(id);
-  // console.log(report);
+  const report = useFetchReportDetailUser(id);
+  console.log(report);
   if (report.isLoading) {
     return <>Loading</>;
   }
@@ -59,7 +60,7 @@ function ReportDetailDialog(props) {
             )}
             <div className={Styles["user-info-container"]}>
               <span>
-                Username bị báo cáo : {report.data.account_report.username}
+                Username báo cáo : {report.data.account_report.username}
               </span>
               {report.data.createAt ? (
                 <span>
@@ -75,8 +76,22 @@ function ReportDetailDialog(props) {
             {report.data.content}
           </div>
           <div className={Styles["content-container"]}>
-            {report.picture ? (
-              <Image src={report.picture} alt="" width={200} height={200} />
+            {report.data.picture ? (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "20px",
+                }}
+              >
+                <Image
+                  src={report.data.picture}
+                  alt=""
+                  width={200}
+                  height={200}
+                />
+              </div>
             ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
@@ -86,4 +101,4 @@ function ReportDetailDialog(props) {
     );
 }
 
-export default ReportDetailDialog;
+export default ReportDetailUser;

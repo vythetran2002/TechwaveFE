@@ -22,6 +22,8 @@ import { Checkbox } from "antd";
 import FavouriteCardPopUp from "@/components/ui/FavouriteItemCard/FavouriteCardPopUp.js/FavouriteCardPopUp";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchReceivedProducts from "@/api/user/useFetchRecievedProduct";
+import { Empty } from "antd";
+import { Toaster } from "react-hot-toast";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -44,6 +46,7 @@ function Index() {
         <title>Đơn hàng đã nhận</title>
       </Head>
       <UserLayout>
+        <Toaster />
         <div className={Styles["profile-edit-card-container"]}>
           <div className={Styles["profile-edit-card-wrapper"]}>
             <div className={Styles["profile-edit-form-wrapper"]}>
@@ -182,7 +185,16 @@ function Index() {
                         );
                       })
                     ) : (
-                      <>Empty</>
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "20px",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Empty />
+                      </div>
                     )
                   ) : (
                     <>Loading</>

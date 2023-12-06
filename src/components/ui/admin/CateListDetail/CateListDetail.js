@@ -24,8 +24,8 @@ function CateListDetail(props) {
     if (cates.data) {
       console.log("---");
 
-      updateMax(cates.data.listCate.cate_child.total);
-      props.updateCateHeading(cates.data.listCate.name);
+      updateMax(cates.data.cate_child.total);
+      props.updateCateHeading(cates.data.name);
     }
   }, [cates.data]);
 
@@ -55,9 +55,9 @@ function CateListDetail(props) {
               <SortOutlinedIcon />
             </div>
           </div>
-          {cates.data.listCate.cate_child ? (
-            cates.data.listCate.cate_child.results.length != 0 ? (
-              cates.data.listCate.cate_child.results.map((cate, index) => {
+          {cates.data.cate_child ? (
+            cates.data.cate_child.results.length != 0 ? (
+              cates.data.cate_child.results.map((cate, index) => {
                 return (
                   <React.Fragment key={"cate" + index}>
                     <CateItemDetail

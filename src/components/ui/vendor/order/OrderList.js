@@ -12,6 +12,7 @@ function OrderList(props) {
   const { status, limit, page, token, updateMax } = props;
   const pendingOrders = useFetchPendingOrders(status, page, limit, token);
   // console.log(pendingOrders);
+  console.log(pendingOrders);
 
   useEffect(() => {
     if (pendingOrders.data) {

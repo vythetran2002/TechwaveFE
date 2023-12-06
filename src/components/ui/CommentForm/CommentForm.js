@@ -15,13 +15,16 @@ import images from "@/assets/images";
 import dayjs from "dayjs";
 import { Divider } from "@mui/joy";
 import { PostComment } from "@/api/user/PostComment";
+import { uploadImage } from "@/components/utils/Upload";
 
 const { TextArea } = Input;
 
 function CommentForm(props) {
-  const { review, productId, token, updateId, handleOpenDialog } = props;
+  const { status, review, productId, token, updateId, handleOpenDialog } =
+    props;
   const [value, setValue] = useState(null);
   const [cmt, setCmt] = useState("");
+  const [avatarSrc, setAvatarSrc] = useState();
   const messageRef = useRef();
 
   // console.log(review);
@@ -33,6 +36,28 @@ function CommentForm(props) {
   const ResetCmt = () => {
     setCmt("");
   };
+
+  const handleDeleteImage = () => {
+    setAvatarSrc(null);
+  };
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    console.log(file);
+    const message = uploadImage(file);
+    const promiseResult = message;
+    promiseResult
+      .then((result) => {
+        const imagePath = result.imagePath;
+        console.log("imagePath:", imagePath);
+        setAvatarSrc(imagePath);
+        // let temp = { ...userProfile, avatar: imagePath };
+        // setUserProfile(temp);
+      })
+      .catch((error) => {
+        console.error("Lỗi:", error);
+      });
+  }
 
   const handleClickProfile = (value) => {
     updateId(value);
@@ -48,7 +73,7 @@ function CommentForm(props) {
         content: cmt,
         rating: value,
         product_id: productId,
-        picture: null,
+        picture: avatarSrc,
       };
       const message = PostComment(temp, token);
       console.log(message);
@@ -121,6 +146,17 @@ function CommentForm(props) {
                         <span style={{ marginTop: "20px" }}>
                           {review.content}
                         </span>
+                        <span style={{ marginTop: "20px" }}>
+                          {review.picture && (
+                            <Image
+                              style={{ borderRadius: "5px" }}
+                              src={review.picture}
+                              alt=""
+                              width={200}
+                              height={200}
+                            />
+                          )}
+                        </span>
                       </div>
                     </div>
                     <div className={Styles["vendor-review-container"]}>
@@ -182,19 +218,51 @@ function CommentForm(props) {
             </>
           )}
         </div>
-        <div className={Styles["form-wrapper"]}>
-          <div className={Styles["rate-container"]}>
-            <span>Đánh giá của bạn</span>
-            <Rating
-              name="simple-controlled"
-              value={value}
-              onChange={(event, newValue) => {
-                setValue(newValue);
-              }}
-            />
-          </div>
-          <div className={Styles["input-container"]}>
-            {/* <div className={Styles["col"]}>
+        {status == true && (
+          <div className={Styles["form-wrapper"]}>
+            <div className={Styles["rate-container"]}>
+              <span>Đánh giá của bạn</span>
+              <Rating
+                name="simple-controlled"
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+              />
+            </div>
+            <div className={Styles["img-input-container"]}>
+              <input
+                onChange={handleFileUpload}
+                accept=".jpg, .jpeg, .png"
+                type="file"
+                style={{
+                  backgroundColor: "transparent",
+                  // color: "black",
+                  fontSize: "15px",
+                  marginTop: "10px",
+                  padding: "0",
+                  borderRadius: "0%",
+                  color: "rgba(241, 241, 241, 0.48)",
+                }}
+              />
+              {avatarSrc && (
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    marginBottom: "20px",
+                    gap: "20px",
+                  }}
+                >
+                  <Image src={avatarSrc} width={150} height={150} alt="" />
+                  <Button onClick={handleDeleteImage}>Xoá ảnh</Button>
+                </div>
+              )}
+            </div>
+            <div className={Styles["input-container"]}>
+              {/* <div className={Styles["col"]}>
               <div className={Styles["row"]}>
                 <Input
                   placeholder="Vui lòng nhập họ tên"
@@ -242,31 +310,32 @@ function CommentForm(props) {
                 />
               </div>
             </div> */}
-            <div className={Styles["col"]}>
-              <div className={Styles["row"]}>
-                <TextArea
-                  value={cmt}
-                  showCount
-                  maxLength={100}
-                  onChange={handleChaneCmt}
-                  placeholder="Vui lòng nhập bình luận"
-                  style={{ height: 120, resize: "none" }}
-                ></TextArea>
+              <div className={Styles["col"]}>
+                <div className={Styles["row"]}>
+                  <TextArea
+                    value={cmt}
+                    showCount
+                    maxLength={100}
+                    onChange={handleChaneCmt}
+                    placeholder="Vui lòng nhập bình luận"
+                    style={{ height: 120, resize: "none" }}
+                  ></TextArea>
+                </div>
               </div>
             </div>
+            <span className={Styles["message"]} ref={messageRef}>
+              Vui lòng nhập đầy đủ thông tin
+            </span>
+            <div className={Styles["submit-container"]}>
+              <Button className={Styles["send-button"]} onClick={handleSubmit}>
+                Gửi bình luận
+              </Button>
+              <Button className={Styles["reset-button"]} onClick={ResetCmt}>
+                Nhập lại
+              </Button>
+            </div>
           </div>
-          <span className={Styles["message"]} ref={messageRef}>
-            Vui lòng nhập đầy đủ thông tin
-          </span>
-          <div className={Styles["submit-container"]}>
-            <Button className={Styles["send-button"]} onClick={handleSubmit}>
-              Gửi bình luận
-            </Button>
-            <Button className={Styles["reset-button"]} onClick={ResetCmt}>
-              Nhập lại
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

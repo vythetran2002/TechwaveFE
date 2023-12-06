@@ -76,14 +76,56 @@ function CartItem(props) {
               <Checkbox checked={isChecked} onChange={handlingChange} />
             </div>
             <div className={Styles["item-img-wrapper"]}>
-              <Image src={images.image8} alt="" className={Styles["img"]} />
+              {props.item.option ? (
+                <>
+                  <Image
+                    width={100}
+                    height={100}
+                    src={props.item.option.image}
+                    alt=""
+                    className={Styles["img"]}
+                  />
+                </>
+              ) : (
+                <>
+                  {props.item.product.image ? (
+                    <>
+                      <Image
+                        width={100}
+                        height={100}
+                        src={props.item.product.image}
+                        alt=""
+                        className={Styles["img"]}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Image
+                        width={100}
+                        height={100}
+                        src={images.nonImg}
+                        alt=""
+                        className={Styles["img"]}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+              {/* <Image
+                width={100}
+                height={100}
+                src={images.image8}
+                alt=""
+                className={Styles["img"]}
+              /> */}
             </div>
           </div>
           <div className={Styles["item-info-container"]}>
             <div className={Styles["item-name-cate-container"]}>
               <span className={Styles["name"]}>{props.item.product.name}</span>
               <span className={Styles["cate"]}>
-                Origin: {props.item.product.origin}
+                {props.item.option && <>Phân loại: {props.item.option.name}</>}
+                {/* Origin: {props.item.product.origin} */}
               </span>
             </div>
             <div className={Styles["item-name-cate-container"]}>

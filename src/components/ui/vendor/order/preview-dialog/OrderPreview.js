@@ -34,7 +34,7 @@ function OrderPreview(props) {
           style={{ fontWeight: "400" }}
         >
           <div className={Styles["img-container"]}>
-            {order.cart_id.option.image != null ? (
+            {order.cart_id.option != null ? (
               <Image
                 src={order.cart_id.option.image}
                 width={200}
@@ -43,13 +43,29 @@ function OrderPreview(props) {
                 priority
               />
             ) : (
-              <Image
-                src={images.nonImg}
-                width={200}
-                height={200}
-                alt=""
-                priority
-              />
+              <>
+                {order.cart_id.product.image ? (
+                  <>
+                    <Image
+                      src={order.cart_id.product.image}
+                      width={200}
+                      height={200}
+                      alt=""
+                      priority
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      src={images.nonImg}
+                      width={200}
+                      height={200}
+                      alt=""
+                      priority
+                    />
+                  </>
+                )}
+              </>
             )}
           </div>
           <div className={Styles["product-info"]}>
@@ -58,8 +74,12 @@ function OrderPreview(props) {
               <span>{order.cart_id.product.name}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Phân loại: </span>
-              <span>{order.cart_id.option.name}</span>
+              {order.cart_id.option && (
+                <>
+                  <span>Phân loại: </span>
+                  <span>{order.cart_id.option.name}</span>
+                </>
+              )}
             </div>
           </div>
           <div className={Styles["product-info"]}>

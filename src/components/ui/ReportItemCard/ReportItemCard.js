@@ -106,7 +106,17 @@ function ReportItemCard(props) {
               <span>{props.name}</span>
             </div>
           </div>
-          <div className={Styles["price-container"]}></div>
+          <div className={Styles["price-container"]}>
+            <Button
+              type="primary"
+              onClick={() => {
+                props.handleOpenDialog();
+                props.updateId(props.id);
+              }}
+            >
+              Xem chi tiết
+            </Button>
+          </div>
         </div>
       </div>
     </>

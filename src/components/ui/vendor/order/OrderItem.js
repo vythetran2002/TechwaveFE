@@ -16,6 +16,8 @@ import { RejectOrder } from "@/api/vendor/RejectOrder";
 function OrderItem(props) {
   const { order } = props;
 
+  console.log(order);
+
   //   const menuRef = useRef(null);
 
   const handlingOpenMenu = () => {
@@ -64,9 +66,19 @@ function OrderItem(props) {
           {order.address}
         </div>
         <div className={Styles["list-item-shop-wrapper"]}>
-          <div className={Styles["list-product-name-container"]}>
-            {order.cart_id.option.name}
-          </div>
+          {order.cart_id.option ? (
+            <>
+              <div className={Styles["list-product-name-container"]}>
+                {order.cart_id.option.name}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={Styles["list-product-name-container"]}>
+                {order.cart_id.product.name}
+              </div>
+            </>
+          )}
         </div>
         <div
           className={Styles["list-item-date-wrapper"]}
@@ -78,7 +90,7 @@ function OrderItem(props) {
           {dayjs(order.createAt).format("DD/MM/YYYY")}
         </div>
 
-        {props.mode == 1 ? (
+        {props.mode == 1 && (
           <div
             className={Styles["list-item-date-wrapper"]}
             style={{ width: "15%", flexDirection: "column", gap: "10px" }}
@@ -93,7 +105,9 @@ function OrderItem(props) {
               Đã duyệt
             </div>
           </div>
-        ) : (
+        )}
+
+        {props.mode == 0 && (
           <div
             className={Styles["list-item-date-wrapper"]}
             style={{
@@ -120,6 +134,36 @@ function OrderItem(props) {
             >
               Từ chối
             </div>
+          </div>
+        )}
+
+        {props.mode == 3 && (
+          <div
+            className={Styles["list-item-date-wrapper"]}
+            style={{
+              flexDirection: "column",
+              gap: "10px",
+              width: "15%",
+            }}
+          >
+            <div
+              className={Styles["list-item-status-watch-button-wrapper"]}
+              onClick={handlingUpdateOrder}
+            >
+              <VisibilityIcon />
+            </div>
+            {/* <div
+              className={Styles["list-item-status-active-button-wrapper"]}
+              onClick={handlingAccept}
+            >
+              Duyệt
+            </div>
+            <div
+              className={Styles["list-item-status-banned-button-wrapper"]}
+              onClick={handlingReject}
+            >
+              Từ chối
+            </div> */}
           </div>
         )}
 

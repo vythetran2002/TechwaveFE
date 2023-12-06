@@ -133,7 +133,7 @@ function Index() {
                 <li
                   className="active"
                   onClick={() => {
-                    router.push("/");
+                    window.location.assign("/");
                   }}
                 >
                   Home

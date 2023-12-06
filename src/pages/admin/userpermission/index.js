@@ -53,9 +53,10 @@ function Index() {
 
   const handleSubmit = () => {
     let temp = [admin, vendor, user];
-    console.log(temp);
+    // console.log(temp);
     const message = EditPermission(temp, cookie["token"]);
     console.log(message);
+    window.location.reload();
   };
 
   // useEffect(() => {

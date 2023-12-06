@@ -91,13 +91,13 @@ function OptionItem(props) {
             className={Styles["list-item-option-list-container"]}
             ref={menuRef}
           >
-            <div
+            {/* <div
               style={{ color: "black" }}
               className={Styles["list-item-option-edit-user-container"]}
             >
               <InfoIcon />
               <span>Xem chi tiết</span>
-            </div>
+            </div> */}
             <div
               className={Styles["list-item-option-edit-user-container"]}
               onClick={handleOpenDialog}

@@ -20,13 +20,13 @@ import { memo } from "react";
 import { useCookies } from "react-cookie";
 import dynamic from "next/dynamic";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
-import useFetchCart from "@/api/user/useFetchCart";
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import queryString from "query-string";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import { Empty } from "antd";
+import useFetchCart from "@/api/user/useFetchCart";
 
 // const Drawer = dynamic(() => import("antd"), { ssr: false });
 
@@ -60,7 +60,9 @@ import { Empty } from "antd";
 // }
 
 const calculateTotalValue = (arr) => {
-  return arr.reduce((total, obj) => total + obj.price * obj.quantity, 0);
+  if (arr) {
+    return arr.reduce((total, obj) => total + obj.price * obj.quantity, 0);
+  }
 };
 
 function hasToken(obj) {
@@ -76,6 +78,7 @@ function Header(props) {
   const [cartItems, setCartItems] = useState(null);
   const [select, setSelect] = useState([]);
   const cart = useFetchCart();
+  // console.log(cart);
   const user = useFetchUserProfile();
   const [amount, setAmount] = useState(0);
 
@@ -104,17 +107,14 @@ function Header(props) {
     marginTop: "35px",
   };
 
-  const handlingDeleteCartItem = async (id, quantity, price) => {
+  const handlingDeleteCartItem = async (id) => {
     try {
       console.log("----");
-      const message = await DeleteCartItem(
-        id,
-        quantity,
-        price,
-        cookies["token"]
-      );
+      const message = await DeleteCartItem(id, cookies["token"]);
       console.log(message);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlingCheckAll = () => {
@@ -128,11 +128,14 @@ function Header(props) {
   const handlingClickDelete = () => {
     let temp = select;
     console.log(temp);
-    setSetlectedItem(null);
     if (temp) {
-      handlingDeleteCartItem(temp.id, temp.quantity, temp.price);
+      temp.map((item) => {
+        console.log(item.cart_id);
+        handlingDeleteCartItem(item.cart_id);
+      });
     }
-    console.log(temp);
+    // console.log(temp);
+    setSelect(null);
   };
 
   const onClickPay = () => {
@@ -169,6 +172,7 @@ function Header(props) {
   // if (user.isError) {
   //   return <>Error</>;
   // } else
+
   return (
     <>
       <section className={Styles["header-container"]}>
@@ -384,8 +388,8 @@ function Header(props) {
               </div>
             </div>
             <div className={Styles["cart-item-list-container"]}>
-              {cartItems ? (
-                cartItems.map((cartItem, index) => {
+              {cart.data ? (
+                cart.data.map((cartItem, index) => {
                   if (cartItem.product) {
                     return (
                       <React.Fragment key={"cartItem" + index}>

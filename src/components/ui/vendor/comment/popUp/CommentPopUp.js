@@ -11,7 +11,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 import Textarea from "@mui/joy/Textarea";
 import Button from "@mui/joy/Button";
 import { ResponseComment } from "@/api/vendor/ResponseComment";
-import { message } from "antd";
+import { message, Empty } from "antd";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -96,6 +96,25 @@ function CommentPopUp(props) {
             </div>
             <div className={Styles["user-cmt-info-content"]}>
               {cmt.data.content}
+            </div>
+            <div
+              className={Styles["user-cmt-info-content"]}
+              style={{ justifyContent: "center", display: "flex" }}
+            >
+              {cmt.data.picture ? (
+                <Image
+                  src={cmt.data.picture}
+                  width={150}
+                  height={150}
+                  alt=""
+                  priority
+                  style={{ borderRadius: "5px" }}
+                />
+              ) : (
+                <>
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                </>
+              )}
             </div>
             <div className={Styles["response-container"]}>
               <span>Phản hồi</span>

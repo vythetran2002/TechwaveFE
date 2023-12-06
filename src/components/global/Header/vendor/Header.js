@@ -10,10 +10,25 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
+import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
+import { LogOutAccount } from "@/api/auth/LogOutAcount";
+
 function VendorHeader() {
   const user = useFetchVendorProfile();
 
   console.log(user);
+
+  const route = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies();
+
+  const handlingLogout = async () => {
+    const message = LogOutAccount(cookies["token"]);
+    await removeCookie("token");
+    console.log(message);
+    route.push("/auth/login");
+    // toast.success("logged out");
+  };
 
   if (user.isError) return <>Error</>;
   if (user.isLoading) return <>Loading</>;
@@ -68,10 +83,13 @@ function VendorHeader() {
                   <span>Cài đặt</span>
                 </Link> */}
               </div>
-              <Link href={"/admin"} className={Styles["nav-avt-logout"]}>
+              <div
+                onClick={handlingLogout}
+                className={Styles["nav-avt-logout"]}
+              >
                 <PowerSettingsNewOutlinedIcon />
                 <span>Đăng xuất</span>
-              </Link>
+              </div>
             </div>
           </div>
           <div className={Styles["help-container"]}>

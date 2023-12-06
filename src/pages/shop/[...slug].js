@@ -82,7 +82,7 @@ function ShopIndex() {
   };
 
   const handlingCloseDialog = () => {
-    setIsOpenDialog(false);
+    setIsOpen(false);
   };
 
   const updateQuantity = (value) => {
@@ -192,6 +192,7 @@ function ShopIndex() {
                   id={id0}
                   cateId={id1}
                   updateMax={updateMax}
+                  handleOpenDialog={handlingOpenDialog}
                 />
                 <div className={Styles["pagination-container"]}>
                   {page && (
@@ -219,7 +220,11 @@ function ShopIndex() {
             onClose={handleCloseDialog}
           >
             <DialogContent>
-              <ReportForm id={id0} token={cookies["token"]} />
+              <ReportForm
+                handlingCloseDialog={handlingCloseDialog}
+                id={id0}
+                token={cookies["token"]}
+              />
             </DialogContent>
           </Dialog>
         </Layout>

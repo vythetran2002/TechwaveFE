@@ -2,12 +2,27 @@ import useSWR from "swr";
 import axios from "axios";
 import { useState } from "react";
 
-const useFetchProductById = (id) => {
-  const url = "http://localhost:3000/api/product/" + id;
-  const fetcher = (url) => axios.get(url).then((res) => res.data);
+const useFetchProductById = (id, myToken) => {
+  // const url = "http://localhost:3000/api/product/" + id;
+  const token = "Bearer " + myToken;
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    // Authorization: `${token}`,
+  };
+
+  if (myToken) {
+    headers.Authorization = `${token}`;
+  }
+
+  const fetcher = (url, headers) =>
+    axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
+
   const { data, error, mutate, isValidating } = useSWR(
     id ? `http://localhost:3000/api/product/${id}` : null,
-    fetcher
+    () =>
+      fetcher(id ? `http://localhost:3000/api/product/${id}` : null, headers)
   );
 
   return {
