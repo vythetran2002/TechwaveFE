@@ -4,6 +4,7 @@ import { Roboto } from "next/font/google";
 import Image from "next/image";
 import images from "@/assets/images";
 import dayjs from "dayjs";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -99,16 +100,32 @@ function OrderPreview(props) {
           <div className={Styles["product-info"]}>
             <div className={Styles["product-name-wrapper"]}>
               <span>Tổng tiền: </span>
-              <span>${order.totalBill}</span>
+              <span>{FormatPrice(order.totalBill)}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
               <span>Phương thức vận chuyển: </span>
               <span>{order.express}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Phước thức thanh toán: </span>
+              <span>Phương thức thức thanh toán: </span>
               <span>{order.payment}</span>
             </div>
+            {order.payment_id != null && order.payment_id.status == 1 ? (
+              <>
+                <div className={Styles["product-option-wrapper"]}>
+                  <span>Thanh toán: </span>
+                  <span style={{ color: "green" }}>Đã thanh toán</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={Styles["product-option-wrapper"]}>
+                  <span>Thanh toán: </span>
+                  <span style={{ color: "red" }}>Chưa thanh toán</span>
+                </div>
+              </>
+            )}
+
             <div className={Styles["product-option-wrapper"]}>
               <span>Ngày đặt: </span>
               {order.createAt && (

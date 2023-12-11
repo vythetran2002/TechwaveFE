@@ -16,6 +16,7 @@ import { uploadImage } from "@/components/utils/Upload";
 import { AddOption } from "@/api/vendor/AddOption";
 import { Toaster } from "react-hot-toast";
 import { PutOption } from "@/api/vendor/PutOption";
+
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
   subsets: ["latin"],
@@ -122,7 +123,7 @@ export default function EditOptionDialog(props) {
       props.token
     );
     console.log(message);
-    window.location.reload();
+    // window.location.reload();
     // const message = AddOption(props.id, temp, props.token);
     // window.location.reload();
     // console.log(message);

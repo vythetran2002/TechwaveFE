@@ -23,8 +23,9 @@ function CateListDetail(props) {
   useEffect(() => {
     if (cates.data) {
       console.log("---");
-
-      updateMax(cates.data.cate_child.total);
+      if (cates.data.cate_child) {
+        updateMax(cates.data.cate_child.total);
+      }
       props.updateCateHeading(cates.data.name);
     }
   }, [cates.data]);

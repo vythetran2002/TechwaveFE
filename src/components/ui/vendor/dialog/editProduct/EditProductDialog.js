@@ -207,7 +207,7 @@ export default function EditProductDialog(props) {
       console.log(message);
       // console.log(temp);
       messageRef.current.style.display = "none";
-      window.location.reload();
+      // window.location.reload();
     } else {
       console.log(temp);
       messageRef.current.style.display = "block";

@@ -4,6 +4,10 @@ import Image from "next/image";
 import images from "@/assets/images";
 import { Checkbox, Divider, InputNumber } from "antd";
 import { memo } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
+import { UpdateCartItem } from "@/api/user/updateCartItem";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function addElementToArray(arr, element) {
   if (typeof element === "number") {
@@ -18,9 +22,15 @@ const removeValueFromArray = (arr, value) => {
 };
 
 function CartItem(props) {
+  const { token } = props;
+
   const { select } = props;
+  const [isEditMode, setIsEditMode] = useState(false);
   // console.log(select);
   const [isChecked, setIsChecked] = useState(false);
+
+  const [quantity, setQuantity] = useState(props.item.quantity);
+
   // console.log(props.item);
 
   // const handlingChange = () => {
@@ -36,6 +46,22 @@ function CartItem(props) {
   //     props.updateSelectedItem(temp);
   //   }
   // };
+
+  const handleToggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
+
+  const handleUpdateCartItem = () => {
+    const message = UpdateCartItem(props.item.cart_id, quantity, token);
+    console.log(message);
+    setIsEditMode(false);
+  };
+
+  const handleUpdateQuantity = (value) => {
+    if (value) {
+      setQuantity(value);
+    }
+  };
 
   const handlingChange = () => {
     if (isChecked) {
@@ -129,17 +155,46 @@ function CartItem(props) {
               </span>
             </div>
             <div className={Styles["item-name-cate-container"]}>
-              <span className={Styles["price"]}>
-                {props.item.price}đ x {props.item.quantity}
-              </span>
+              <div className={Styles["price"]}>
+                <span>
+                  {" "}
+                  {FormatPrice(props.item.price)} x {props.item.quantity}
+                </span>
+                <span
+                  onClick={handleToggleEditMode}
+                  className={Styles["edit-cart-btn"]}
+                  style={{ backgroundColor: isEditMode ? "black" : "white" }}
+                >
+                  <EditIcon
+                    style={{
+                      fontSize: "15px",
+                      color: isEditMode ? "white" : "black",
+                    }}
+                  />
+                </span>
+              </div>
               <span className={Styles["quantity"]}>
                 <InputNumber
-                  disabled
+                  disabled={!isEditMode}
                   min={1}
                   max={props.item.product.quantity}
-                  defaultValue={props.item.quantity}
+                  value={quantity}
                   size="small"
+                  onChange={handleUpdateQuantity}
                 />
+                {isEditMode && (
+                  <span
+                    className={Styles["submit-update-cart-btn"]}
+                    onClick={handleUpdateCartItem}
+                  >
+                    <DoneIcon
+                      style={{
+                        fontSize: "15px",
+                        color: "white",
+                      }}
+                    />
+                  </span>
+                )}
               </span>
             </div>
           </div>

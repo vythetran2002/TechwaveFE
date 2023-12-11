@@ -35,7 +35,7 @@ function ListItem(props) {
   const handleSoftDelete = () => {
     const message = DeleteSoftAccount(account.account_id, props.token);
     console.log(message);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleDelteAccount = () => {
@@ -53,7 +53,11 @@ function ListItem(props) {
   const handlingActiveAccount = () => {
     const message = ActiveAccount(account.account_id, props.token);
     console.log(message);
+    mutate([
+      "http://localhost:3000/api/admin/account/?status=2&page=1&limit=1",
+    ]);
     handleReload();
+    // handleReload();
     // window.location.reload();
   };
 
@@ -73,7 +77,7 @@ function ListItem(props) {
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  });
+  }, []);
 
   return (
     <>

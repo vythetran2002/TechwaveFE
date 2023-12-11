@@ -51,6 +51,7 @@ function CommentList(props) {
               return (
                 <React.Fragment key={"comment" + index}>
                   <CommentItem
+                    status={props.status}
                     updateId={props.updateId}
                     comment={comment}
                     handleOpenDialog={props.handleOpen}

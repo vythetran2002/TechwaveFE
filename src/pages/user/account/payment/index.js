@@ -22,6 +22,7 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import Empty from "antd/lib/empty";
 import { MakeShipPayment } from "@/api/user/MakeShipPayment";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast, { Toaster } from "react-hot-toast";
 
 const Input = dynamic(() => import("antd/es/input"), { ssr: false });
@@ -29,6 +30,12 @@ const Input = dynamic(() => import("antd/es/input"), { ssr: false });
 const calculateTotalValue = (arr) => {
   return arr.reduce((total, obj) => total + obj.price * obj.quantity, 0);
 };
+
+function extractCartIds(cartItems) {
+  if (cartItems) {
+    return cartItems.map((item) => ({ cart_id: item.cart_id }));
+  }
+}
 
 function checkNullProperties(obj) {
   for (let key in obj) {
@@ -45,7 +52,8 @@ function Index() {
   const [amount, setAmount] = useState();
   const querry = router.query;
   const [objectsArray, setObjectsArray] = useState(null);
-  const [shipFee, setShipFee] = useState(0);
+  const [shipFee, setShipFee] = useState(40000);
+  // const [shipType, setShipType] = useState("");
   const [bill, setBill] = useState({
     fullname: null,
     phone: null,
@@ -54,7 +62,7 @@ function Index() {
     express: null,
     carts: null,
   });
-  const [option, setOption] = useState();
+  const [option, setOption] = useState("ship");
 
   const messageRef = useRef();
 
@@ -63,11 +71,12 @@ function Index() {
   const handleClickSend = () => {
     let temp = {
       ...bill,
+      express: option,
       totalBill:
         parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
-      carts: objectsArray,
+      carts: extractCartIds(objectsArray),
     };
-    // console.log(temp);
+    console.log(temp);
     if (checkNullProperties(temp) && option) {
       messageRef.current.style.display = "none";
       if (option == "ship") {
@@ -90,7 +99,7 @@ function Index() {
           bankCode: null,
           language: "vn",
           returnUrl: "http://localhost:3001/user/account/transaction",
-          carts: objectsArray,
+          carts: extractCartIds(objectsArray),
         };
         console.log(temp2);
         const message = SendPaymentAmount(temp2, cookie["token"]);
@@ -191,7 +200,7 @@ function Index() {
                   Vận chuyển
                 </span>
                 <div className={Styles["ship-wrapper"]}>
-                  <RadioGroup onChange={onChangeRadio}>
+                  <RadioGroup onChange={onChangeRadio} defaultValue={shipFee}>
                     <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={40000} name="Giao hàng thông thường" />
@@ -212,10 +221,7 @@ function Index() {
               <div className={Styles["ship-container"]}>
                 <span>Thanh toán</span>
                 <div className={Styles["ship-wrapper"]}>
-                  <RadioGroup
-                    defaultValue={"Giao hàng tận nơi"}
-                    onChange={onChangeOption}
-                  >
+                  <RadioGroup defaultValue={option} onChange={onChangeOption}>
                     <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={"vnpay"} />
@@ -229,7 +235,7 @@ function Index() {
                         />
                       </div>
                     </div>
-                    <div className={Styles["ship-item-wrapper"]}>
+                    {/* <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={"nganluong"} />
                         <span>Thanh toán qua ngân lượng</span>
@@ -241,8 +247,8 @@ function Index() {
                           className={Styles["nganluong"]}
                         />
                       </div>
-                    </div>
-                    <div className={Styles["ship-item-wrapper"]}>
+                    </div> */}
+                    {/* <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={"moca"} />
                         <span>Thanh toán qua Moca</span>
@@ -254,8 +260,8 @@ function Index() {
                           className={Styles["moca"]}
                         />
                       </div>
-                    </div>
-                    <div className={Styles["ship-item-wrapper"]}>
+                    </div> */}
+                    {/* <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={"zaloPay"} />
                         <span>Thanh toán qua Zalo Pay</span>
@@ -267,7 +273,7 @@ function Index() {
                           className={Styles["zaloPay"]}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
                         <Radio value={"ship"} />
@@ -322,20 +328,23 @@ function Index() {
                 >
                   <div className={Styles["price-wrapper"]}>
                     <span>Tạm tính</span>
-                    <span>{calculateTotalValue(objectsArray)}đ</span>
+                    <span>
+                      {FormatPrice(calculateTotalValue(objectsArray))}
+                    </span>
                   </div>
                   <div className={Styles["price-wrapper"]}>
                     <span>Phí vận chuyển</span>
-                    <span>{shipFee}đ</span>
+                    <span>{FormatPrice(shipFee)}đ</span>
                   </div>
                 </div>
                 <div className={Styles["price-container"]}>
                   <div className={Styles["price-total-wrapper"]}>
                     <span>Tổng cộng</span>
                     <span id={Styles["total"]}>
-                      {parseInt(calculateTotalValue(objectsArray)) +
-                        parseInt(shipFee)}
-                      đ
+                      {FormatPrice(
+                        parseInt(calculateTotalValue(objectsArray)) +
+                          parseInt(shipFee)
+                      )}
                     </span>
                   </div>
                 </div>

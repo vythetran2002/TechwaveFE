@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import InfoIcon from "@mui/icons-material/Info";
 import Link from "next/link";
 import { DeleteProduct } from "@/api/vendor/DeleteProduct";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function ProductItem(props) {
   const menuRef = useRef(null);
@@ -31,7 +32,7 @@ function ProductItem(props) {
   const handleDelete = () => {
     const message = DeleteProduct(props.product.product_id, props.token);
     console.log(message);
-    window.location.reload();
+    // window.location.reload();
   };
 
   useEffect(() => {
@@ -58,13 +59,13 @@ function ProductItem(props) {
         </div>
         <div className={Styles["list-item-email-wrapper"]}>
           {" "}
-          {props.product.price}
+          {FormatPrice(props.product.price)}
         </div>
         <div
           className={Styles["list-item-email-wrapper"]}
           style={{ color: "green" }}
         >
-          {props.product.promotional_price}
+          {FormatPrice(props.product.promotional_price)}
         </div>
         <div className={Styles["list-item-dob-wrapper"]}>
           {props.product.image != null ? (

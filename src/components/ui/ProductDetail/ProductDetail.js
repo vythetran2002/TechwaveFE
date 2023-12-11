@@ -21,6 +21,7 @@ import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined";
 import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
 import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import countElementOfArray from "@/assets/utils/countArrayElement";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
@@ -257,15 +258,43 @@ function ProductDetail(props) {
                   )}
                 </span>
                 <span className={Styles["row-container"]}>Số lượt xem: 4</span>
-                <div className={Styles["product-price-container"]}>
-                  <span>Giá bán:</span>
-                  <span style={{ color: "red" }}>{product.price} đ</span>
-                  <span
-                    style={{ color: "black", textDecoration: "line-through" }}
-                  >
-                    {product.promotional_price} đ
-                  </span>
-                </div>
+                {product.promotional_price ? (
+                  <>
+                    <div className={Styles["product-price-container"]}>
+                      <span>Giá bán:</span>
+                      <span style={{ color: "red" }}>
+                        {FormatPrice(product.promotional_price)}
+                      </span>
+                      <span
+                        style={{
+                          color: "black",
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {FormatPrice(product.price)}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={Styles["product-price-container"]}>
+                      <span>Giá bán:</span>
+                      <span style={{ color: "red" }}>
+                        {" "}
+                        {FormatPrice(product.price)}
+                      </span>
+                      {/* <span
+                        style={{
+                          color: "black",
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {product.promotional_price} đ
+                      </span> */}
+                    </div>
+                  </>
+                )}
+
                 <span className={Styles["row-container"]}>
                   Số lượng: {product.quantity}
                 </span>

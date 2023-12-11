@@ -6,6 +6,7 @@ import { Pagination } from "@mui/material";
 import useFetchAllProduct from "@/api/vendor/useFetchAllProduct";
 import { useRouter } from "next/router";
 import useFetchOptionByProductId from "@/api/vendor/useFetchOptionByProductId";
+import { Empty } from "antd";
 
 function OptionList(props) {
   const router = useRouter();
@@ -61,15 +62,26 @@ function OptionList(props) {
                 );
               })
             ) : (
-              <>Empty</>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "20px",
+                }}
+              >
+                <Empty />
+              </div>
             )
           ) : (
-            <>Error</>
+            <>
+              <Empty />
+            </>
           )}
         </div>
 
         <div className={Styles["item-pagination-container"]}>
-          <Pagination count={10} size="large" />
+          <Pagination count={1} size="large" />
         </div>
       </>
     );

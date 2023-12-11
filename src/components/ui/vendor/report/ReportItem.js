@@ -16,7 +16,7 @@ function ReportItem(props) {
   //   const menuRef = useRef(null);
 
   const { report } = props;
-  // console.log(report);
+  console.log(report);
   const handlingOpenMenu = () => {
     menuRef.current.style.transform = "scale(1)";
   };
@@ -47,9 +47,11 @@ function ReportItem(props) {
   return (
     <>
       <div className={Styles["list-item-container"]}>
-        <div className={Styles["list-item-id-wrapper"]}>{report.createBy}</div>
+        <div className={Styles["list-item-id-wrapper"]}>
+          {report.createBy.username}
+        </div>
         <div className={Styles["list-item-name-wrapper"]}>
-          {report.id_account_report}
+          {report.account_report.username}
         </div>
 
         <div className={Styles["list-item-status-wrapper"]}>

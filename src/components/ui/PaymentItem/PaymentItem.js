@@ -2,10 +2,11 @@ import React from "react";
 import Styles from "./style.module.css";
 import images from "@/assets/images";
 import Image from "next/image";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function PaymentItem(props) {
   const { item } = props;
-  console.log(item);
+  // console.log(item);
 
   return (
     <>
@@ -71,7 +72,7 @@ function PaymentItem(props) {
           </span>
         </div>
         <span className={Styles["price-container"]}>
-          {item.price}đ x {item.quantity}
+          {FormatPrice(item.price)} x {item.quantity}
         </span>
       </div>
     </>

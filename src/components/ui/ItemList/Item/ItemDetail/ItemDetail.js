@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Roboto } from "next/font/google";
 import { memo } from "react";
 import useFetchProductById from "@/api/products/useFetchProductById";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
@@ -209,16 +210,30 @@ function ItemDetail(props) {
                     </div>
                   </div>
                 </div>
-                {item && (
+                {item.promotional_price ? (
                   <div className={Styles["price-promo-price-container"]}>
-                    <span style={{ fontStyle: "bold" }}>{item.price}đ</span>
+                    {/* <span style={{ fontStyle: "bold" }}>{item.price}đ</span> */}
                     <span style={{ color: "red" }}>
-                      {item.promotional_price}đ
+                      {FormatPrice(item.promotional_price)}
                     </span>
                     <span style={{ textDecoration: "line-through" }}>
-                      1.049.000đ
+                      {FormatPrice(item.price)}
                     </span>
-                    <span className={Styles["percent-discount"]}>-36%</span>
+                    {/* <span className={Styles["percent-discount"]}>-36%</span> */}
+                  </div>
+                ) : (
+                  <div className={Styles["price-promo-price-container"]}>
+                    <span style={{ fontStyle: "bold" }}>
+                      {" "}
+                      {FormatPrice(item.price)}
+                    </span>
+                    {/* <span style={{ color: "red" }}>
+                      {item.promotional_price}đ
+                    </span> */}
+                    {/* <span style={{ textDecoration: "line-through" }}>
+                      1.049.000đ
+                    </span> */}
+                    {/* <span className={Styles["percent-discount"]}>-36%</span> */}
                   </div>
                 )}
 

@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
+import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 
 function AdminSidebar(props) {
   const route = useRouter();
@@ -220,28 +221,28 @@ function AdminSidebar(props) {
               </Link>
             )}
 
-            {/* {props.path === "/vendor" ? (
+            {props.path === "/comment" ? (
               <Link
-                href={"/admin/vendor"}
+                href={"/admin/comment"}
                 className={`${Styles["nav-link"]} ${Styles["active"]}`}
               >
                 <div className={Styles["nav-icon"]}>
-                  <StorefrontOutlinedIcon />
+                  <QuestionAnswerOutlinedIcon />
                 </div>
                 <span ref={storeRef} className={Styles["nav-title"]}>
-                  Quản lý cửa hàng
+                  Quản lý đánh giá
                 </span>
               </Link>
             ) : (
-              <Link href={"/admin/vendor"} className={Styles["nav-link"]}>
+              <Link href={"/admin/comment"} className={Styles["nav-link"]}>
                 <div className={Styles["nav-icon"]}>
-                  <StorefrontOutlinedIcon />
+                  <QuestionAnswerOutlinedIcon />
                 </div>
                 <span ref={storeRef} className={Styles["nav-title"]}>
-                  Quản lý cửa hàng
+                  Quản lý đánh giá
                 </span>
               </Link>
-            )} */}
+            )}
 
             {props.path === "/userpermission" ? (
               <Link

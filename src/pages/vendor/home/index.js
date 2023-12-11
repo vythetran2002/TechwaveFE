@@ -9,12 +9,19 @@ import TestDialog from "@/pages/Test/dialog";
 import OrdersChart from "@/components/ui/admin/chart/OrdersChart";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { Toaster } from "react-hot-toast";
+import useFetchStatistic from "@/api/vendor/useFetchStatistic";
+import CustomLoader from "@/components/ui/CustomLoader/CustomLoader";
 
 function Index() {
   const vendor = useFetchVendorProfile();
+  const statistic = useFetchStatistic();
 
   if (vendor.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <CustomLoader />
+      </>
+    );
   }
   if (vendor.isError) {
     return <>Error</>;
@@ -36,7 +43,9 @@ function Index() {
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
                           <h3>Doanh thu</h3>
-                          <h1>$12,05</h1>
+                          {statistic.data && (
+                            <h1>{statistic.data.statistic.revenue}</h1>
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
                           <Circle
@@ -58,8 +67,10 @@ function Index() {
                     <div className={Styles["left-body-item-card-wrapper"]}>
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
-                          <h3>Truy cập</h3>
-                          <h1>12,989</h1>
+                          <h3>Khách Hàng</h3>
+                          {statistic.data && (
+                            <h1>{statistic.data.statistic.countCustomer}</h1>
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
                           <Circle
@@ -81,8 +92,10 @@ function Index() {
                     <div className={Styles["left-body-item-card-wrapper"]}>
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
-                          <h3>Tìm kiếm</h3>
-                          <h1>1,986</h1>
+                          <h3>Tồn kho</h3>
+                          {statistic.data && (
+                            <h1>{statistic.data.statistic.inventories}</h1>
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
                           <div className={Styles["left-body-item-card-circle"]}>
@@ -107,7 +120,15 @@ function Index() {
               <div className={Styles["left-body-item-container"]}>
                 <span className={Styles["left-body-item-title"]}>ĐƠN HÀNG</span>
                 <div className={Styles["left-body-chart-item"]}>
-                  <OrdersChart />
+                  {statistic.data ? (
+                    <OrdersChart
+                      info={statistic.data.statistic.ordersStatistic}
+                    />
+                  ) : (
+                    <>
+                      <CustomLoader />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

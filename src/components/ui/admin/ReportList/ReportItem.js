@@ -10,6 +10,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Image from "next/image";
 import images from "@/assets/images";
+import dayjs from "dayjs";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 function ReportItem(props) {
@@ -78,7 +79,11 @@ function ReportItem(props) {
             )}
           </div>
           <div className={Styles["list-item-date-wrapper"]}>
-            {props.report.createAt ? <>props.report.createAt</> : <></>}
+            {props.report.createAt ? (
+              <>{dayjs(props.report.createAt).format("DD/MM/YYYY")}</>
+            ) : (
+              <></>
+            )}
           </div>
           {props.report.status ? (
             props.report.status == 0 ? (

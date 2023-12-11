@@ -44,6 +44,7 @@
   max-width: 82px;
   max-height: 82px;
   object-fit: cover;
+  border-radius: 5px;
 }
 .name-wrapper {
   display: flex;

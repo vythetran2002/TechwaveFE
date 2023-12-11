@@ -350,6 +350,17 @@
   transition: 300ms;
 }
 
+.phone-mail-wrapper:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 100%;
+  height: 200%;
+  /* background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.5; */
+}
+
 .phone-mail-wrapper:hover .avatar-dropdown-container {
   animation: fadeIn ease-in 0.3s;
   display: block;

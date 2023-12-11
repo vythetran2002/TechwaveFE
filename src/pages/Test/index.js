@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import "react-quill/dist/quill.snow.css";
 import Head from "next/head";
 import Styles from "./test.module.css";
+import CustomLoader from "@/components/ui/CustomLoader/CustomLoader";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 // const ImageResize = dynamic(() => import("quill-image-resize-module-react"), {
 //   ssr: false,

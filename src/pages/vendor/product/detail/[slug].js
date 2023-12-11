@@ -15,6 +15,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import { Rating } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function HtmlContent({ htmlString }) {
   return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
@@ -246,23 +247,36 @@ function Index() {
                       {product.data.origin} | Địa chỉ: {product.data.place}
                     </span>
                   </Row>
-                  <Row style={{ width: "100%", marginTop: "20px" }}>
-                    <span className={Styles["detail-product-price-property"]}>
-                      <span style={{ color: "red" }}>
-                        {product.data.price}đ{" "}
+                  {product.data.promotional_price ? (
+                    <Row style={{ width: "100%", marginTop: "20px" }}>
+                      <span className={Styles["detail-product-price-property"]}>
+                        <span style={{ color: "red" }}>
+                          {FormatPrice(product.data.promotional_price)}{" "}
+                        </span>
+                        <span style={{ textDecoration: "line-through" }}>
+                          {FormatPrice(product.data.price)}
+                        </span>
                       </span>
-                      <span style={{ textDecoration: "line-through" }}>
-                        {product.data.promotional_price}đ
+                    </Row>
+                  ) : (
+                    <Row style={{ width: "100%", marginTop: "20px" }}>
+                      <span className={Styles["detail-product-price-property"]}>
+                        <span style={{ color: "red" }}>
+                          {FormatPrice(product.data.price)}{" "}
+                        </span>
+                        {/* <span style={{ textDecoration: "line-through" }}>
+                          {product.data.promotional_price}đ
+                        </span> */}
                       </span>
-                    </span>
-                  </Row>
+                    </Row>
+                  )}
 
                   <Row
                     style={{ width: "100%", marginTop: "20px" }}
                     className={Styles["detail-product-property"]}
                   >
                     Danh mục sản phẩm:
-                    {product.data && <>{product.data.category.name}</>}
+                    {product.data && <> {product.data.category.name}</>}
                   </Row>
                   {product.data.category.parent && (
                     <Row

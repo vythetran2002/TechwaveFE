@@ -23,8 +23,7 @@ import FavouriteCardPopUp from "@/components/ui/FavouriteItemCard/FavouriteCardP
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchAllOrders from "@/api/user/useFetchAllOrder";
 import OrderItem from "@/components/ui/vendor/order/OrderItem";
-import { useRouter } from "next/router";
-import useFetchTestPayment from "@/api/user/testPayment";
+import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 
@@ -201,7 +200,16 @@ function Index() {
                           );
                         })
                       ) : (
-                        <>Empty</>
+                        <div
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            padding: "20px 0 20px 0",
+                          }}
+                        >
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </div>
                       )
                     ) : (
                       <>Loading</>

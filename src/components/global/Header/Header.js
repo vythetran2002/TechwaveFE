@@ -21,6 +21,7 @@ import { useCookies } from "react-cookie";
 import dynamic from "next/dynamic";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import queryString from "query-string";
@@ -75,9 +76,20 @@ function hasToken(obj) {
   );
 }
 
+function countElementsWithStatusOne(array) {
+  if (!isObjectEmpty(array)) {
+    return array.reduce((count, element) => {
+      if (element.status === "0") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+  }
+}
+
 function Header(props) {
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const [isLogin, setIsLogin] = useState(null);
   const [cartItems, setCartItems] = useState(null);
   const [select, setSelect] = useState([]);
@@ -265,6 +277,7 @@ function Header(props) {
                       <span>Đăng xuất</span>
                     </div>
                   </div>
+                  {/* <div className={Styles["avatar-dropdown-container-2"]}></div> */}
                 </>
               ) : (
                 <>
@@ -333,7 +346,7 @@ function Header(props) {
                   {cart.data && !isObjectEmpty(cart.data) && (
                     <div className={Styles["amount-cart-item-wrapper"]}>
                       <div className={Styles["amount-cart-item"]}>
-                        {cart.data.length}
+                        {countElementsWithStatusOne(cart.data)}
                       </div>
                     </div>
                   )}
@@ -346,7 +359,7 @@ function Header(props) {
             placement="right"
             onClose={onClose}
             open={open}
-            width={"400px"}
+            width={"500px"}
             closable={false}
             footer={
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -373,31 +386,34 @@ function Header(props) {
             }
           >
             <div className={Styles["cart-info-container"]}>
-              <span>Tổng tiền: {amount}đ</span>
+              <span>Tổng tiền: {FormatPrice(amount)}đ</span>
               <div className={Styles["quantity-checkbox-container"]}>
                 {cart.data && (
                   <>
-                    <span>Số lượng: {cart.data.length}</span>
+                    <span>
+                      Số lượng: {countElementsWithStatusOne(cart.data)}
+                    </span>
                   </>
                 )}
 
-                <div>
+                {/* <div>
                   <Checkbox
                     sx={{ "& .MuiSvgIcon-root": { fontSize: "20px" } }}
                     checked={isChecked}
                     onChange={handlingCheckAll}
                     inputProps={{ "aria-label": "controlled" }}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
             <div className={Styles["cart-item-list-container"]}>
               {cart.data && !isObjectEmpty(cart.data) ? (
                 cart.data.map((cartItem, index) => {
-                  if (cartItem.product) {
+                  if (cartItem.status == 0) {
                     return (
                       <React.Fragment key={"cartItem" + index}>
                         <CartItem
+                          token={cookies["token"]}
                           isChecked={isChecked}
                           item={cartItem}
                           onClickDelete={handlingClickDelete}

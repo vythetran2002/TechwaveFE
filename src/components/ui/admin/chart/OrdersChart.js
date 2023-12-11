@@ -56,28 +56,58 @@ const data = {
     {
       fill: true,
       label: "Đơn hàng thành công",
-      data: [20, 40, 45, 22, 19, 33, 17, 23, 56, 44, 12, 32],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
       borderColor: "#0284c7",
       backgroundColor: "rgba(53, 162, 235, .4)",
     },
     {
       fill: false,
       label: "Đơn hàng thất bại",
-      data: [10, 5, 12, 5, 12, 3, 12, 20, 21, 19, 20, 12],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       borderColor: "#ef4444",
       backgroundColor: "rgba(248, 113, 113, .6)",
     },
     {
       fill: false,
       label: "Đơn hàng bị huỷ",
-      data: [11, 22, 22, 11, 19, 21, 9, 40, 39, 33, 23, 30],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       borderColor: "#eab308",
       backgroundColor: "#facc15",
     },
   ],
 };
 
-function OrdersChart() {
+function OrdersChart(props) {
+  const { info } = props;
+  // console.log(info);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        fill: true,
+        label: info[0].label,
+        data: info[0].data,
+        borderColor: "#0284c7",
+        backgroundColor: "rgba(53, 162, 235, .4)",
+      },
+      {
+        fill: false,
+        label: info[1].label,
+        data: info[1].data,
+        borderColor: "#ef4444",
+        backgroundColor: "rgba(248, 113, 113, .6)",
+      },
+      {
+        fill: false,
+        label: info[2].label,
+        data: info[2].data,
+        borderColor: "#eab308",
+        backgroundColor: "#facc15",
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 }
 

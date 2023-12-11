@@ -152,7 +152,12 @@ function Index() {
             onClose={handleClose}
           >
             <DialogContent>
-              <CommentPopUp id={id} token={cookies["token"]} />
+              <CommentPopUp
+                handleClose={handleClose}
+                id={id}
+                token={cookies["token"]}
+                status={0}
+              />
             </DialogContent>
           </Dialog>
           <div

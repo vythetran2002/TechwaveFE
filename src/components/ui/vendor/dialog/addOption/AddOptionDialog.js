@@ -114,7 +114,7 @@ export default function AddOptionDialog(props) {
     event.preventDefault();
     let temp = { ...option, name: name };
     const message = AddOption(props.id, temp, props.token);
-    window.location.reload();
+    // window.location.reload();
     console.log(message);
   };
 
@@ -131,9 +131,9 @@ export default function AddOptionDialog(props) {
     </div>
   );
 
-  useEffect(() => {
-    console.log(name);
-  }, [name]);
+  // useEffect(() => {
+  //   console.log(name);
+  // }, [name]);
 
   return (
     <React.Fragment>

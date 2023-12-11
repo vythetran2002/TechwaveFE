@@ -10,6 +10,7 @@ import { memo } from "react";
 import { Rating } from "@mui/material";
 import { Tooltip } from "antd";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function Item(props) {
   const handlingOpenDialog = () => {
@@ -19,7 +20,6 @@ function Item(props) {
 
   const handlingAddFavouriteProduct = () => {
     let temp = { ...props.item };
-
     if (temp.product_id) {
       props.addFavourite(temp.product_id);
     }
@@ -84,9 +84,9 @@ function Item(props) {
               <span>{props.item.name}</span>
             </div>
             <div className={Styles["item-price-container"]}>
-              <span>{props.item.price}đ</span>
+              <span>{FormatPrice(props.item.price)}</span>
               <span id={Styles["promo-price"]}>
-                {props.item.promotional_price}đ
+                {FormatPrice(props.item.promotional_price)}
               </span>
             </div>
             <div className={Styles["item-rating-container"]}>

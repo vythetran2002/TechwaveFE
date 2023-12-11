@@ -193,7 +193,7 @@ function Index() {
                           justifyContent: "center",
                         }}
                       >
-                        <Empty />
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                       </div>
                     )
                   ) : (

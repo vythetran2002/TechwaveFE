@@ -29,7 +29,7 @@ function OptionItem(props) {
       props.token
     );
     console.log(message);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleOpenDialog = () => {

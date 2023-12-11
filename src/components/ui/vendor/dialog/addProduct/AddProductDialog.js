@@ -55,7 +55,6 @@ function checkValidFields(obj) {
     obj.hasOwnProperty("quantity") &&
     obj.hasOwnProperty("origin") &&
     obj.hasOwnProperty("price") &&
-    obj.hasOwnProperty("promotional_price") &&
     obj.hasOwnProperty("category_id") &&
     (obj.hasOwnProperty("image") || obj.hasOwnProperty("category_child")) &&
     obj.name !== null &&
@@ -311,7 +310,7 @@ export default function AddProductDialog(props) {
               </span>
               <InputNumber
                 onChange={handlingChangePrice}
-                min={50000}
+                min={10000}
                 max={1000000000}
                 placeholder="giá niêm yết"
                 style={{
@@ -323,7 +322,7 @@ export default function AddProductDialog(props) {
               <span className={Styles["add-user-field-label"]}>Giá KM:</span>
               <InputNumber
                 onChange={handlingChangePromoPrice}
-                min={50000}
+                min={10000}
                 max={1000000000}
                 placeholder="giá khuyến mãi"
                 style={{

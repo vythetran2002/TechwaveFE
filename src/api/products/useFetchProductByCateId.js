@@ -27,8 +27,10 @@ const useFetchProductByCateId = (id) => {
   const fetcher = (url, headers) =>
     axios.get(url, { headers }).then((res) => res.data);
 
-  const { data, error, mutate, isValidating } = useSWR(url, () =>
-    fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(
+    url,
+    () => fetcher(url, headers),
+    { refreshInterval: 1000 }
   );
 
   return {

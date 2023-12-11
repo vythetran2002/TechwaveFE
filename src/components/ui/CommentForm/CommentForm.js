@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { Divider } from "@mui/joy";
 import { PostComment } from "@/api/user/PostComment";
 import { uploadImage } from "@/components/utils/Upload";
+import toast from "react-hot-toast";
 
 const { TextArea } = Input;
 
@@ -29,16 +30,25 @@ function CommentForm(props) {
 
   // console.log(review);
 
+  //Refs
+  const inputRef = useRef();
+
   const handleChaneCmt = (e) => {
     setCmt(e.target.value);
   };
 
   const ResetCmt = () => {
     setCmt("");
+    setAvatarSrc(null);
   };
 
   const handleDeleteImage = () => {
     setAvatarSrc(null);
+    toast.success("Deleted image");
+  };
+
+  const onClickImgUpload = () => {
+    inputRef.current.click();
   };
 
   function handleFileUpload(event) {
@@ -171,32 +181,82 @@ function CommentForm(props) {
                                   {response.createBy.avatar != null ? (
                                     <>
                                       <Image
+                                        onClick={() => {
+                                          handleClickProfile(
+                                            response.createBy.account_id
+                                          );
+                                        }}
                                         src={response.createBy.avatar}
                                         width={50}
                                         height={50}
                                         alt=""
-                                        style={{ borderRadius: "50%" }}
+                                        style={{
+                                          borderRadius: "50%",
+                                          cursor: "pointer",
+                                        }}
                                       />
                                     </>
                                   ) : (
                                     <>
                                       <Image
+                                        onClick={() => {
+                                          handleClickProfile(
+                                            response.createBy.account_id
+                                          );
+                                        }}
                                         src={images.nonAvatar}
                                         width={100}
                                         height={100}
                                         alt=""
+                                        style={{
+                                          borderRadius: "50%",
+                                          cursor: "pointer",
+                                        }}
                                       />
                                     </>
                                   )}
                                   <div
                                     className={Styles["vendor-info-wrapper"]}
+                                    style={{ gap: "20px" }}
                                   >
-                                    <span style={{ fontSize: "13px" }}>
-                                      {response.createBy.username}
-                                    </span>
-                                    <span style={{ fontSize: "13px" }}>
+                                    <div
+                                      style={{
+                                        fontSize: "15px",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "5px",
+                                      }}
+                                    >
+                                      <span>{response.createBy.username}</span>
+                                      {response.createAt && (
+                                        <span style={{ color: "#757575" }}>
+                                          {dayjs(response.createAt).format(
+                                            "DD/MM/YYYY"
+                                          )}
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    <span style={{ fontSize: "15px" }}>
                                       {response.content}
                                     </span>
+                                    <div
+                                      style={{
+                                        fontSize: "15px",
+                                        marginTop: "10px",
+                                      }}
+                                    >
+                                      {response.picture && (
+                                        <Image
+                                          height={200}
+                                          width={200}
+                                          src={response.picture}
+                                          priority
+                                          alt=""
+                                          style={{ borderRadius: "5px" }}
+                                        />
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -243,8 +303,27 @@ function CommentForm(props) {
                   padding: "0",
                   borderRadius: "0%",
                   color: "rgba(241, 241, 241, 0.48)",
+                  display: "none",
                 }}
+                ref={inputRef}
               />
+              <button className={Styles["button"]} onClick={onClickImgUpload}>
+                {/* <svg
+                  className={Styles["svg"]}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg> */}
+                ADD IMAGE
+              </button>
               {avatarSrc && (
                 <div
                   style={{
@@ -256,7 +335,13 @@ function CommentForm(props) {
                     gap: "20px",
                   }}
                 >
-                  <Image src={avatarSrc} width={150} height={150} alt="" />
+                  <Image
+                    style={{ borderRadius: "5px" }}
+                    src={avatarSrc}
+                    width={150}
+                    height={150}
+                    alt=""
+                  />
                   <Button onClick={handleDeleteImage}>Xoá ảnh</Button>
                 </div>
               )}

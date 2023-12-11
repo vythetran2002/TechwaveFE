@@ -11,15 +11,13 @@ function ItemList(props) {
 
   const account = useFetchAccount(status, page, limit, token);
   console.log(account);
-
-  const handleReload = () => {
-    account.reload();
-  };
+  const reload = account.mutate;
 
   useEffect(() => {
     if (account.data) {
       console.log("---");
       updateMax(account.data.total);
+      reload();
     }
   }, [account.data]);
 
@@ -69,11 +67,11 @@ function ItemList(props) {
                   <React.Fragment key={"account" + index}>
                     <ListItem
                       token={props.token}
+                      handleReload={reload}
                       updateAccount={props.updateAccount}
                       updateId={props.updateId}
                       status={props.status}
                       account={account}
-                      handleReload={handleReload}
                       handleOpenDialog={props.handleOpenDialog}
                       handleCloseDialog={props.handleCloseDialog}
                       handleOpenDetailDialog={props.handleOpenDetailDialog}

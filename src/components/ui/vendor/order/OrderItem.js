@@ -12,6 +12,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import dayjs from "dayjs";
 import { AcceptOrder } from "@/api/vendor/AcceptOrder";
 import { RejectOrder } from "@/api/vendor/RejectOrder";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
 
 function OrderItem(props) {
   const { order } = props;
@@ -62,7 +63,10 @@ function OrderItem(props) {
         <div className={Styles["list-item-id-wrapper"]}>{order.fullname}</div>
         <div className={Styles["list-item-name-wrapper"]}>{order.phone}</div>
 
-        <div className={Styles["list-item-gender-wrapper"]}>
+        <div
+          className={Styles["list-item-gender-wrapper"]}
+          style={{ justifyContent: "center" }}
+        >
           {order.address}
         </div>
         <div className={Styles["list-item-shop-wrapper"]}>
@@ -84,7 +88,7 @@ function OrderItem(props) {
           className={Styles["list-item-date-wrapper"]}
           style={{ width: "10%" }}
         >
-          {order.totalBill}
+          {FormatPrice(order.totalBill)}
         </div>
         <div className={Styles["list-item-gender-wrapper"]}>
           {dayjs(order.createAt).format("DD/MM/YYYY")}

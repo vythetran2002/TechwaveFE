@@ -3,23 +3,14 @@ import AdminLayout from "@/components/layout/AdminLayout";
 import Head from "next/head";
 import Styles from "./styles.module.css";
 import { useRef, useState } from "react";
-import { Divider } from "antd";
+
 import Image from "next/image";
-import Link from "next/link";
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import InventoryIcon from "@mui/icons-material/Inventory";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import OutlinedFlagRoundedIcon from "@mui/icons-material/OutlinedFlagRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import DoneIcon from "@mui/icons-material/Done";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
+
 import { Radio, DatePicker, Checkbox, Input } from "antd";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+
 import { Switch } from "antd";
 import images from "@/assets/images";
 import dayjs from "dayjs";

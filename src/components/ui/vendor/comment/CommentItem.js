@@ -13,7 +13,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 function CommentItem(props) {
   //   const menuRef = useRef(null);
-  const { comment } = props;
+  const { comment, status } = props;
 
   // const handlingOpenMenu = () => {
   //   menuRef.current.style.transform = "scale(1)";
@@ -41,10 +41,10 @@ function CommentItem(props) {
     <>
       <div className={Styles["list-item-container"]}>
         <div className={Styles["list-item-id-wrapper"]}>
-          {comment.account_id}
+          {comment.account.username}
         </div>
         <div className={Styles["list-item-name-wrapper"]}>
-          {comment.product_id}
+          {comment.product.name}
         </div>
 
         <div className={Styles["list-item-status-wrapper"]}>
@@ -53,31 +53,59 @@ function CommentItem(props) {
         <div className={Styles["list-item-shop-wrapper"]}>
           {dayjs(comment.createAt).format("DD/MM/YYYY")}
         </div>
-
-        <div
-          className={Styles["list-item-date-wrapper"]}
-          style={{
-            flexDirection: "column",
-            gap: "10px",
-          }}
-        >
-          {/* <div
+        {status == 1 && (
+          <div
+            className={Styles["list-item-date-wrapper"]}
+            style={{
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            {/* <div
             className={Styles["list-item-status-active-button-wrapper"]}
             style={{ backgroundColor: "#6b7280" }}
             onClick={handleOpenDialog}
           >
             <VisibilityIcon />
           </div> */}
-          <div
-            onClick={handleOpenDialog}
-            className={Styles["list-item-status-active-button-wrapper"]}
-          >
-            Phản hồi
-          </div>
-          {/* <div className={Styles["list-item-status-banned-button-wrapper"]}>
+            <div
+              onClick={handleOpenDialog}
+              className={Styles["list-item-status-active-button-wrapper"]}
+              style={{ backgroundColor: "#475569" }}
+            >
+              <VisibilityIcon />
+            </div>
+            {/* <div className={Styles["list-item-status-banned-button-wrapper"]}>
             Huỷ
           </div> */}
-        </div>
+          </div>
+        )}
+        {status == 0 && (
+          <div
+            className={Styles["list-item-date-wrapper"]}
+            style={{
+              flexDirection: "column",
+              gap: "10px",
+            }}
+          >
+            {/* <div
+            className={Styles["list-item-status-active-button-wrapper"]}
+            style={{ backgroundColor: "#6b7280" }}
+            onClick={handleOpenDialog}
+          >
+            <VisibilityIcon />
+          </div> */}
+            <div
+              onClick={handleOpenDialog}
+              className={Styles["list-item-status-active-button-wrapper"]}
+            >
+              Phản hồi
+            </div>
+            {/* <div className={Styles["list-item-status-banned-button-wrapper"]}>
+            Huỷ
+          </div> */}
+          </div>
+        )}
 
         {/* <div className={Styles["list-item-more-option-wrapper"]}>
           <div

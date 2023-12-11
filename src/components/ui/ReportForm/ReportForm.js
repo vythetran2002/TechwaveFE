@@ -100,6 +100,7 @@ function ReportForm(props) {
             style={{ width: "100%", justifyContent: "center" }}
           >
             <input
+              accept=".jpg, .jpeg, .png, image/jpeg, image/png"
               type="file"
               onChange={handleFileUpload}
               style={{

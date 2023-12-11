@@ -13,7 +13,7 @@ export const PostReport = async (data, token) => {
       }
     );
 
-    toast.success("Comment posted");
+    toast.success("Report Account Successfully");
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

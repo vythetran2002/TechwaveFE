@@ -235,9 +235,14 @@ function Index() {
             avatar,
             password,
           };
-          console.log(reqUser);
+          // console.log(reqUser);
+          const test = reqUser.modifiedAt;
+          const final = {
+            ...reqUser,
+            modifiedAt: dayjs(test).format("YYYY/MM/DD"),
+          };
           messageRef.current.style.display = "none";
-          const message = sendPostRequestWithToken(temp, cookies["token"]);
+          const message = sendPostRequestWithToken(final, cookies["token"]);
           console.log(message);
           window.location.reload();
         }
@@ -490,7 +495,10 @@ function Index() {
                       <span className={Styles["profile-row2"]}>
                         <DatePicker
                           style={{ width: "100%" }}
-                          defaultValue={dayjs(formatDate(userProfile.dob))}
+                          defaultValue={dayjs(
+                            formatDate(userProfile.dob),
+                            "DD-MM-YYYY"
+                          )}
                           format={dateFormat}
                           onChange={handlingChangeDob}
                         />

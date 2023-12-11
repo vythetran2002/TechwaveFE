@@ -21,7 +21,8 @@ const useFetchPendingOrders = (status, page, limit, myToken) => {
 
   const { data, error, mutate, isValidating } = useSWR(
     page && limit ? `${url}?${queryParams}` : null,
-    () => fetcher(`${url}?${queryParams}`, headers)
+    () => fetcher(`${url}?${queryParams}`, headers),
+    { refreshInterval: 1000 }
   );
 
   return {

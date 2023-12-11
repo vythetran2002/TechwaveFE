@@ -18,8 +18,10 @@ const useFetchCart = () => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(url, () =>
-    fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(
+    url,
+    () => fetcher(url, headers),
+    { refreshInterval: 1000 }
   );
 
   return {

@@ -38,6 +38,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 10px;
 }
 .name {
   font-size: 14px;
@@ -48,5 +49,40 @@
   font-weight: 300;
 }
 .quantity {
+  display: flex;
   text-align: end;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.edit-cart-btn {
+  transition: 300ms;
+  padding: 2px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-cart-btn:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+.submit-update-cart-btn {
+  transition: 300ms;
+  padding: 2px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+}
+.submit-update-cart-btn:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }

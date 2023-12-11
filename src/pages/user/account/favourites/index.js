@@ -239,8 +239,8 @@ function Index() {
                   </div>
                   <div className={Styles["overflow-y"]}>
                     {products.data ? (
-                      products.data ? (
-                        products.data.map((product, index) => {
+                      products.data.data ? (
+                        products.data.data.map((product, index) => {
                           if (product.product) {
                             return (
                               <React.Fragment key={"productItem" + index}>

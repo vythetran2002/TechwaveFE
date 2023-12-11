@@ -21,11 +21,13 @@ import DialogContent from "@mui/material/DialogContent";
 import UserProfile from "@/components/ui/UserProfile/UserProfile";
 import { addCartItem } from "@/api/user/addCartItem";
 import toast from "react-hot-toast";
+import { Element, scroller } from "react-scroll";
 
 function Index() {
   const [cookies] = useCookies();
   const router = useRouter();
   const slug = router.query.slug;
+  console.log(slug);
   const product = useFetchProductById(slug, cookies["token"]);
   console.log(product);
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +48,6 @@ function Index() {
     console.log("----");
     try {
       const message = await addCartItem(data, cookies["token"]);
-      // console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");
       } else {
@@ -59,13 +60,21 @@ function Index() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(id);
-  // }, [id]);
+  useEffect(() => {
+    if (router.query.nav) {
+      // console.log("asdhsakjdhsajdhsjkhasdhsjkdhaskjdhaskjd");
+      scroller.scrollTo("danhGia", {
+        smooth: true,
+        duration: 500,
+        offset: -50,
+      });
+    }
+  }, [router.query.nav, product.data]);
 
   if (product.isLoading) {
     return <>Loading</>;
   }
+
   if (product.isError) {
     return <>Error</>;
   } else
@@ -119,6 +128,7 @@ function Index() {
             </div>
           </div>
           <CommentForm
+            name={"danhGia"}
             updateId={updateId}
             handleOpenDialog={handleOpenDialog}
             review={product.data.review}
@@ -133,7 +143,11 @@ function Index() {
             onClose={handleCloseDialog}
           >
             <DialogContent>
-              <UserProfile id={id} />
+              <UserProfile
+                token={cookies["token"]}
+                handleCloseDialog={handleCloseDialog}
+                id={id}
+              />
             </DialogContent>
           </Dialog>
 
