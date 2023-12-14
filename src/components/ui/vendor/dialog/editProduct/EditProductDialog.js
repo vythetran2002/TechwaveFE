@@ -49,13 +49,12 @@ function checkValidFields(obj) {
     obj.hasOwnProperty("quantity") &&
     obj.hasOwnProperty("origin") &&
     obj.hasOwnProperty("price") &&
-    obj.hasOwnProperty("promotional_price") &&
     obj.hasOwnProperty("category_id") &&
-    (obj.hasOwnProperty("image") || obj.hasOwnProperty("category_child")) &&
+    // (obj.hasOwnProperty("image") || obj.hasOwnProperty("category_child")) &&
     obj.name !== null &&
     obj.quantity !== null &&
     obj.price !== null &&
-    obj.promotional_price !== null &&
+    // obj.promotional_price !== null &&
     obj.category_id !== null &&
     (obj.image !== null || obj.category_child !== null)
   ) {
@@ -207,6 +206,7 @@ export default function EditProductDialog(props) {
       console.log(message);
       // console.log(temp);
       messageRef.current.style.display = "none";
+      props.handleClose();
       // window.location.reload();
     } else {
       console.log(temp);
@@ -270,12 +270,7 @@ export default function EditProductDialog(props) {
                   ></input>
                   <div className={Styles["img-container"]}>
                     {avatarSrc ? (
-                      <Image
-                        src={images.nonAvatar}
-                        alt=""
-                        width={100}
-                        height={100}
-                      />
+                      <Image src={avatarSrc} alt="" width={100} height={100} />
                     ) : (
                       <>
                         {props.product.image ? (
@@ -466,7 +461,7 @@ export default function EditProductDialog(props) {
                   Huỷ
                 </span>
                 <button className={Styles["add-user-field-submit-btn"]}>
-                  THÊM
+                  Lưu
                 </button>
               </div>
             </form>

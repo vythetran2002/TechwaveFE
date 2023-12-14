@@ -2,8 +2,11 @@ import useSWR from "swr";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
+const fetcher = (url, headers) =>
+  axios.get(url, { headers }).then((res) => res.data);
+
 const useFetchReceivedProducts = () => {
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies] = useCookies();
   const url = "http://localhost:3000/api/user/bill/received/";
   const token = "Bearer " + cookies["token"];
 
@@ -12,9 +15,6 @@ const useFetchReceivedProducts = () => {
     "Content-Type": "application/json",
     Authorization: `${token}`,
   };
-
-  const fetcher = (url, headers) =>
-    axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
 
   const { data, error, mutate, isValidating } = useSWR(url, () =>
     fetcher(url, headers)

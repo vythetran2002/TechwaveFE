@@ -3,10 +3,17 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 
 const fetcher = (url, headers) =>
-  axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
+  axios.get(url, { headers }).then((res) => res.data);
 
-const useFetchCateListByPage = (id, page, limit, myToken) => {
-  const url = "http://localhost:3000/api/category/" + id;
+const useFetchCateListByPage = (id0, id1, page, limit, myToken) => {
+  let url = null;
+  if (id1) {
+    url = "http://localhost:3000/api/category/" + id1;
+  } else {
+    url = "http://localhost:3000/api/category/" + id0;
+  }
+
+  // const url = "http://localhost:3000/api/category/" + id;
 
   const token = "Bearer " + myToken;
 
@@ -16,7 +23,7 @@ const useFetchCateListByPage = (id, page, limit, myToken) => {
     // Authorization: `${token}`,
   };
 
-  if (myToken) {
+  if (myToken && myToken != "undefined") {
     headers.Authorization = `${token}`;
   }
 

@@ -60,11 +60,16 @@ function Index() {
   const [date, setDate] = useState();
   const [gender, setGender] = useState("Nam");
   const [pass, setPass] = useState();
+  const [role, setRole] = useState("user");
 
   const messRef = useRef();
 
   const onChangeGender = ({ target: { value } }) => {
     setGender(value);
+  };
+
+  const onChangeRole = ({ target: { value } }) => {
+    setRole(value);
   };
 
   const handleResgiter = async (e) => {
@@ -81,24 +86,44 @@ function Index() {
     };
 
     if (checkAllProperties(info)) {
-      try {
-        // Gửi yêu cầu đăng nhập tới API
-        const response = await axios.post(
-          "http://localhost:3000/api/register",
-          info
-        );
-        if (response.data) {
-          console.log(response.data);
-          toast.success("Đăng ký thành công");
-          router.push("/auth/login");
+      if (role == "user") {
+        try {
+          // Gửi yêu cầu đăng nhập tới API
+          const response = await axios.post(
+            "http://localhost:3000/api/register",
+            info
+          );
+          if (response.data) {
+            console.log(response.data);
+            toast.success("Đăng ký thành công");
+            router.push("/auth/login");
+          }
+        } catch (error) {
+          console.error("Đăng ký thất bại", error);
+          toast.error("Đăng ký thất bại");
+          // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
         }
-      } catch (error) {
-        console.error("Đăng ký thất bại", error);
-        toast.error("Đăng ký thất bại");
-        // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
+      } else if (role == "vendor") {
+        try {
+          // Gửi yêu cầu đăng nhập tới API
+          const response = await axios.post(
+            "http://localhost:3000/api/registerStaff",
+            info
+          );
+          if (response.data) {
+            console.log(response.data);
+            toast.success("Đăng ký thành công");
+            router.push("/auth/login");
+          }
+        } catch (error) {
+          console.error("Đăng ký thất bại", error);
+          toast.error("Đăng ký thất bại");
+          // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
+        }
       }
     } else {
       messRef.current.style.display = "block";
+      toast.error("Nhập đầy đủ thông tin");
     }
   };
 
@@ -115,20 +140,20 @@ function Index() {
     setDate(stringDate);
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    let info = {
-      fullname: name,
-      email: email,
-      address: address,
-      phone: phone,
-      dob: date,
-      gender: gender,
-      username: username,
-      password: pass,
-    };
-    console.log(info);
-  };
+  // const submit = (e) => {
+  //   e.preventDefault();
+  //   let info = {
+  //     fullname: name,
+  //     email: email,
+  //     address: address,
+  //     phone: phone,
+  //     dob: date,
+  //     gender: gender,
+  //     username: username,
+  //     password: pass,
+  //   };
+  //   console.log(info);
+  // };
 
   return (
     <>
@@ -168,13 +193,13 @@ function Index() {
                 >
                   Register
                 </li>
-                <li
+                {/* <li
                   onClick={() => {
                     router.push("/auth/vendor-register");
                   }}
                 >
                   Vendor Register
-                </li>
+                </li> */}
                 <li
                   onClick={() => {
                     router.push("/auth/forgot-password");
@@ -302,6 +327,21 @@ function Index() {
                     setPass(e.target.value);
                   }}
                 />
+              </div>
+              <div className="input" style={{ color: "white" }}>
+                <Radio.Group
+                  name="radiogroup"
+                  defaultValue={role}
+                  size="lg"
+                  onChange={onChangeRole}
+                >
+                  <Radio value={"user"} style={{ color: "white" }}>
+                    User
+                  </Radio>
+                  <Radio value={"vendor"} style={{ color: "white" }}>
+                    Vendor
+                  </Radio>
+                </Radio.Group>{" "}
               </div>
               {/* {errors.password && (
                 <p className={Styles["validate-message"]}>

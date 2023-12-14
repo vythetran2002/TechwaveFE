@@ -2,10 +2,9 @@ import useSWR from "swr";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
-const useFetchDetailReviewAdmin = (id) => {
+const useFetchDetailReviewAdmin = (myID) => {
   const [cookies] = useCookies();
-  const url = "http://localhost:3000/api/admin/review/" + id;
-
+  const url = "http://localhost:3000/api/admin/review/" + myID;
   const token = "Bearer " + cookies["token"];
 
   const headers = {
@@ -15,12 +14,10 @@ const useFetchDetailReviewAdmin = (id) => {
   };
 
   const fetcher = (url, headers) =>
-    axios
-      .get(id ? url : null, { headers, credentials: "include" })
-      .then((res) => res.data);
+    axios.get(myID ? url : null, { headers }).then((res) => res.data);
 
   const { data, error, mutate, isValidating } = useSWR(
-    url,
+    myID ? `http://localhost:3000/api/admin/review/${myID}` : null,
     () => fetcher(url, headers),
     { refreshInterval: 1000 }
   );

@@ -1,0 +1,34 @@
+.card-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+.card-container:hover {
+  background: #d9eef8;
+}
+.card-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  color: black;
+  font-weight: 400;
+}
+.price-container {
+  display: flex;
+  gap: 10px;
+}
+.promo-price {
+  color: red;
+}
+.price {
+  text-decoration: line-through;
+  color: black;
+}

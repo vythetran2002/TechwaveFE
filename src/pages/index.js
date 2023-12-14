@@ -27,7 +27,7 @@ function Index() {
   const [detailItem, setDeTailItem] = useState(null);
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
-  const cateList02 = useFetchProductByCateId(5);
+  const cateList02 = useFetchProductByCateId(19);
   const cateList03 = useFetchProductByCateId(4);
   const route = useRouter();
 

@@ -27,7 +27,7 @@ function Index() {
   const [cookies] = useCookies();
   const router = useRouter();
   const slug = router.query.slug;
-  console.log(slug);
+  // console.log(slug);
   const product = useFetchProductById(slug, cookies["token"]);
   console.log(product);
   const [isOpen, setIsOpen] = useState(false);

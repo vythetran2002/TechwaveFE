@@ -18,13 +18,17 @@ const roboto = Roboto({
 function CommentPopup(props) {
   const { id, token } = props;
 
+  // console.log(id);
+
   const cmt = useFetchDetailReviewAdmin(id);
-  console.log(cmt);
+  // console.log(cmt);
+  // console.log(id);
 
   const handleClickDeleteVendorCmt = () => {
     console.log(cmt.data.responses[0].response_id);
     const message = DeleteComment(cmt.data.responses[0].response_id, token);
     console.log(message);
+    props.handleCloseDialog();
   };
 
   if (cmt.isLoading) {

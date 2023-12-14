@@ -3,7 +3,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 
 const fetcher = (url, headers) =>
-  axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
+  axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchDetailProduct = (id) => {
   const [cookies] = useCookies();

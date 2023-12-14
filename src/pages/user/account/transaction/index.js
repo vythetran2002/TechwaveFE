@@ -20,7 +20,7 @@ function Index() {
   };
 
   const handleClickHomePage = () => {
-    router.push("/user/account/order");
+    router.push("/");
   };
 
   if (payment.isLoading) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
@@ -13,7 +13,7 @@ import "react-quill/dist/quill.snow.css";
 import Link from "next/link";
 import "react-quill/dist/quill.snow.css";
 import { PutProductDesc } from "@/api/vendor/PutProductDesc";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import useFetchProductDesc from "@/api/vendor/useFetchProductDesc";
 import { useCookies } from "react-cookie";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -33,13 +33,20 @@ function Index() {
   const product = useFetchProductDesc(slug);
   const [value, setValue] = useState(null);
 
+  //Refs
+  const linkRef = useRef(null);
+
   // console.log(product0);
 
   const handlingUpdateDesc = async () => {
     try {
       const message = await PutProductDesc(slug, value, cookies["token"]);
-      console.log(message);
-      window.location.reload(true);
+      await console.log(message);
+
+      setTimeout(() => {
+        linkRef.current.click();
+      }, 1000);
+      // window.location.reload(true);
     } catch (error) {
       console.log(error);
     }
@@ -103,6 +110,7 @@ function Index() {
           <div className={Styles["user-managemnent-container"]}>
             <div>
               <Link
+                ref={linkRef}
                 href={"/vendor/product/detail/" + product0.data.product_id}
                 className="detail-product-button-container"
               >

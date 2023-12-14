@@ -44,7 +44,7 @@ function Index() {
                         <div className={Styles["left-body-item-card-info"]}>
                           <h3>Doanh thu</h3>
                           {statistic.data && (
-                            <h1>{statistic.data.statistic.revenue}</h1>
+                            <h1>${statistic.data.statistic.revenue}</h1>
                           )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>

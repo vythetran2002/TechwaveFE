@@ -81,6 +81,8 @@ function CommentPopUp(props) {
 
   const cmt = useFetchDetailComment(id, token);
 
+  console.log(cmt);
+
   if (cmt.isLoading) {
     return (
       <>
@@ -142,7 +144,56 @@ function CommentPopUp(props) {
                   <>{/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> */}</>
                 )}
               </div>
+              {cmt.data.responses.length != 0 && (
+                <div className={Styles["vendor-img-cmt-container"]}>
+                  <div className={Styles["vendor-img-info-container"]}>
+                    {cmt.data.responses[0].createBy.avatar != null ? (
+                      <>
+                        <Image
+                          src={cmt.data.responses[0].createBy.avatar}
+                          alt=""
+                          width={50}
+                          height={50}
+                          style={{
+                            borderRadius: "50%",
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <Image
+                        src={images.nonAvatar}
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
+                    )}
+                    <div className={Styles["vendor-info-container"]}>
+                      <span>{cmt.data.responses[0].createBy.username}</span>
+                      <span>
+                        {dayjs(cmt.data.responses[0].createAt).format(
+                          "DD/MM/YYYY"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={Styles["vendor-content-container"]}>
+                    {cmt.data.responses[0].content}
+                  </div>
+                  {cmt.data.responses[0].picture && (
+                    <div className={Styles["vendor-content-container"]}>
+                      <Image
+                        src={cmt.data.responses[0].picture}
+                        width={150}
+                        height={150}
+                        style={{ borderRadius: "5px" }}
+                        alt=""
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
+
             {props.status == 0 && (
               <>
                 <div

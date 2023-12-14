@@ -16,6 +16,7 @@ import { uploadImage } from "@/components/utils/Upload";
 import { AddOption } from "@/api/vendor/AddOption";
 import { Toaster } from "react-hot-toast";
 import { PutOption } from "@/api/vendor/PutOption";
+import images from "@/assets/images";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -26,7 +27,7 @@ const roboto = Roboto({
 export default function EditOptionDialog(props) {
   // console.log(props);
   const [open, setOpen] = React.useState(false);
-  const [image, setImage] = useState(props.option.image);
+  const [avatarSrc, setAvatarSrc] = useState(null);
   const [name, setName] = useState(props.option.name);
   const messageRef = useRef();
 
@@ -88,9 +89,9 @@ export default function EditOptionDialog(props) {
       .then((result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
-        // setAvatarSrc(imagePath);
-        let temp = { ...option, image: imagePath };
-        props.updateImage(temp);
+        setAvatarSrc(imagePath);
+        // let temp = { ...props.option, image: imagePath };
+        // props.updateImage(temp);
       })
       .catch((error) => {
         console.error("Lỗi:", error);
@@ -110,8 +111,16 @@ export default function EditOptionDialog(props) {
 
   const handlingSubmit = (event) => {
     event.preventDefault();
-    let { image, name } = props.option;
-    let temp = { image, name };
+    let temp = {};
+    if (avatarSrc) {
+      temp = {
+        name: props.option.name,
+        image: avatarSrc,
+      };
+    } else {
+      let { image, name } = props.option;
+      temp = { image, name };
+    }
     console.log(temp);
     // console.log(temp);
     // console.log("productId " + props.productId);
@@ -123,6 +132,7 @@ export default function EditOptionDialog(props) {
       props.token
     );
     console.log(message);
+    props.handleClose();
     // window.location.reload();
     // const message = AddOption(props.id, temp, props.token);
     // window.location.reload();
@@ -143,8 +153,8 @@ export default function EditOptionDialog(props) {
   // );
 
   // useEffect(() => {
-  //   console.log(name);
-  // }, [name]);
+  //   console.log(image);
+  // }, [image]);
 
   return (
     <React.Fragment>
@@ -200,27 +210,40 @@ export default function EditOptionDialog(props) {
                 >
                   {fileList.length >= 8 ? null : uploadButton}
                 </Upload> */}
-                {image ? (
+                {avatarSrc ? (
                   <>
                     <Image
                       width={100}
                       height={100}
                       style={{ borderRadius: "5px" }}
-                      src={image}
+                      src={avatarSrc}
                       alt=""
                       priority
                     />
                   </>
                 ) : (
                   <>
-                    <Image
-                      width={100}
-                      height={100}
-                      style={{ borderRadius: "5px" }}
-                      src={props.option.image}
-                      alt=""
-                      priority
-                    />
+                    {props.option.image ? (
+                      <Image
+                        width={100}
+                        height={100}
+                        style={{ borderRadius: "5px" }}
+                        src={props.option.image}
+                        alt=""
+                        priority
+                      />
+                    ) : (
+                      <>
+                        <Image
+                          width={100}
+                          height={100}
+                          style={{ borderRadius: "5px" }}
+                          src={images.nonImg}
+                          alt=""
+                          priority
+                        />
+                      </>
+                    )}
                   </>
                 )}
               </div>

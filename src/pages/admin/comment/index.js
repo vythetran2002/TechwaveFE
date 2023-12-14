@@ -30,7 +30,7 @@ function Index() {
   //   const [isOpenEditCateDialog, setIsOpenEditCaterDialog] = useState(false);
   //   const [isOpenEditImgDialog, setIsOpenEditImgDialog] = useState(false);
   //   const [avatarSrc, setAvatarSrc] = useState(images.empty);
-  const [id, setId] = useState();
+  const [id, setId] = useState(null);
   const [cookie] = useCookies();
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
@@ -177,7 +177,11 @@ function Index() {
             onClose={handlingClose}
           >
             <DialogContent>
-              <CommentPopup id={id} token={cookie["token"]} />
+              <CommentPopup
+                handleCloseDialog={handlingClose}
+                id={id}
+                token={cookie["token"]}
+              />
             </DialogContent>
           </Dialog>
           <div

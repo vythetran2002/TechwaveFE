@@ -24,9 +24,9 @@ import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlin
 
 function AdminSidebar(props) {
   const route = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const handlingLogout = async () => {
-    const message = LogOutAccount(cookies["token"]);
+    const message = await LogOutAccount(cookies["token"]);
     await removeCookie("token");
     console.log(message);
     route.push("/auth/login");

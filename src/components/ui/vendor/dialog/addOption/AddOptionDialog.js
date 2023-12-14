@@ -115,6 +115,7 @@ export default function AddOptionDialog(props) {
     let temp = { ...option, name: name };
     const message = AddOption(props.id, temp, props.token);
     // window.location.reload();
+    props.handleClose();
     console.log(message);
   };
 

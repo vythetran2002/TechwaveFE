@@ -1,6 +1,9 @@
 import useSWR from "swr";
 import axios from "axios";
 
+const fetcher = (url, headers) =>
+  axios.get(url, { headers }).then((res) => res.data);
+
 const useFetchDetailComment = (id, myToken) => {
   const url = "http://localhost:3000/api/vendor/review/" + id;
 
@@ -11,9 +14,6 @@ const useFetchDetailComment = (id, myToken) => {
     "Content-Type": "application/json",
     Authorization: `${token}`,
   };
-
-  const fetcher = (url, headers) =>
-    axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
 
   const { data, error, mutate, isValidating } = useSWR(
     id ? `http://localhost:3000/api/vendor/review/${id}` : null,

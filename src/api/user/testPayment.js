@@ -38,7 +38,7 @@ const useFetchTestPayment = (params) => {
           {
             params: params,
           },
-          { headers, credentials: "include" }
+          { headers }
         )
         .then((res) => res.data);
     } else {

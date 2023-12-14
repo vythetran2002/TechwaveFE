@@ -24,10 +24,12 @@ const LoginScheme = Yup.object().shape({
     .required("Vui lòng nhập thông tin"),
 });
 
+const maxAge = 7200;
+
 function Index() {
   const [cookies, setCookie, removeCookie] = useCookies();
   const router = useRouter();
-  console.log(cookies);
+  // console.log(cookies);
 
   const handleLogin = async (data, e) => {
     e.preventDefault();
@@ -108,11 +110,11 @@ function Index() {
     resolver: yupResolver(LoginScheme),
   });
 
-  useEffect(() => {
-    // Lấy giá trị từ cookie
-    const storedData = cookies["yourKey"];
-    console.log("Data from cookie:", storedData);
-  }, [cookies]);
+  // useEffect(() => {
+  //   // Lấy giá trị từ cookie
+  //   const storedData = cookies["yourKey"];
+  //   console.log("Data from cookie:", storedData);
+  // }, [cookies]);
 
   return (
     <>
@@ -152,13 +154,13 @@ function Index() {
                 >
                   Register
                 </li>
-                <li
+                {/* <li
                   onClick={() => {
                     router.push("/auth/vendor-register");
                   }}
                 >
                   Vendor Register
-                </li>
+                </li> */}
 
                 <li
                   onClick={() => {
@@ -241,7 +243,7 @@ function Index() {
             </form>
           </div>
           <div className="right">
-            <Image src={images.loginBg} alt="" />
+            <Image src={images.loginBg} alt="" priority />
           </div>
         </div>
       </div>

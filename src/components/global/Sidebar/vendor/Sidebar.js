@@ -22,14 +22,17 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { LogOutAccount } from "@/api/auth/LogOutAcount";
 
 function VendorSidebar(props) {
   const route = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies, removeCookie] = useCookies();
   const handlingLogout = async () => {
-    await removeCookie("token");
+    const message = await LogOutAccount(cookies["token"]);
+    removeCookie("token");
+    console.log(message);
     route.push("/auth/login");
-    toast.success("logged out");
+    // toast.success("logged out");
   };
 
   const navRef = useRef();

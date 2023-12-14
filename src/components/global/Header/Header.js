@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Styles from "./styles.module.css";
 import { useState } from "react";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
@@ -28,7 +28,9 @@ import queryString from "query-string";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import { Empty } from "antd";
 import useFetchCart from "@/api/user/useFetchCart";
-
+import useFetchSearchProduct from "@/api/useFetchSearchProduct";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import SearchItemCard from "@/components/ui/SearchItemCard/SearchItemCard";
 // const Drawer = dynamic(() => import("antd"), { ssr: false });
 
 // function useAuthToken() {
@@ -93,14 +95,20 @@ function Header(props) {
   const [isLogin, setIsLogin] = useState(null);
   const [cartItems, setCartItems] = useState(null);
   const [select, setSelect] = useState([]);
-  const cart = useFetchCart();
-  // console.log(cart);
   const user = useFetchUserProfile();
   const [amount, setAmount] = useState(0);
-
   const [isChecked, setIsChecked] = useState(false);
-
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState();
+  const [isSearch, setIsSearch] = useState(false);
+  const cart = useFetchCart();
+  const result = useFetchSearchProduct(search);
+  // console.log(result);
+  // const authToken = useAuthToken();
+  // console.log(cart);
+
+  //refs
+  const searchContainerRef = useRef();
 
   const logOut = () => {
     const message = LogOutAccount(cookies["token"]);
@@ -121,6 +129,14 @@ function Header(props) {
 
   const sxStyle = {
     marginTop: "35px",
+  };
+
+  const handleSearch = () => {
+    if (search) {
+      router.push("/search?name=" + search);
+    } else {
+      toast.error("Vui lòng nhập thông tin");
+    }
   };
 
   const handlingDeleteCartItem = async (id) => {
@@ -216,75 +232,124 @@ function Header(props) {
                   <div className={Styles["avatar-wrapper"]}>
                     {user.data ? (
                       user.data.avatar ? (
-                        <Image
-                          width={50}
-                          height={50}
-                          src={user.data.avatar}
-                          alt=""
-                          priority={true}
-                          className={Styles["avatar"]}
-                        />
+                        <div className={Styles["avatar-container"]}>
+                          <Image
+                            width={50}
+                            height={50}
+                            src={user.data.avatar}
+                            alt=""
+                            priority={true}
+                            className={Styles["avatar"]}
+                          />
+                          <div className={Styles["avatar-dropdown-container"]}>
+                            <div className={Styles["info"]}>
+                              <span className={Styles["info-name"]}>
+                                {user.data.fullname}
+                              </span>
+                              <span className={Styles["info-email"]}>
+                                {user.data.email}
+                              </span>
+                            </div>
+                            <div className={Styles["nav-avt-list"]}>
+                              <Link
+                                href={"/user/account/profile/"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <AccountCircleOutlinedIcon />
+                                <span>Tài khoản của tôi</span>
+                              </Link>
+                              <Link
+                                href={"/user/account/profile"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <EditNoteOutlinedIcon />
+                                <span>Đổi mật khẩu</span>
+                              </Link>
+                              <Link
+                                href={"/user/account/favourites"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <FavoriteBorderOutlinedIcon />
+                                <span>Sản phẩm yêu thích</span>
+                              </Link>
+                            </div>
+                            <div
+                              className={Styles["nav-avt-logout"]}
+                              onClick={logOut}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <PowerSettingsNewOutlinedIcon />
+                              <span>Đăng xuất</span>
+                            </div>
+                          </div>
+                        </div>
                       ) : (
-                        <Image
-                          src={images.nonAvatar}
-                          alt=""
-                          priority={true}
-                          className={Styles["avatar"]}
-                        />
+                        <div className={Styles["avatar-container"]}>
+                          <Image
+                            src={images.nonAvatar}
+                            alt=""
+                            priority={true}
+                            className={Styles["avatar"]}
+                          />
+                          <div className={Styles["avatar-dropdown-container"]}>
+                            <div className={Styles["info"]}>
+                              <span className={Styles["info-name"]}>
+                                {user.data.fullname}
+                              </span>
+                              <span className={Styles["info-email"]}>
+                                {user.data.email}
+                              </span>
+                            </div>
+                            <div className={Styles["nav-avt-list"]}>
+                              <Link
+                                href={"/user/account/profile/"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <AccountCircleOutlinedIcon />
+                                <span>Tài khoản của tôi</span>
+                              </Link>
+                              <Link
+                                href={"/user/account/profile"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <EditNoteOutlinedIcon />
+                                <span>Đổi mật khẩu</span>
+                              </Link>
+                              <Link
+                                href={"/user/account/favourites"}
+                                className={Styles["nav-avatar-item"]}
+                              >
+                                <FavoriteBorderOutlinedIcon />
+                                <span>Sản phẩm yêu thích</span>
+                              </Link>
+                            </div>
+                            <div
+                              className={Styles["nav-avt-logout"]}
+                              onClick={logOut}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <PowerSettingsNewOutlinedIcon />
+                              <span>Đăng xuất</span>
+                            </div>
+                          </div>
+                        </div>
                       )
                     ) : (
                       <></>
                     )}
                   </div>
-                  <div className={Styles["avatar-dropdown-container"]}>
-                    <div className={Styles["info"]}>
-                      <span className={Styles["info-name"]}>
-                        {user.data.fullname}
-                      </span>
-                      <span className={Styles["info-email"]}>
-                        {user.data.email}
-                      </span>
-                    </div>
-                    <div className={Styles["nav-avt-list"]}>
-                      <Link
-                        href={"/user/account/profile/"}
-                        className={Styles["nav-avatar-item"]}
-                      >
-                        <AccountCircleOutlinedIcon />
-                        <span>Tài khoản của tôi</span>
-                      </Link>
-                      <Link
-                        href={"/user/account/profile"}
-                        className={Styles["nav-avatar-item"]}
-                      >
-                        <EditNoteOutlinedIcon />
-                        <span>Đổi mật khẩu</span>
-                      </Link>
-                      {/* <Link
-                        href={"/admin"}
-                        className={Styles["nav-avatar-item"]}
-                      >
-                        <SettingsOutlinedIcon />
-                        <span>Cài đặt</span>
-                      </Link> */}
-                    </div>
-                    <div
-                      className={Styles["nav-avt-logout"]}
-                      onClick={logOut}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <PowerSettingsNewOutlinedIcon />
-                      <span>Đăng xuất</span>
-                    </div>
-                  </div>
+
                   {/* <div className={Styles["avatar-dropdown-container-2"]}></div> */}
                 </>
               ) : (
-                <>
+                <div className={Styles["resgister-login-container"]}>
+                  <Link href={"/auth/register"} style={{ cursor: "pointer" }}>
+                    Đăng ký
+                  </Link>
                   <Link href={"/auth/login"} style={{ cursor: "pointer" }}>
                     Đăng nhập
                   </Link>
-                </>
+                </div>
               )}
 
               {/* </Badge> */}
@@ -307,18 +372,55 @@ function Header(props) {
               </Link>
             </div>
             <div className={Styles["search-phone-cart-container"]}>
-              <form className={Styles["search-form"]} action="/">
+              <div className={Styles["search-form"]}>
                 <div className={Styles["input-group"]}>
                   <input
+                    onFocus={() => {
+                      if (searchContainerRef.current) {
+                        searchContainerRef.current.style.display = "block";
+                      }
+                    }}
+                    onBlur={() => {
+                      if (searchContainerRef.current) {
+                        setTimeout(() => {
+                          searchContainerRef.current.style.display = "none";
+                        }, 100);
+                      }
+                    }}
                     type="text"
                     className={Styles["input-search"]}
                     placeholder="Tìm kiếm ..."
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
                   ></input>
-                  <div className={Styles["button-search"]}>
+                  <div
+                    className={Styles["button-search"]}
+                    onClick={handleSearch}
+                  >
                     <SearchOutlinedIcon />
                   </div>
                 </div>
-              </form>
+                {result.data &&
+                  search != "" &&
+                  result.data.results.length != 0 && (
+                    <div
+                      ref={searchContainerRef}
+                      className={
+                        Styles["search-suggestion-autocomplete-container"]
+                      }
+                    >
+                      {result.data.results.length != 0 &&
+                        result.data.results.map((item, index) => {
+                          return (
+                            <React.Fragment key={"search-item" + index}>
+                              <SearchItemCard item={item} />
+                            </React.Fragment>
+                          );
+                        })}
+                    </div>
+                  )}
+              </div>
               <button className={Styles["phone-button"]}>
                 <CallOutlinedIcon
                   className={Styles["phone-button-wrapper"]}
@@ -337,9 +439,11 @@ function Header(props) {
                       marginTop: "3px",
                     }}
                   >
-                    Thành tiền
+                    Giỏ hàng của tôi
                   </span>
-                  <span style={{ textAlign: "start", flex: "0.9" }}>0đ</span>
+                  {/* <span style={{ textAlign: "start", flex: "0.9" }}>
+                    của tôi
+                  </span> */}
                 </div>
                 <div className={Styles["cart-icon-container"]}>
                   <ShoppingCartOutlinedIcon />

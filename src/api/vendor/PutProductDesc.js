@@ -15,7 +15,7 @@ export const PutProductDesc = async (id, data, token) => {
         },
       }
     );
-    toast.success("Updated");
+    toast.success("Cập nhật thành công");
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

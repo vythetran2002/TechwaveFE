@@ -128,13 +128,13 @@ function Index() {
                 >
                   Register
                 </li>
-                <li
+                {/* <li
                   onClick={() => {
                     router.push("/auth/vendor-register");
                   }}
                 >
                   Vendor Register
-                </li>
+                </li> */}
 
                 <li
                   onClick={() => {

@@ -12,7 +12,7 @@ const useFetchProductById = (id, myToken) => {
     // Authorization: `${token}`,
   };
 
-  if (myToken) {
+  if (myToken && myToken != "undefined") {
     headers.Authorization = `${token}`;
   }
 

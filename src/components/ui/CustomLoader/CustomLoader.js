@@ -11,7 +11,7 @@ function CustomLoader() {
         justifyContent: "center",
       }}
     >
-      <div class="custom-loader"></div>
+      <div className="custom-loader"></div>
     </div>
   );
 }

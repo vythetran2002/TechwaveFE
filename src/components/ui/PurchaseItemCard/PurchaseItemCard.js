@@ -388,12 +388,27 @@ function PurchaseItemCard(props) {
                     )
                   ) : (
                     <>
-                      <Image
-                        src={images.nonImg}
-                        alt=""
-                        priority={true}
-                        className={Styles["img"]}
-                      />
+                      {oderItem.cart_id.product.image ? (
+                        <>
+                          <Image
+                            width={80}
+                            height={80}
+                            src={oderItem.cart_id.product.image}
+                            alt=""
+                            priority={true}
+                            className={Styles["img"]}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <Image
+                            src={images.nonImg}
+                            alt=""
+                            priority={true}
+                            className={Styles["img"]}
+                          />
+                        </>
+                      )}
                     </>
                   )
                 ) : (

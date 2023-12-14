@@ -1,26 +1,31 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useState } from "react";
 import { useCookies } from "react-cookie";
 
 const fetcher = (url, headers) =>
-  axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
+  axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchCart = () => {
-  const [cookies] = useCookies();
+  const [cookies] = useCookies(["token"]); // Only get the 'token' cookie
   const url = "http://localhost:3000/api/user/cart";
 
-  const token = "Bearer " + cookies["token"];
+  // Check if token exists before creating the Authorization header
+  const token =
+    cookies["token"] && cookies["token"] != "undefined"
+      ? `Bearer ${cookies["token"]}`
+      : null;
 
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: `${token}`,
-  };
+  const headers = token
+    ? {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: token,
+      }
+    : {};
 
   const { data, error, mutate, isValidating } = useSWR(
-    url,
-    () => fetcher(url, headers),
+    token ? url : null, // Only fetch if the token exists
+    token ? () => fetcher(url, headers) : null, // Provide fetcher function only if token exists
     { refreshInterval: 1000 }
   );
 

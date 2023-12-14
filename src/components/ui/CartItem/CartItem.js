@@ -104,13 +104,27 @@ function CartItem(props) {
             <div className={Styles["item-img-wrapper"]}>
               {props.item.option ? (
                 <>
-                  <Image
-                    width={100}
-                    height={100}
-                    src={props.item.option.image}
-                    alt=""
-                    className={Styles["img"]}
-                  />
+                  {props.item.option.image ? (
+                    <>
+                      <Image
+                        width={100}
+                        height={100}
+                        src={props.item.option.image}
+                        alt=""
+                        className={Styles["img"]}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Image
+                        width={100}
+                        height={100}
+                        src={images.nonImg}
+                        alt=""
+                        className={Styles["img"]}
+                      />
+                    </>
+                  )}
                 </>
               ) : (
                 <>

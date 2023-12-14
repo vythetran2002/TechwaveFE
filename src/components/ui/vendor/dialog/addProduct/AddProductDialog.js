@@ -71,7 +71,7 @@ function checkValidFields(obj) {
 }
 
 export default function AddProductDialog(props) {
-  console.log(props.product);
+  // console.log(props.product);
 
   const [open, setOpen] = React.useState(false);
   const [genderValue, setGenderValue] = useState(1);
@@ -158,6 +158,7 @@ export default function AddProductDialog(props) {
       const message = AddProduct(temp, props.token);
       console.log(message);
       messageRef.current.style.display = "none";
+      props.handleClose();
     } else {
       console.log(temp);
       messageRef.current.style.display = "block";

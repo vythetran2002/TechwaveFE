@@ -8,7 +8,7 @@ import Circle from "react-circle";
 import Image from "next/image";
 import images from "@/assets/images";
 import TestDialog from "@/pages/Test/dialog";
-import OrdersChart from "@/components/ui/admin/chart/OrdersChart";
+import OrdersChart from "@/components/ui/admin/chart/admin/OrdersChart";
 import { Toaster } from "react-hot-toast";
 import useFetchAdminProfile from "@/api/admin/useFetchAdminProfile";
 

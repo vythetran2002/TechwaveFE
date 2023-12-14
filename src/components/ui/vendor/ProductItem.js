@@ -89,9 +89,12 @@ function ProductItem(props) {
         <div className={Styles["list-item-status-wrapper"]}>
           {dayjs(props.product.createAt).format("DD/MM/YYYY")}
         </div>
-        <div className={Styles["list-item-gender-wrapper"]}>
+        <div
+          className={Styles["list-item-gender-wrapper"]}
+          style={{ marginRight: "10px" }}
+        >
           <div className={Styles["list-item-status-active-button-wrapper"]}>
-            {props.product.category_id}
+            {props.product.category.name}
           </div>
         </div>
         <div className={Styles["list-item-more-option-wrapper"]}>
