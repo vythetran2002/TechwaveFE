@@ -295,7 +295,7 @@ function PurchaseItemCard(props) {
                   <MoreHorizOutlinedIcon />
                 </span>
                 <span style={{ marginLeft: "10px" }}>
-                  Đơn hàng đang được chờ phê duyệt
+                  Đơn hàng đang chờ xác nhận
                 </span>
               </div>
             </div>

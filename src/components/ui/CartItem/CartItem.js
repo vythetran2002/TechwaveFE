@@ -8,6 +8,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 import { UpdateCartItem } from "@/api/user/updateCartItem";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import Link from "next/link";
 
 function addElementToArray(arr, element) {
   if (typeof element === "number") {
@@ -162,7 +163,13 @@ function CartItem(props) {
           </div>
           <div className={Styles["item-info-container"]}>
             <div className={Styles["item-name-cate-container"]}>
-              <span className={Styles["name"]}>{props.item.product.name}</span>
+              <Link
+                style={{ color: "black" }}
+                href={"/product/" + props.item.product.product_id}
+                className={Styles["name"]}
+              >
+                {props.item.product.name}
+              </Link>
               <span className={Styles["cate"]}>
                 {props.item.option && <>Phân loại: {props.item.option.name}</>}
                 {/* Origin: {props.item.product.origin} */}

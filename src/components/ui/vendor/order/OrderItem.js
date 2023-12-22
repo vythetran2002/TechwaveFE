@@ -17,7 +17,7 @@ import { FormatPrice } from "@/assets/utils/PriceFormat";
 function OrderItem(props) {
   const { order } = props;
 
-  console.log(order);
+  // console.log(order);
 
   //   const menuRef = useRef(null);
 
@@ -141,7 +141,7 @@ function OrderItem(props) {
           </div>
         )}
 
-        {props.mode == 3 && (
+        {props.mode == 2 && (
           <div
             className={Styles["list-item-date-wrapper"]}
             style={{

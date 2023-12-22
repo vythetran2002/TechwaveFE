@@ -13,6 +13,8 @@ import { useCookies } from "react-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import { addCartItem } from "@/api/user/addCartItem";
 import toast, { Toaster } from "react-hot-toast";
+import useFetch from "@/api/useFetch";
+import Link from "next/link";
 
 function index() {
   const [cookies] = useCookies();
@@ -21,8 +23,9 @@ function index() {
   const router = useRouter();
   const name = router.query.name;
   const result = useFetchSearchProduct(name);
-  console.log(result);
-
+  // console.log(result);
+  const cates = useFetch("http://localhost:3000/api/category");
+  console.log(cates);
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
   };
@@ -72,20 +75,41 @@ function index() {
                   <span className={Styles["data-text"]}>
                     Có {result.data.results.length} sản phẩm với từ khoá: {name}
                   </span>
-                  <div className={Styles["item-list-container"]}>
-                    {result.data.results.map((item, index) => {
-                      return (
-                        <React.Fragment key={"item-card" + index}>
-                          <Item
-                            addFavourite={handlingAddFavouriteProduct}
-                            addCartItem={handlingAddCartItem}
-                            item={item}
-                            setDeTailItem={setDeTailItem}
-                            handlingOpenDialog={handlingOpenDialog}
-                          />
-                        </React.Fragment>
-                      );
-                    })}
+                  <div className={Styles["item-list-cate-container"]}>
+                    <div className={Styles["nav-container"]}>
+                      {cates.data ? (
+                        cates.data.map((cate, index) => {
+                          return (
+                            <Link
+                              key={"cate" + cate.category_id}
+                              href={"/cate/" + cate.category_id}
+                              className={`${Styles["nav-item"]} ${Styles["active"]}`}
+                            >
+                              {cate.name}
+                            </Link>
+                          );
+                        })
+                      ) : (
+                        <>
+                          <Empty />
+                        </>
+                      )}
+                    </div>
+                    <div className={Styles["item-list-container"]}>
+                      {result.data.results.map((item, index) => {
+                        return (
+                          <React.Fragment key={"item-card" + index}>
+                            <Item
+                              addFavourite={handlingAddFavouriteProduct}
+                              addCartItem={handlingAddCartItem}
+                              item={item}
+                              setDeTailItem={setDeTailItem}
+                              handlingOpenDialog={handlingOpenDialog}
+                            />
+                          </React.Fragment>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               ) : (
