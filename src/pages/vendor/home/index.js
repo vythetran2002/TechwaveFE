@@ -11,6 +11,8 @@ import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { Toaster } from "react-hot-toast";
 import useFetchStatistic from "@/api/vendor/useFetchStatistic";
 import CustomLoader from "@/components/ui/CustomLoader/CustomLoader";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 function Index() {
   const vendor = useFetchVendorProfile();
@@ -72,7 +74,10 @@ function Index() {
                             <h1>{statistic.data.statistic.countCustomer}</h1>
                           )}
                         </div>
-                        <div className={Styles["left-body-item-card-circle"]}>
+                        <div
+                          className={Styles["left-body-item-card-circle"]}
+                          style={{ width: 100, height: 100 }}
+                        >
                           <Circle
                             progress={35}
                             animate={true}
@@ -84,6 +89,9 @@ function Index() {
                             showPercentage={true}
                             showPercentageSymbol={true}
                           />
+                          {/* <CircularProgressbar 
+                          st
+                          value={50} text={`${50}%`} />; */}
                         </div>
                       </div>
                     </div>

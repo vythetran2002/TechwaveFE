@@ -233,7 +233,7 @@ function Home() {
   return (
     <>
       <Head>
-        <title>Techwave - Vendor</title>
+        <title>Techwave - Admin</title>
       </Head>
       <AdminLayout path={"/profile"}>
         <Toaster />

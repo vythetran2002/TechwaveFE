@@ -39,10 +39,10 @@ function HeaderNav() {
               <HomeOutlinedIcon style={{ color: "white !important" }} />
               <span>Trang chủ</span>
             </Link>
-            <div className={Styles["nav-item-container"]}>
+            <Link href={"/contact"} className={Styles["nav-item-container"]}>
               <InfoOutlinedIcon />
               <span>Giới thiệu</span>
-            </div>
+            </Link>
             {/* <div className={Styles["nav-item-container"]}>
             <CustomerServiceOutlined />
             <span>Dịch vụ</span>

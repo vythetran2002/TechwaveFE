@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all -p open-browser dev-server",
-    "dev-server": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "open-browser": "open http://localhost:3001"
+    "lint": "next lint"
   },
   "author": "TranTheVy",
   "dependencies": {
@@ -43,6 +41,7 @@
     "react-bootstrap": "^2.9.1",
     "react-chartjs-2": "^5.2.0",
     "react-circle": "^1.1.1",
+    "react-circular-progressbar": "^2.1.0",
     "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
     "react-fancybox": "^0.2.5",

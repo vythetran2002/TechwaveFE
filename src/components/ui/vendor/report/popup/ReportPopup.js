@@ -3,6 +3,7 @@ import Styles from "./styles.module.css";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
 import images from "@/assets/images";
+import dayjs from "dayjs";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -51,14 +52,27 @@ function ReportPopup(props) {
             <div className={Styles["user-info-container"]}>
               <span>Tên: {report.account_report.username}</span>
               {report.createAt ? (
-                <span>{report.createAt}</span>
+                <span>{dayjs(report.createAt).format("DD/MM/YYYY")}</span>
               ) : (
                 <span>Ngày tạo:</span>
               )}
               {handleStatus(report.status)}
             </div>
           </div>
-          <div className={Styles["content-container"]}>{report.content}</div>
+          <div className={Styles["content-container"]}>
+            <span> {report.content}</span>
+
+            {report.picture && (
+              <div className={Styles["img-container"]}>
+                <Image
+                  src={report.picture}
+                  width={200}
+                  height={200}
+                  alt=""
+                ></Image>
+              </div>
+            )}
+          </div>
         </div>
       </>
     );

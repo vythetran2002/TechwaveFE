@@ -74,9 +74,23 @@ function ReportDetailDialog(props) {
           <div className={Styles["content-container"]}>
             {report.data.content}
           </div>
-          <div className={Styles["content-container"]}>
-            {report.picture ? (
-              <Image src={report.picture} alt="" width={200} height={200} />
+          <div
+            className={Styles["content-container"]}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
+            {report.data.picture ? (
+              <Image
+                src={report.data.picture}
+                alt=""
+                width={200}
+                height={200}
+                style={{ borderRadius: "5px" }}
+              />
             ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}

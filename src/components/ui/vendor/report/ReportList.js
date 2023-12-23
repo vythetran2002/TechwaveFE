@@ -37,7 +37,7 @@ function ReportList(props) {
             </div>
 
             <div className={Styles["gender-wrapper"]}>
-              <span className={Styles["head-title"]}>Ngày đánh giá </span>
+              <span className={Styles["head-title"]}>Ngày báo cáo </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
