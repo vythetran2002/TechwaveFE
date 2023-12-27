@@ -1,5 +1,6 @@
 import React from "react";
 import Styles from "./styles.module.css";
+import { useRef } from "react";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import images from "@/assets/images";
 import Image from "next/image";
@@ -11,8 +12,15 @@ import FileDownloadDoneOutlinedIcon from "@mui/icons-material/FileDownloadDoneOu
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 function FollowShopCard(props) {
+  //Refs
+  const linkRef = useRef(null);
+
   const handlingClickUnfollow = () => {
     props.onClickUnFollow(props.vendorId);
+  };
+
+  const handlingClickViewDetail = () => {
+    linkRef.current.click();
   };
 
   return (
@@ -22,14 +30,17 @@ function FollowShopCard(props) {
           <Button type="primary" danger onClick={handlingClickUnfollow}>
             Huỷ Follow
           </Button>
-          <div className={Styles["item-status-wrapper"]}>
-            {/* <span className={Styles["item-status-wrapper"]}>
+          <Button type="primary" onClick={handlingClickViewDetail}>
+            Xem Shop
+          </Button>
+          {/* <div className={Styles["item-status-wrapper"]}>
+            <span className={Styles["item-status-wrapper"]}>
               <MoreHorizOutlinedIcon />
             </span>
             <span style={{ marginLeft: "10px" }}>
               Báo cáo đang được phê duyệt
-            </span> */}
-          </div>
+            </span>
+          </div> */}
         </div>
 
         <div className={Styles["item-info-container"]}>
@@ -59,10 +70,10 @@ function FollowShopCard(props) {
               <Link
                 href={"/shop/" + props.vendorId + "/0"}
                 className={Styles["name-shop-link"]}
+                ref={linkRef}
               >
                 {props.name}
               </Link>
-              {/* <span>13:30 13/10/2023</span> */}
             </div>
           </div>
           <div className={Styles["price-container"]}></div>

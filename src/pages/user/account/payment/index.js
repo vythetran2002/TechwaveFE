@@ -28,7 +28,15 @@ import toast, { Toaster } from "react-hot-toast";
 const Input = dynamic(() => import("antd/es/input"), { ssr: false });
 
 const calculateTotalValue = (arr) => {
-  return arr.reduce((total, obj) => total + obj.price * obj.quantity, 0);
+  if (arr) {
+    return arr.reduce((total, obj) => {
+      if (obj.product.promotional_price) {
+        return total + obj.product.promotional_price * obj.quantity;
+      } else {
+        return total + obj.product.price * obj.quantity;
+      }
+    }, 0);
+  }
 };
 
 function extractCartIds(cartItems) {

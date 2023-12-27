@@ -49,8 +49,8 @@ function PermissionList(props) {
       label: "MODIFY",
     },
     {
-      value: "DENY",
-      label: "DENY",
+      value: "ACCESS_DENIED",
+      label: "ACCESS_DENIED",
     },
   ];
 
@@ -169,7 +169,7 @@ function PermissionList(props) {
       return view;
     } else if (text == "MODIFY") {
       return modify;
-    } else if (text == "DENY") {
+    } else if (text == "ACCESS_DENIED") {
       return deny;
     }
   };
@@ -183,7 +183,7 @@ function PermissionList(props) {
       return viewEdit;
     } else if (text == "MODIFY") {
       return modifyEdit;
-    } else if (text == "DENY") {
+    } else if (text == "ACCESS_DENIED") {
       return denyEdit;
     }
   };

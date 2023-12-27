@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "@/components/layout/Layout";
 import Head from "next/head";
+import { useEffect } from "react";
 import Styles from "./styles.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -20,14 +21,20 @@ function index() {
   const [cookies] = useCookies();
   const [detailItem, setDeTailItem] = useState(null);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [img, setImg] = useState(null);
+  const [reload, setReload] = useState(false);
   const router = useRouter();
   const name = router.query.name;
   const result = useFetchSearchProduct(name);
   // console.log(result);
   const cates = useFetch("http://localhost:3000/api/category");
-  console.log(cates);
+  // console.log(cates);
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
+  };
+  const updateImg = (value) => {
+    setImg(value);
+    setReload(!reload);
   };
 
   const handlingAddFavouriteProduct = (id) => {
@@ -56,6 +63,10 @@ function index() {
       router.push("/auth/login");
     }
   };
+
+  useEffect(() => {
+    setReload(!reload);
+  }, [img]);
 
   if (result.isLoading) {
     return <CustomLoader />;
@@ -123,6 +134,8 @@ function index() {
             </div>
           </div>
           <ItemDetail
+            img={img}
+            updateImg={updateImg}
             addCartItem={handlingAddCartItem}
             item={detailItem}
             isOpenDialog={isOpenDialog}

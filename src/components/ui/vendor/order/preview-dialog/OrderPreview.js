@@ -70,9 +70,12 @@ function OrderPreview(props) {
             )}
           </div>
           <div className={Styles["product-info"]}>
-            <div className={Styles["product-name-wrapper"]}>
-              <span>Sản phẩm: </span>
-              <span>{order.cart_id.product.name}</span>
+            <div
+              className={Styles["product-name-wrapper"]}
+              style={{ width: "100%" }}
+            >
+              <span style={{ width: "20%" }}>Sản phẩm: </span>
+              <span style={{ width: "80%" }}>{order.cart_id.product.name}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
               {order.cart_id.option && (
@@ -85,56 +88,66 @@ function OrderPreview(props) {
           </div>
           <div className={Styles["product-info"]}>
             <div className={Styles["product-name-wrapper"]}>
-              <span>Họ tên: </span>
-              <span>{order.fullname}</span>
+              <span style={{ width: "20%" }}>Họ tên: </span>
+              <span style={{ width: "80%" }}>{order.fullname}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Số điện thoại: </span>
-              <span>{order.phone}</span>
+              <span style={{ width: "20%" }}>Số điện thoại: </span>
+              <span style={{ width: "80%" }}>{order.phone}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Địa chỉ: </span>
-              <span>{order.address}</span>
+              <span style={{ width: "20%" }}>Địa chỉ: </span>
+              <span style={{ width: "80%" }}>{order.address}</span>
             </div>
           </div>
           <div className={Styles["product-info"]}>
             <div className={Styles["product-name-wrapper"]}>
-              <span>Tổng tiền: </span>
-              <span>{FormatPrice(order.totalBill)}</span>
+              <span style={{ width: "30%" }}>Tổng tiền: </span>
+              <span style={{ width: "70%" }}>
+                {FormatPrice(order.totalBill)}
+              </span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Phương thức vận chuyển: </span>
-              <span>{order.express}</span>
+              <span style={{ width: "30%" }}>Phương thức vận chuyển: </span>
+              <span style={{ width: "70%" }}>{order.express}</span>
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Phương thức thức thanh toán: </span>
-              <span>{order.payment}</span>
+              <span style={{ width: "30%" }}>
+                Phương thức thức thanh toán:{" "}
+              </span>
+              <span style={{ width: "70%" }}>{order.payment}</span>
             </div>
             {order.payment_id != null && order.payment_id.status == 1 ? (
               <>
                 <div className={Styles["product-option-wrapper"]}>
-                  <span>Thanh toán: </span>
-                  <span style={{ color: "green" }}>Đã thanh toán</span>
+                  <span style={{ width: "30%" }}>Thanh toán: </span>
+                  <span style={{ color: "green", width: "70%" }}>
+                    Đã thanh toán
+                  </span>
                 </div>
               </>
             ) : (
               <>
                 <div className={Styles["product-option-wrapper"]}>
-                  <span>Thanh toán: </span>
-                  <span style={{ color: "red" }}>Chưa thanh toán</span>
+                  <span style={{ width: "30%" }}>Thanh toán: </span>
+                  <span style={{ color: "red", width: "70%" }}>
+                    Chưa thanh toán
+                  </span>
                 </div>
               </>
             )}
 
             <div className={Styles["product-option-wrapper"]}>
-              <span>Ngày đặt: </span>
+              <span style={{ width: "30%" }}>Ngày đặt: </span>
               {order.createAt && (
-                <span>{dayjs(order.createAt).format("DD/MM/YYYY")}</span>
+                <span style={{ width: "70%" }}>
+                  {dayjs(order.createAt).format("DD/MM/YYYY")}
+                </span>
               )}
             </div>
             <div className={Styles["product-option-wrapper"]}>
-              <span>Trạng thái: </span>
-              {handleStatus(order.status)}
+              <span style={{ width: "30%" }}>Trạng thái: </span>
+              <span style={{ width: "70%" }}>{handleStatus(order.status)}</span>
             </div>
           </div>
         </div>

@@ -67,13 +67,43 @@ function PaymentItem(props) {
 
             <span className={Styles["dot"]}>{item.quantity}</span>
           </div>
-          <span>
-            {item.option ? <>{item.option.name}</> : <>{item.product.name}</>}
+          <span
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+              gap: "10px",
+            }}
+          >
+            {/* {item.option ? <>{item.option.name}</> : <>{item.product.name}</>} */}
+            <span>{item.product.name}</span>
+            {item.option && (
+              <>
+                <span style={{ fontSize: "13px" }}>
+                  Phân loại: {item.option.name}
+                </span>
+              </>
+            )}
           </span>
         </div>
-        <span className={Styles["price-container"]}>
-          {FormatPrice(item.price)} x {item.quantity}
-        </span>
+        {item.product.promotional_price ? (
+          <div className={Styles["price-container"]}>
+            <span style={{ textDecoration: "line-through" }}>
+              {FormatPrice(item.product.price)}
+            </span>
+            <div className={Styles["price-quantity-container"]}>
+              <span>{FormatPrice(item.product.promotional_price)} </span>
+              <span>x {item.quantity}</span>
+            </div>
+          </div>
+        ) : (
+          <div className={Styles["price-container"]}>
+            <span>
+              {FormatPrice(item.product.price)} x {item.quantity}
+            </span>
+          </div>
+        )}
       </div>
     </>
   );

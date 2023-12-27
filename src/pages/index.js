@@ -25,6 +25,7 @@ function Index() {
   const [cookies] = useCookies();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
+  const [img, setImg] = useState(null);
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
   const cateList02 = useFetchProductByCateId(19);
@@ -37,6 +38,7 @@ function Index() {
 
   const handlingCloseDialog = () => {
     setIsOpenDialog(false);
+    setImg(null);
   };
 
   const handlingAddFavouriteProduct = (id) => {
@@ -136,6 +138,8 @@ function Index() {
         <CustomerFeedBack />
         <Map />
         <ItemDetail
+          img={img}
+          updateImg={setImg}
           addCartItem={handlingAddCartItem}
           item={detailItem}
           isOpenDialog={isOpenDialog}

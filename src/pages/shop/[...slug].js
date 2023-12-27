@@ -18,6 +18,8 @@ import DialogContent from "@mui/material/DialogContent";
 import ReportForm from "@/components/ui/ReportForm/ReportForm";
 import { useCookies } from "react-cookie";
 import ShopItemList from "@/components/ui/ShopItemList/ShopItemList";
+import { addCartItem } from "@/api/user/addCartItem";
+import { Cookie } from "next/font/google";
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10) + 1;
@@ -25,15 +27,17 @@ function getRandomNumber() {
 
 function ShopIndex() {
   const router = useRouter();
-  const [cookies] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const [count, setCount] = useState(0);
+  const [reload, setReload] = useState(false);
   const [favouriteChanged, setFavouriteChanged] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [img, setImg] = useState(null);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
-  const [max, setMax] = useState();
+  const [max, setMax] = useState(2);
   const slug = router.query.slug;
   let id0 = null;
   let id1 = null;
@@ -45,6 +49,10 @@ function ShopIndex() {
   // console.log(id0);
   // console.log(id1);
   const store = useFetchShopById(id0);
+  const updateImg = (value) => {
+    setImg(value);
+    setReload(!reload);
+  };
   // console.log(store);
   // console.log(store);
 
@@ -82,7 +90,8 @@ function ShopIndex() {
   };
 
   const handlingCloseDialog = () => {
-    setIsOpen(false);
+    setIsOpenDialog(false);
+    setImg(null);
   };
 
   const updateQuantity = (value) => {
@@ -97,9 +106,29 @@ function ShopIndex() {
     setMax(value);
   };
 
+  const handlingAddCartItem = async (data) => {
+    console.log("----");
+    try {
+      const message = await addCartItem(data, cookies["token"]);
+      // console.log(data);
+      if (message) {
+        toast.success("Đã thêm vào giỏ");
+      } else {
+        toast.error("Cần đăng nhập");
+        route.push("/auth/login");
+      }
+    } catch (error) {
+      toast.error("Cần đăng nhập");
+      route.push("/auth/login");
+    }
+  };
+
   // useState(() => {
   //   console.log("aaa");
   // }, [count, store]);
+  useEffect(() => {
+    setReload(!reload);
+  }, [img]);
 
   if (store.isLoading) {
     return <>Loading</>;
@@ -188,11 +217,14 @@ function ShopIndex() {
                 store.data ? store.data.
               } */}
                 <ShopItemList
+                  setDeTailItem={setDeTailItem}
                   page={page}
                   id={id0}
                   cateId={id1}
                   updateMax={updateMax}
                   handleOpenDialog={handlingOpenDialog}
+                  handleCloseDialog={handlingCloseDialog}
+                  handlingAddCartItem={handlingAddCartItem}
                 />
                 <div className={Styles["pagination-container"]}>
                   {page && (
@@ -207,11 +239,13 @@ function ShopIndex() {
             </div>
           </div>
           <ItemDetail
-            setDeTailItem={setDeTailItem}
+            img={img}
+            updateImg={updateImg}
             item={detailItem}
             isOpenDialog={isOpenDialog}
             handlingOpenDialog={handlingOpenDialog}
             handlingCloseDialog={handlingCloseDialog}
+            addCartItem={handlingAddCartItem}
           />
           <Dialog
             fullWidth={true}

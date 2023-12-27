@@ -24,6 +24,7 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchReceivedProducts from "@/api/user/useFetchRecievedProduct";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
+import MmsIcon from "@mui/icons-material/Mms";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -162,6 +163,13 @@ function Index() {
                   >
                     <BookmarkOutlinedIcon />
                     <span>Theo dõi</span>
+                  </Link>
+                  <Link
+                    href={"/user/account/review"}
+                    className={Styles["nav-item-container"]}
+                  >
+                    <MmsIcon />
+                    <span>Đánh giá</span>
                   </Link>
                 </div>
               </div>

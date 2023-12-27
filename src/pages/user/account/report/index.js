@@ -26,6 +26,8 @@ import dayjs from "dayjs";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import ReportDetailUser from "@/components/ui/ReportDetailUser/ReportDetailUser";
+import MmsIcon from "@mui/icons-material/Mms";
+
 function Index() {
   const reports = useFetchAllReport();
   const user = useFetchUserProfile();
@@ -182,6 +184,13 @@ function Index() {
                   >
                     <BookmarkOutlinedIcon />
                     <span>Theo dõi</span>
+                  </Link>
+                  <Link
+                    href={"/user/account/review"}
+                    className={Styles["nav-item-container"]}
+                  >
+                    <MmsIcon />
+                    <span>Đánh giá</span>
                   </Link>
                 </div>
               </div>

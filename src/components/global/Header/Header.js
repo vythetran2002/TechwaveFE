@@ -64,7 +64,13 @@ import SearchItemCard from "@/components/ui/SearchItemCard/SearchItemCard";
 
 const calculateTotalValue = (arr) => {
   if (arr) {
-    return arr.reduce((total, obj) => total + obj.price * obj.quantity, 0);
+    return arr.reduce((total, obj) => {
+      if (obj.product.promotional_price) {
+        return total + obj.product.promotional_price * obj.quantity;
+      } else {
+        return total + obj.product.price * obj.quantity;
+      }
+    }, 0);
   }
 };
 
@@ -123,6 +129,10 @@ function Header(props) {
     setOpen(true);
   };
 
+  const resetSelect = () => {
+    setSelect([]);
+  };
+
   const onClose = () => {
     setOpen(false);
   };
@@ -167,7 +177,7 @@ function Header(props) {
       });
     }
     // console.log(temp);
-    setSelect(null);
+    setSelect([]);
   };
 
   const onClickPay = () => {
@@ -195,8 +205,13 @@ function Header(props) {
   // }, [cookies]); // Phụ thuộc vào giá trị state của token// Phụ thuộc vào giá trị state của token
 
   useEffect(() => {
+    if (cart.data) {
+      setCartItems(cart.data);
+    }
     setAmount(calculateTotalValue(select));
-  }, [select]);
+    console.log("---------------------");
+    console.log(select.length);
+  }, [select, cart.data, select]);
 
   // if (user.isLoading) {
   //   return <>Loading</>;
@@ -439,7 +454,7 @@ function Header(props) {
                       marginTop: "3px",
                     }}
                   >
-                    Giỏ hàng của tôi
+                    Giỏ hàng
                   </span>
                   {/* <span style={{ textAlign: "start", flex: "0.9" }}>
                     của tôi
@@ -490,7 +505,7 @@ function Header(props) {
             }
           >
             <div className={Styles["cart-info-container"]}>
-              <span>Tổng tiền: {FormatPrice(amount)}đ</span>
+              <span>Tổng tiền: {FormatPrice(amount)}</span>
               <div className={Styles["quantity-checkbox-container"]}>
                 {cart.data && (
                   <>
@@ -517,6 +532,7 @@ function Header(props) {
                     return (
                       <React.Fragment key={"cartItem" + index}>
                         <CartItem
+                          resetSelect={resetSelect}
                           token={cookies["token"]}
                           isChecked={isChecked}
                           item={cartItem}

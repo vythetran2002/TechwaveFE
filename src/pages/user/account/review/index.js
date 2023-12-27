@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import UserLayout from "@/components/layout/UserLayout";
 import Layout from "@/components/layout/Layout";
-import Styles from "../favourites/style.module.css";
+import Styles from "./style.module.css";
 import { useRef } from "react";
 import ReportItemCard from "@/components/ui/ReportItemCard/ReportItemCard";
 import Link from "next/link";
@@ -26,13 +26,15 @@ import { useCookies } from "react-cookie";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import toast, { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
-const Empty = dynamic(() => import("antd/lib/empty"), { ssr: false });
 import MmsIcon from "@mui/icons-material/Mms";
+import UserReviewCard from "@/components/ui/UserReviewCard/UserReviewCard";
+import useFetchUserReviews from "@/api/user/useFetchUserReviews";
+import { Empty } from "antd";
 
 function Index() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const vendors = useFetchUserFollowVendor();
-  console.log(vendors);
+  const reviews = useFetchUserReviews();
+  // console.log(reviews);
   const user = useFetchUserProfile();
 
   //Refs
@@ -64,7 +66,7 @@ function Index() {
   return (
     <>
       <Head>
-        <title>Theo dõi của tôi</title>
+        <title>Đánh giá của tôi</title>
       </Head>
       <UserLayout>
         <Toaster />
@@ -180,14 +182,14 @@ function Index() {
                   </Link>
                   <Link
                     href={"/user/account/follow"}
-                    className={`${Styles["nav-item-container"]} ${Styles["active"]}`}
+                    className={Styles["nav-item-container"]}
                   >
                     <BookmarkOutlinedIcon />
                     <span>Theo dõi</span>
                   </Link>
                   <Link
                     href={"/user/account/review"}
-                    className={Styles["nav-item-container"]}
+                    className={`${Styles["nav-item-container"]} ${Styles["active"]}`}
                   >
                     <MmsIcon />
                     <span>Đánh giá</span>
@@ -198,12 +200,39 @@ function Index() {
             <div className={Styles["profile-right-edit-form-wrapper"]}>
               <div className={Styles["profile-title-container"]}>
                 <span style={{ fontWeight: "400", fontSize: "20px" }}>
-                  Theo dõi của tôi
+                  Đánh giá của tôi
                 </span>
-                <span>Quản lý danh sách theo dõi</span>
+                <span>Quản lý danh sách đánh giá</span>
               </div>
               <div className={Styles["follow-shop-item-container"]}>
-                {vendors.data ? (
+                {reviews.isLoading ? (
+                  <>Loading</>
+                ) : (
+                  <>
+                    {reviews.data && reviews.data.length > 0 ? (
+                      reviews.data.map((review) => {
+                        return (
+                          <React.Fragment key={review.review_id}>
+                            <UserReviewCard review={review} />
+                          </React.Fragment>
+                        );
+                      })
+                    ) : (
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <Empty />
+                      </div>
+                    )}
+                  </>
+                )}
+                {/* {vendors.data ? (
                   vendors.data.length != 0 ? (
                     vendors.data.map((vendor, index) => {
                       return (
@@ -231,7 +260,7 @@ function Index() {
                   )
                 ) : (
                   <>Loading</>
-                )}
+                )} */}
               </div>
             </div>
           </div>

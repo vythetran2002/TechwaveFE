@@ -15,6 +15,8 @@ import { Roboto } from "next/font/google";
 import { memo } from "react";
 import useFetchProductById from "@/api/products/useFetchProductById";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import toast from "react-hot-toast";
+import { Rating } from "@mui/material";
 
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
@@ -26,8 +28,13 @@ const roboto = Roboto({
 
 function ItemDetail(props) {
   const item = props.item;
+  const { img, updateImg } = props;
+  // console.log(item);
+  const [reload, setReload] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [id, setId] = useState();
+  const [id, setId] = useState(null);
+
+  // console.log(img);
   const [quantity, setQuantity] = useState(1);
 
   if (item) {
@@ -84,8 +91,10 @@ function ItemDetail(props) {
     ],
   };
 
-  const handleClick = (option, id, e) => {
+  const handleClick = (option, id, img) => {
     setId(id);
+    updateImg(img);
+    setReload(!reload);
   };
 
   const check = (option) => {
@@ -101,13 +110,18 @@ function ItemDetail(props) {
   };
 
   const handleAddCart = () => {
-    let temp = {
-      option_id: id,
-      quantity: quantity,
-      price: parseInt(quantity) * parseInt(item.price),
-      product_id: item.product_id,
-    };
-    props.addCartItem(temp);
+    if (id) {
+      let temp = {
+        option_id: id,
+        quantity: quantity,
+        price: parseInt(quantity) * parseInt(item.price),
+        product_id: item.product_id,
+      };
+      props.addCartItem(temp);
+      props.handlingCloseDialog();
+    } else {
+      toast.error("Hãy chọn loại sản phẩm");
+    }
   };
 
   // useEffect(() => {
@@ -130,9 +144,9 @@ function ItemDetail(props) {
   //   setIsActive((prevState) => !prevState);
   // }
 
-  // useEffect(() => {
-  //   console.log(id);
-  // }, [id]);
+  useEffect(() => {
+    console.log(img);
+  }, [img]);
 
   if (item)
     return (
@@ -145,28 +159,53 @@ function ItemDetail(props) {
           onClose={props.handlingCloseDialog}
           className={roboto.className}
         >
-          <DialogContent>
+          <DialogContent
+            sx={{
+              height: "fit-content",
+            }}
+          >
             <div className={Styles["dialog-container"]}>
               <div className={Styles["slider-container"]}>
                 <div className={Styles["top-slider-wrapper"]}>
                   <ReactOwl className="owl-theme" {...options}>
                     <div className={Styles["img-wrapper"]}>
-                      {item.image ? (
-                        <Image
-                          src={item.image}
-                          width={1000}
-                          height={1000}
-                          alt=""
-                          className={Styles["img"]}
-                          priority={true}
-                        />
+                      {img ? (
+                        <>
+                          <Image
+                            src={img}
+                            width={1000}
+                            height={1000}
+                            alt=""
+                            className={Styles["img"]}
+                            priority={true}
+                          />
+                        </>
                       ) : (
-                        <Image
-                          src={images.image8}
-                          alt=""
-                          className={Styles["img"]}
-                          priority={true}
-                        />
+                        <>
+                          {item.image ? (
+                            <>
+                              <Image
+                                src={item.image}
+                                width={1000}
+                                height={1000}
+                                alt=""
+                                className={Styles["img"]}
+                                priority={true}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <Image
+                                src={images.image8}
+                                width={1000}
+                                height={1000}
+                                alt=""
+                                className={Styles["img"]}
+                                priority={true}
+                              />
+                            </>
+                          )}
+                        </>
                       )}
                     </div>
                     {/* <div className={Styles["img-wrapper"]}>
@@ -198,47 +237,86 @@ function ItemDetail(props) {
               </div>
               <div className={Styles["item-detail-container"]}>
                 <div className={Styles["item-name-exit-button-container"]}>
-                  {item ? (
-                    <span style={{ cursor: "auto" }}>{item.name}</span>
-                  ) : (
-                    <span style={{ cursor: "auto" }}>Untitled</span>
-                  )}
-
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "20px",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item ? (
+                      <span style={{ cursor: "auto" }}>{item.name}</span>
+                    ) : (
+                      <span style={{ cursor: "auto" }}>Untitled</span>
+                    )}
+                    {item && item.rating ? (
+                      <>
+                        <Rating
+                          value={parseInt(props.item.rating)}
+                          precision={0.5}
+                          readOnly
+                          size="md"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Rating value={0} precision={0.5} readOnly size="md" />
+                      </>
+                    )}
+                  </div>
                   <div className={Styles["exit-button-container"]}>
                     <div onClick={props.handlingCloseDialog}>
                       <CloseOutlined />
                     </div>
                   </div>
                 </div>
-                {item.promotional_price ? (
-                  <div className={Styles["price-promo-price-container"]}>
-                    {/* <span style={{ fontStyle: "bold" }}>{item.price}đ</span> */}
-                    <span style={{ color: "red" }}>
-                      {FormatPrice(item.promotional_price)}
-                    </span>
-                    <span style={{ textDecoration: "line-through" }}>
-                      {FormatPrice(item.price)}
-                    </span>
-                    {/* <span className={Styles["percent-discount"]}>-36%</span> */}
-                  </div>
-                ) : (
-                  <div className={Styles["price-promo-price-container"]}>
-                    <span style={{ fontStyle: "bold" }}>
-                      {" "}
-                      {FormatPrice(item.price)}
-                    </span>
-                    {/* <span style={{ color: "red" }}>
+                <div className={Styles["price-rate-container"]}>
+                  {item.promotional_price ? (
+                    <div className={Styles["price-promo-price-container"]}>
+                      {/* <span style={{ fontStyle: "bold" }}>{item.price}đ</span> */}
+                      <span style={{ color: "red" }}>
+                        {FormatPrice(item.promotional_price)}
+                      </span>
+                      <span style={{ textDecoration: "line-through" }}>
+                        {FormatPrice(item.price)}
+                      </span>
+                      {/* <span className={Styles["percent-discount"]}>-36%</span> */}
+                    </div>
+                  ) : (
+                    <div className={Styles["price-promo-price-container"]}>
+                      <span style={{ fontStyle: "bold" }}>
+                        {" "}
+                        {FormatPrice(item.price)}
+                      </span>
+                      {/* <span style={{ color: "red" }}>
                       {item.promotional_price}đ
                     </span> */}
-                    {/* <span style={{ textDecoration: "line-through" }}>
+                      {/* <span style={{ textDecoration: "line-through" }}>
                       1.049.000đ
                     </span> */}
-                    {/* <span className={Styles["percent-discount"]}>-36%</span> */}
+                      {/* <span className={Styles["percent-discount"]}>-36%</span> */}
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "5px",
+                    }}
+                  >
+                    <span>Đã bán:</span>
+                    <span>{item.haveSales}</span>
                   </div>
-                )}
+                </div>
 
                 <div className={Styles["options-container"]}>
-                  <span className={Styles["option-title-container"]}>Loại</span>
+                  {item && item.option.length != 0 && (
+                    <>
+                      <span className={Styles["option-title-container"]}>
+                        Loại
+                      </span>
+                    </>
+                  )}
+
                   <div className={Styles["option-cards-container"]}>
                     {item && item.option.length != 0 ? (
                       item.option.map((option, index) => {
@@ -247,7 +325,11 @@ function ItemDetail(props) {
                             id={option.option_id}
                             key={option.option_id}
                             onClick={(e) =>
-                              handleClick(option, option.option_id, e)
+                              handleClick(
+                                option,
+                                option.option_id,
+                                option.image
+                              )
                             }
                             className={
                               check(option, id)
@@ -288,7 +370,9 @@ function ItemDetail(props) {
                         );
                       })
                     ) : (
-                      <div className={Styles["empty-div-container"]}>Trống</div>
+                      <>
+                        <div className={Styles["empty-div-container"]}></div>
+                      </>
                     )}
                   </div>
                 </div>

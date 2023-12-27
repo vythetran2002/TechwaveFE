@@ -11,8 +11,11 @@ import { Rating } from "@mui/material";
 import { Tooltip } from "antd";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import toast from "react-hot-toast";
 
 function Item(props) {
+  // console.log(props.item);
+
   const handlingOpenDialog = () => {
     props.setDeTailItem(props.item);
     props.handlingOpenDialog();
@@ -31,12 +34,19 @@ function Item(props) {
   };
 
   const handlingAddCartItem = () => {
-    let id = props.item.product_id;
-    let quantity = 1;
-    let price = props.item.promotional_price;
-    // let optionId = 5;
-    let temp = { quantity: quantity, price: price, product_id: id };
-    props.addCartItem(temp);
+    if (props.item.option.length != 0) {
+      handlingOpenDialog();
+      // toast("Hãy chọn loại sản phẩm", {
+      //   icon: "⌨️",
+      // });
+    } else {
+      let id = props.item.product_id;
+      let quantity = 1;
+      let price = props.item.promotional_price;
+      // let optionId = 5;
+      let temp = { quantity: quantity, price: price, product_id: id };
+      props.addCartItem(temp);
+    }
   };
 
   if (props.error) return <div>Lỗi khi tải dữ liệu</div>;

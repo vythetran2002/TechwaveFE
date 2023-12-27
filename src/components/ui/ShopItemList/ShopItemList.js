@@ -6,10 +6,18 @@ import { Empty } from "antd";
 import { useEffect } from "react";
 
 function ShopItemList(props) {
-  const { id, cateId, setDeTailItem, page, updateMax, handleOpenDialog } =
-    props;
-  const products = useFetchShopByPage(id, page, 1);
-  console.log(products);
+  const {
+    id,
+    cateId,
+    setDeTailItem,
+    page,
+    updateMax,
+    handleOpenDialog,
+    handleCloseDialog,
+    handlingAddCartItem,
+  } = props;
+  const products = useFetchShopByPage(id, page, 5);
+  // console.log(products);
 
   useEffect(() => {
     if (products.data) {
@@ -34,6 +42,8 @@ function ShopItemList(props) {
               return (
                 <React.Fragment key={"productItem" + index}>
                   <Item
+                    addCartItem={handlingAddCartItem}
+                    handleCloseDialog={handleCloseDialog}
                     item={productItem}
                     setDeTailItem={setDeTailItem}
                     handlingOpenDialog={handleOpenDialog}

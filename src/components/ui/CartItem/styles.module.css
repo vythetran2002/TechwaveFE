@@ -24,6 +24,7 @@
   max-width: 50px;
   max-height: 50px;
   object-fit: cover;
+  border-radius: 5px;
 }
 .item-info-container {
   width: 78%;

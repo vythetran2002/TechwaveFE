@@ -5,10 +5,11 @@ import images from "@/assets/images";
 import { Checkbox, Divider, InputNumber } from "antd";
 import { memo } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import DoneIcon from "@mui/icons-material/Done";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import { UpdateCartItem } from "@/api/user/updateCartItem";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import Link from "next/link";
+import { Tooltip } from "antd";
 
 function addElementToArray(arr, element) {
   if (typeof element === "number") {
@@ -19,16 +20,18 @@ function addElementToArray(arr, element) {
 }
 
 const removeValueFromArray = (arr, value) => {
-  return arr.filter((item) => item !== value);
+  if (arr) {
+    return arr.filter((item) => item !== value);
+  }
 };
 
 function CartItem(props) {
   const { token } = props;
-
   const { select } = props;
   const [isEditMode, setIsEditMode] = useState(false);
   // console.log(select);
   const [isChecked, setIsChecked] = useState(false);
+  const [reload, setReload] = useState();
 
   const [quantity, setQuantity] = useState(props.item.quantity);
 
@@ -53,9 +56,16 @@ function CartItem(props) {
   };
 
   const handleUpdateCartItem = () => {
-    const message = UpdateCartItem(props.item.cart_id, quantity, token);
+    const message = UpdateCartItem(
+      props.item.cart_id,
+      quantity,
+      props.item.option_id,
+      props.item.product.price,
+      token
+    );
     console.log(message);
     setIsEditMode(false);
+    props.resetSelect();
   };
 
   const handleUpdateQuantity = (value) => {
@@ -75,8 +85,10 @@ function CartItem(props) {
       //   ...prevSelectedItems.filter((item) => item != props.item),
       // ]);
       setIsChecked(true);
-      const temp = [...select, props.item];
-      props.updateSelect(temp);
+      if (select) {
+        const temp = [...select, props.item];
+        props.updateSelect(temp);
+      }
     }
   };
 
@@ -86,13 +98,14 @@ function CartItem(props) {
     } else {
       setIsChecked(false);
     }
+    setQuantity(props.item.quantity);
     // if (isChecked) {
     //   let temp = props.item.product.product_id;
     //   props.updateSelectedItem(temp);
     // } else {
     //   props.updateSelectedItem(null);
     // }
-  }, [props.isChecked]);
+  }, [props.isChecked, props.item.quantity]);
 
   return (
     <>
@@ -177,10 +190,28 @@ function CartItem(props) {
             </div>
             <div className={Styles["item-name-cate-container"]}>
               <div className={Styles["price"]}>
-                <span>
-                  {" "}
-                  {FormatPrice(props.item.price)} x {props.item.quantity}
-                </span>
+                {props.item.product.promotional_price ? (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ textDecoration: "line-through" }}>
+                      {" "}
+                      {FormatPrice(props.item.product.price)}
+                    </span>
+                    <span>
+                      {" "}
+                      {FormatPrice(props.item.product.promotional_price)} x{" "}
+                      {props.item.quantity}
+                    </span>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span>
+                      {" "}
+                      {FormatPrice(props.item.product.price)} x{" "}
+                      {props.item.quantity}
+                    </span>
+                  </div>
+                )}
+
                 <span
                   onClick={handleToggleEditMode}
                   className={Styles["edit-cart-btn"]}
@@ -200,6 +231,7 @@ function CartItem(props) {
                   min={1}
                   max={props.item.product.quantity}
                   value={quantity}
+                  defaultValue={props.item.quantity}
                   size="small"
                   onChange={handleUpdateQuantity}
                 />
@@ -208,12 +240,14 @@ function CartItem(props) {
                     className={Styles["submit-update-cart-btn"]}
                     onClick={handleUpdateCartItem}
                   >
-                    <DoneIcon
-                      style={{
-                        fontSize: "15px",
-                        color: "white",
-                      }}
-                    />
+                    <Tooltip placement="bottom" title="Cập nhật đơn hàng">
+                      <SaveAltIcon
+                        style={{
+                          fontSize: "15px",
+                          color: "white",
+                        }}
+                      />
+                    </Tooltip>
                   </span>
                 )}
               </span>

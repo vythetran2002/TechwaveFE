@@ -28,6 +28,7 @@ import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { sendPostRequestWithToken } from "@/api/user/sendPostRequestProfile";
+import MmsIcon from "@mui/icons-material/Mms";
 
 const { TextArea } = Input;
 
@@ -370,6 +371,13 @@ function Index() {
                   >
                     <BookmarkOutlinedIcon />
                     <span>Theo dõi</span>
+                  </Link>
+                  <Link
+                    href={"/user/account/review"}
+                    className={Styles["nav-item-container"]}
+                  >
+                    <MmsIcon />
+                    <span>Đánh giá</span>
                   </Link>
                 </div>
               </div>

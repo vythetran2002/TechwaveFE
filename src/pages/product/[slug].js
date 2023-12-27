@@ -27,9 +27,11 @@ function Index() {
   const [cookies] = useCookies();
   const router = useRouter();
   const slug = router.query.slug;
+  const [img, setImg] = useState(null);
+  const [reload, setReload] = useState(false);
   // console.log(slug);
   const product = useFetchProductById(slug, cookies["token"]);
-  console.log(product);
+  // console.log(product);
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState();
 
@@ -42,6 +44,11 @@ function Index() {
   };
   const updateId = (value) => {
     setId(value);
+  };
+
+  const updateImg = (value) => {
+    setImg(value);
+    setReload(!reload);
   };
 
   const handlingAddCartItem = async (data) => {
@@ -69,7 +76,8 @@ function Index() {
         offset: -50,
       });
     }
-  }, [router.query.nav, product.data]);
+    setReload(!reload);
+  }, [router.query.nav, product.data, img]);
 
   if (product.isLoading) {
     return <>Loading</>;
@@ -89,8 +97,10 @@ function Index() {
         </Head>
         <Layout>
           <Toaster />
-          <RoutingBar />
+          <RoutingBar product={product.data} />
           <ProductDetail
+            img={img}
+            updateImg={updateImg}
             handleAddCart={handlingAddCartItem}
             product={product.data}
           />

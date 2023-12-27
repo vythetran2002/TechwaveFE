@@ -141,8 +141,9 @@
   width: 11%;
   padding: 5px 10px;
   align-items: center;
+
   flex-shrink: 0;
-  padding-left: 45px;
+
   justify-content: center;
   box-sizing: border-box;
 }
@@ -152,11 +153,10 @@
   padding: 5px 10px;
   align-items: center;
   flex-shrink: 0;
-  justify-content: space-between;
-  position: relative;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   flex-direction: row;
+  max-width: 100%;
 }
 .list-item-more-option-wrapper {
   cursor: pointer;
@@ -197,7 +197,7 @@
 .list-item-status-active-button-wrapper {
   display: flex;
   padding: 5px 15px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   border-radius: 50px;
   background: #4db848;

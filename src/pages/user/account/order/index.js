@@ -26,6 +26,7 @@ import OrderItem from "@/components/ui/vendor/order/OrderItem";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
+import MmsIcon from "@mui/icons-material/Mms";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -174,6 +175,13 @@ function Index() {
                     >
                       <BookmarkOutlinedIcon />
                       <span>Theo dõi</span>
+                    </Link>
+                    <Link
+                      href={"/user/account/review"}
+                      className={Styles["nav-item-container"]}
+                    >
+                      <MmsIcon />
+                      <span>Đánh giá</span>
                     </Link>
                   </div>
                 </div>

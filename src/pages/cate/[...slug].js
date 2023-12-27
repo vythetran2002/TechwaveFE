@@ -22,6 +22,8 @@ import useFetchCateListByPage from "@/api/user/useFetchCateListByPage";
 function CateIndex() {
   const router = useRouter();
   const [cookies] = useCookies();
+  const [img, setImg] = useState(null);
+  const [reload, setReload] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
@@ -82,6 +84,10 @@ function CateIndex() {
     setMax(value);
   };
 
+  const updateImg = (value) => {
+    setImg(value);
+  };
+
   useEffect(() => {
     if (listItem.data) {
       console.log("---");
@@ -89,11 +95,13 @@ function CateIndex() {
         updateMax(listItem.data.data.total);
       }
     }
-  }, [listItem.data]);
+    setReload(!reload);
+  }, [listItem.data, img]);
 
   if (!slug) {
     return <></>;
   }
+
   // if (cateList.isError) return <>Error</>;
   // if (cateList.isLoading) return <>Loading</>;
   else
@@ -205,6 +213,8 @@ function CateIndex() {
                             addFavourite={handlingAddFavouriteProduct}
                             addCartItem={handlingAddCartItem}
                             item={item}
+                            img={img}
+                            updateImg={updateImg}
                             setDeTailItem={setDeTailItem}
                             handlingOpenDialog={handlingOpenDialog}
                           />
@@ -240,6 +250,8 @@ function CateIndex() {
           <ItemDetail
             addCartItem={handlingAddCartItem}
             item={detailItem}
+            img={img}
+            updateImg={updateImg}
             isOpenDialog={isOpenDialog}
             handlingOpenDialog={handlingOpenDialog}
             handlingCloseDialog={handlingCloseDialog}

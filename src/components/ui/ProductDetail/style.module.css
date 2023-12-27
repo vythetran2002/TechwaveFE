@@ -140,7 +140,7 @@
 }
 .option-card {
   width: 30%;
-  height: fit-content;
+  max-height: 300px;
   padding: 10px;
   box-sizing: border-box;
   word-break: break-word;

@@ -15,6 +15,7 @@ import { HandleCancleOrder } from "@/api/user/handleCancleOrder";
 import Link from "next/link";
 import { animateScroll as scroll } from "react-scroll";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import dayjs from "dayjs";
 
 function PurchaseItemCard(props) {
   const router = useRouter();
@@ -30,19 +31,9 @@ function PurchaseItemCard(props) {
     router.push({
       pathname: "/product/" + oderItem.cart_id.product.product_id,
       query: {
-        nav: "comment",
+        nav: "danhGia",
       },
     });
-    // router.push(
-    //   `/product/[id]`,
-    //   `/product/${oderItem.cart_id.product.product_id}`
-    // );
-    // setTimeout(() => {
-    //   scroll.scrollTo("#danhGia", {
-    //     smooth: true,
-    //     duration: 500,
-    //   });
-    // }, 500);
   };
 
   const handleReceive = () => {
@@ -217,6 +208,12 @@ function PurchaseItemCard(props) {
               </div>
             </div>
           )}
+          {oderItem.createAt && (
+            <div className={Styles["date-container"]}>
+              <span>{dayjs(oderItem.createAt).format("DD/MM/YYYY")}</span>
+              <span>Ngày đặt:</span>
+            </div>
+          )}
           <div className={Styles["item-info-container"]}>
             <div className={Styles["img-name-container"]}>
               <div className={Styles["img-wrapper"]}>
@@ -261,12 +258,17 @@ function PurchaseItemCard(props) {
               {oderItem.cart_id && (
                 <div className={Styles["name-wrapper"]}>
                   <Link
+                    className={Styles["link"]}
                     href={"/product/" + oderItem.cart_id.product.product_id}
                   >
                     {oderItem.cart_id.product.name}
                   </Link>
-                  {oderItem.cart_id.product.option && (
-                    <span>Phân loại: {props.option.name}</span>
+                  {oderItem.cart_id.option ? (
+                    <span style={{ fontSize: "14px" }}>
+                      Phân loại: {oderItem.cart_id.option.name}
+                    </span>
+                  ) : (
+                    <></>
                   )}
                   <span style={{ marginTop: "20px" }}>
                     x {oderItem.cart_id.quantity}
@@ -360,6 +362,12 @@ function PurchaseItemCard(props) {
               </div>
             </div>
           )}
+          {oderItem.createAt && (
+            <div className={Styles["date-container"]}>
+              <span>{dayjs(oderItem.createAt).format("DD/MM/YYYY")}</span>
+              <span>Ngày đặt:</span>
+            </div>
+          )}
           <div className={Styles["item-info-container"]}>
             <div className={Styles["img-name-container"]}>
               <div className={Styles["img-wrapper"]}>
@@ -425,6 +433,7 @@ function PurchaseItemCard(props) {
               {oderItem.cart_id && (
                 <div className={Styles["name-wrapper"]}>
                   <Link
+                    className={Styles["link"]}
                     href={"/product/" + oderItem.cart_id.product.product_id}
                   >
                     {oderItem.cart_id.product.name}

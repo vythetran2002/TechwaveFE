@@ -39,3 +39,14 @@
   top: -7px;
   right: -9px;
 }
+.price-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.price-quantity-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

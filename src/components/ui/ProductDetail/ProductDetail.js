@@ -22,11 +22,12 @@ import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
 import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import countElementOfArray from "@/assets/utils/countArrayElement";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import toast, { Toaster } from "react-hot-toast";
 
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
 function ProductDetail(props) {
-  const product = props.product;
+  const { product, img, updateImg } = props;
 
   // Refs
   const img1Ref = useRef();
@@ -72,8 +73,9 @@ function ProductDetail(props) {
     carousel.to(3, 500);
   };
 
-  const handleClick = (option, id, e) => {
+  const handleClick = (option, id, img) => {
     setId(id);
+    updateImg(img);
   };
 
   const handleChangeQuantity = (value) => {
@@ -93,35 +95,78 @@ function ProductDetail(props) {
   };
 
   const handleAddCart = () => {
-    if (product) {
-      if (id == null) {
-        let temp = {
-          quantity: quantity,
-          price: parseInt(quantity) * parseInt(product.price),
-          product_id: product.product_id,
-        };
-        props.handleAddCart(temp);
-      } else {
-        let temp = {
-          option_id: id,
-          quantity: quantity,
-          price: parseInt(quantity) * parseInt(product.price),
-          product_id: product.product_id,
-        };
-        props.handleAddCart(temp);
+    if (id) {
+      if (product) {
+        if (id == null) {
+          let temp = {
+            quantity: quantity,
+            price: parseInt(quantity) * parseInt(product.price),
+            product_id: product.product_id,
+          };
+          props.handleAddCart(temp);
+        } else {
+          let temp = {
+            option_id: id,
+            quantity: quantity,
+            price: parseInt(quantity) * parseInt(product.price),
+            product_id: product.product_id,
+          };
+          props.handleAddCart(temp);
+        }
       }
+    } else {
+      toast.error("Hãy chọn loại sản phẩm");
     }
   };
 
   if (product)
     return (
       <>
+        <Toaster />
         <div className={Styles["product-detail-container"]}>
           <div className={Styles["product-detail-wrapper"]}>
             <div className={Styles["product-carousel-container"]}>
               <div className={Styles["product-carousel-wrapper"]}>
                 <ReactOwl className="owl-theme" {...options} nav>
-                  {product.image != null ? (
+                  {img ? (
+                    <>
+                      <Image
+                        src={img}
+                        width={500}
+                        height={500}
+                        alt=""
+                        className={Styles["img"]}
+                        priority={true}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      {product.image ? (
+                        <>
+                          <Image
+                            src={product.image}
+                            width={500}
+                            height={500}
+                            alt=""
+                            className={Styles["img"]}
+                            priority={true}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <Image
+                            src={images.image8}
+                            width={500}
+                            height={500}
+                            alt=""
+                            className={Styles["img"]}
+                            priority={true}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
+                  {/* {product.image != null ? (
                     <>
                       <Image
                         src={product.image}
@@ -141,7 +186,7 @@ function ProductDetail(props) {
                       // ref={img1Ref}
                       priority={true}
                     />
-                  )}
+                  )} */}
                   {/* <Image
                     src={images.image8}
                     alt=""
@@ -316,10 +361,16 @@ function ProductDetail(props) {
                                 : Styles["option-card"]
                             }
                             onClick={(e) =>
-                              handleClick(option, option.option_id, e)
+                              handleClick(
+                                option,
+                                option.option_id,
+                                option.image
+                              )
                             }
                           >
-                            <span style={{ width: "100%" }}>{option.name}</span>
+                            <span style={{ width: "100%", height: "50px" }}>
+                              {option.name}
+                            </span>
                             {option.image != null ? (
                               <div className={Styles["cate-img-wrapper"]}>
                                 <Image
@@ -361,14 +412,14 @@ function ProductDetail(props) {
                 <div className={Styles["product-contact-button-container"]}>
                   <button className={Styles["button-top"]}>
                     <span>Chat Zalo</span>
-                    <span>0123.456.789</span>
+                    <span>0336.278.954</span>
                   </button>
                   <button
                     className={Styles["button-top"]}
                     style={{ backgroundColor: "#f88e20" }}
                   >
                     <span>Gọi ngay</span>
-                    <span>0123.456.789</span>
+                    <span>0816.789.439</span>
                   </button>
                   <button
                     className={Styles["button-bottom"]}

@@ -15,8 +15,10 @@ const useFetchSearchProduct = (value) => {
   //     Authorization: `${token}`,
   //   };
 
-  const { data, error, mutate, isValidating } = useSWR(value ? url : null, () =>
-    fetcher(url)
+  const { data, error, mutate, isValidating } = useSWR(
+    value ? url : null,
+    () => fetcher(url),
+    { refreshInterval: 1000 }
   );
 
   return {

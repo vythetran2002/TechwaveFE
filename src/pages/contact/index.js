@@ -9,7 +9,9 @@ import images from "@/assets/images";
 function Index() {
   return (
     <>
-      <Head></Head>
+      <Head>
+        <title>Contact</title>
+      </Head>
       <Layout>
         <div className={Styles["contact-container"]}>
           <div className={Styles["contact-wrapper"]}>

@@ -372,3 +372,6 @@
   margin-top: 10px;
   margin-bottom: 20px;
 }
+.ant-tooltip {
+  z-index: 5;
+}

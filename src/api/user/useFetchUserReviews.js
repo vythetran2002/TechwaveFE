@@ -6,9 +6,9 @@ import { useCookies } from "react-cookie";
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
-const useFetchUserFavProduct = () => {
+const useFetchUserReviews = () => {
   const [cookies] = useCookies();
-  const url = "http://localhost:3000/api/user/favor-product";
+  const url = "http://localhost:3000/api/user/review?status=1";
 
   const token = "Bearer " + cookies["token"];
 
@@ -33,4 +33,4 @@ const useFetchUserFavProduct = () => {
   };
 };
 
-export default useFetchUserFavProduct;
+export default useFetchUserReviews;

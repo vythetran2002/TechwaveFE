@@ -26,6 +26,7 @@ import { useCookies } from "react-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { Delete } from "@mui/icons-material";
 import { Empty } from "antd";
+import MmsIcon from "@mui/icons-material/Mms";
 
 function Index() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -33,7 +34,7 @@ function Index() {
   const user = useFetchUserProfile();
   const products = useFetchUserFavProduct();
 
-  console.log(products);
+  // console.log(products);
 
   const handlingDeleteFavouriteProduct = async (id) => {
     // try {
@@ -210,6 +211,13 @@ function Index() {
                       <BookmarkOutlinedIcon />
                       <span>Theo dõi</span>
                     </Link>
+                    <Link
+                      href={"/user/account/review"}
+                      className={Styles["nav-item-container"]}
+                    >
+                      <MmsIcon />
+                      <span>Đánh giá</span>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -223,17 +231,17 @@ function Index() {
                 <div className={Styles["product-nav-item-container"]}>
                   <div className={Styles["product-nav-container"]}>
                     <div className={Styles["checkbox-name-wrapper"]}>
-                      <Checkbox
+                      {/* <Checkbox
                         className="flex03 center"
                         checked={topAllCheckBox}
                         onChange={handlingChangeTopAllCheckBox}
-                      />
+                      /> */}
                       <span className="flex1 center">Sản phẩm</span>
                     </div>
                     <div className={Styles["remain-detail-wrapper"]}>
                       <span className="flex1 center">Đơn giá</span>
                       <span className="flex1 center">Số lượng</span>
-                      <span className="flex1 center">Số tiền</span>
+                      <span className="flex1 center">Xuất sứ</span>
                       <span className="flex1 center">Thao tác</span>
                     </div>
                   </div>

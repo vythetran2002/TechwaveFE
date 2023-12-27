@@ -144,23 +144,23 @@ export default function EditUserDialog(props) {
         dob,
         gender,
         username,
-        password,
         address,
         avatar,
+        password,
       };
       console.log(temp2);
       const message = EditAccountById(temp.account_id, temp2, token);
-      // console.log(message);
+      console.log(message);
       // window.location.reload();
     } else {
       messageRef.current.style.display = "block";
     }
   };
 
-  useEffect(() => {
-    console.log("---");
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log("---");
+  //   console.log(data);
+  // }, [data]);
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
