@@ -14,8 +14,6 @@ const CategoryList = () => {
 
   const data = useFetch("http://localhost:3000/api/category");
 
-  console.log(data);
-
   if (data.isError) return <div>Lỗi khi tải dữ liệu</div>;
   if (data.isLoading) return <div>Đang tải...</div>;
 

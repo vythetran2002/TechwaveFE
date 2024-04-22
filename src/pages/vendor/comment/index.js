@@ -16,10 +16,11 @@ import DialogContent from "@mui/material/DialogContent";
 import CommentPopUp from "@/components/ui/vendor/comment/popUp/CommentPopUp";
 import { Toaster } from "react-hot-toast";
 import { Pagination } from "@mui/material";
+import Cookies from "js-cookie";
 
 function Index() {
   // states
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
   const [quantity, setQuantity] = useState(5);
@@ -140,7 +141,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             status={0}
             handleOpen={handleOpen}
             updateId={updateId}
@@ -155,7 +156,7 @@ function Index() {
               <CommentPopUp
                 handleClose={handleClose}
                 id={id}
-                token={cookies["token"]}
+                token={token}
                 status={0}
               />
             </DialogContent>

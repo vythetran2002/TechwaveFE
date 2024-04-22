@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
@@ -23,16 +22,11 @@ const useFetchAccount = (status, page, limit, myToken) => {
     () => fetcher(`${url}?${queryParams}`, headers)
   );
 
-  const reload = () => {
-    mutate();
-  };
-
   return {
     data,
     isLoading: !error && !data,
     isError: error,
     mutate,
-    reload,
     isValidating,
   };
 };

@@ -21,13 +21,19 @@ function CommentPopup(props) {
   // console.log(id);
 
   const cmt = useFetchDetailReviewAdmin(id);
+  const handleMutate = () => {
+    cmt.mutate();
+  };
   // console.log(cmt);
   // console.log(id);
 
-  const handleClickDeleteVendorCmt = () => {
-    console.log(cmt.data.responses[0].response_id);
-    const message = DeleteComment(cmt.data.responses[0].response_id, token);
-    console.log(message);
+  const handleClickDeleteVendorCmt = async () => {
+    // console.log(cmt.data.responses[0].response_id);
+    const message = await DeleteComment(
+      cmt.data.responses[0].response_id,
+      token
+    );
+    await handleMutate();
     props.handleCloseDialog();
   };
 

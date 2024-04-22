@@ -20,7 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import ReportDetailDialog from "@/components/ui/admin/dialog/reportDialog/ReportDetailDialog";
 import { Pagination } from "@mui/material";
 import { Select } from "antd";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 function Index() {
   // states
@@ -35,7 +36,7 @@ function Index() {
 
   const [id, setId] = useState();
   const [open, setOpen] = useState(false);
-  const [cookie] = useCookies();
+  const token = Cookies.get("token");
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
@@ -160,7 +161,7 @@ function Index() {
           </div>
 
           <ReportList
-            token={cookie["token"]}
+            token={token}
             updateMax={updateMax}
             limit={quantity}
             page={page}

@@ -13,7 +13,7 @@ import images from "@/assets/images";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import PaymentItem from "@/components/ui/PaymentItem/PaymentItem";
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import Link from "next/link";
 import OutlinedFlagRoundedIcon from "@mui/icons-material/OutlinedFlagRounded";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
@@ -24,6 +24,9 @@ import Empty from "antd/lib/empty";
 import { MakeShipPayment } from "@/api/user/MakeShipPayment";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast, { Toaster } from "react-hot-toast";
+import Cookies from "js-cookie";
+import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
+import PaymentShop from "@/components/ui/PaymentShop/PaymentShop";
 
 const Input = dynamic(() => import("antd/es/input"), { ssr: false });
 
@@ -54,10 +57,27 @@ function checkNullProperties(obj) {
   return true;
 }
 
+function refactorProducts(products) {
+  if (products) {
+    let result = {};
+    products.forEach((product) => {
+      let shopId = product.product.createBy;
+      if (!result[shopId]) {
+        result[shopId] = [];
+      }
+      result[shopId].push(product);
+    });
+    return Object.values(result);
+  }
+}
+
 function Index() {
   const router = useRouter();
-  const [cookie] = useCookies();
+  const token = Cookies.get("token");
+
+  //states
   const [amount, setAmount] = useState();
+  const [adminVoucherValue, setAdminVoucherValue] = useState(1);
   const querry = router.query;
   const [objectsArray, setObjectsArray] = useState(null);
   const [shipFee, setShipFee] = useState(40000);
@@ -71,10 +91,11 @@ function Index() {
     carts: null,
   });
   const [option, setOption] = useState("ship");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalVendorOpen, setIsModalVendorOpen] = useState(false);
   const messageRef = useRef();
 
-  console.log(objectsArray);
+  //console.log(refactorProducts(objectsArray));
 
   const handleClickSend = () => {
     let temp = {
@@ -84,15 +105,15 @@ function Index() {
         parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
       carts: extractCartIds(objectsArray),
     };
-    console.log(temp);
+    // console.log(temp);
     if (checkNullProperties(temp) && option) {
       messageRef.current.style.display = "none";
       if (option == "ship") {
         // console.log(temp);
         // console.log("ship thwongf");
         try {
-          const message = MakeShipPayment(temp, cookie["token"]);
-          console.log(message);
+          const message = MakeShipPayment(temp, token);
+          //console.log(message);
           // toast.success("Thanh toán thành công");
           router.push("/user/account/order");
         } catch (error) {
@@ -109,9 +130,9 @@ function Index() {
           returnUrl: "http://localhost:3001/user/account/transaction",
           carts: extractCartIds(objectsArray),
         };
-        console.log(temp2);
-        const message = SendPaymentAmount(temp2, cookie["token"]);
-        console.log(message);
+        //  console.log(temp2);
+        const message = SendPaymentAmount(temp2, token);
+        // console.log(message);
       }
       // const message = SendPaymentAmount(
       //   {
@@ -130,7 +151,7 @@ function Index() {
   };
 
   const onChangeRadio = (e) => {
-    console.log(shipFee);
+    // console.log(shipFee);
     setShipFee(e.target.value);
     let temp = { ...bill, express: e.target.name };
     setBill(temp);
@@ -155,12 +176,40 @@ function Index() {
     setBill(temp);
   };
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const showModalVendor = () => {
+    setIsModalVendorOpen(true);
+  };
+
+  const handleOkVendor = () => {
+    setIsModalVendorOpen(false);
+  };
+  const handleCancelVendor = () => {
+    setIsModalVendorOpen(false);
+  };
+
+  const onChangeAdminVoucher = (e) => {
+    console.log("radio checked", e.target.value);
+    setAdminVoucherValue(e.target.value);
+  };
+
   useEffect(() => {
     if (router.query.data) {
       try {
         const decodedData = decodeURIComponent(router.query.data);
         const parsedData = JSON.parse(decodedData);
         setObjectsArray(parsedData);
+        //  console.log(router.query.data);
       } catch (error) {
         console.error("Error parsing data", error);
       }
@@ -211,7 +260,10 @@ function Index() {
                   <RadioGroup onChange={onChangeRadio} defaultValue={shipFee}>
                     <div className={Styles["ship-item-wrapper"]}>
                       <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={40000} name="Giao hàng thông thường" />
+                        <Radio
+                          value={40000}
+                          name="Giao hàng thông thường"
+                        ></Radio>
                         <span>Giao hàng thông thường</span>
                       </div>
                       <span>40.000đ</span>
@@ -305,7 +357,7 @@ function Index() {
               </div>
               <div className={Styles["item-price-container"]}>
                 <div className={Styles["item-container"]}>
-                  {objectsArray.length != 0 ? (
+                  {/* {objectsArray.length != 0 ? (
                     objectsArray.map((item, index) => {
                       return (
                         <React.Fragment key={("index", index)}>
@@ -315,18 +367,34 @@ function Index() {
                     })
                   ) : (
                     <>EMPTY</>
-                  )}
+                  )} */}
+
+                  {refactorProducts(objectsArray).map((shop, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <PaymentShop
+                          items={shop}
+                          handleOpen={showModalVendor}
+                        />
+                      </React.Fragment>
+                    );
+                  })}
+                  {/* <PaymentShop items={objectsArray} /> */}
                 </div>
                 <div
                   className={Styles["voucher-input-container"]}
                   style={{ alignItems: "center" }}
                 >
-                  <Input
+                  {/* <Input
                     size="large"
                     placeholder="Nhập voucher tại đây"
                     prefix={<LocalActivityOutlinedIcon />}
-                  />
-                  <Button size="large" type="primary">
+                  /> */}
+                  <div className={Styles["techwave-voucher-label-container"]}>
+                    <LocalActivityOutlinedIcon />
+                    <span>Techwave Voucher: </span>
+                  </div>
+                  <Button size="large" type="primary" onClick={showModal}>
                     Áp dụng
                   </Button>
                 </div>
@@ -395,6 +463,50 @@ function Index() {
               </div>
             </div>
           </div>
+          <Modal
+            title="Techwave vouchers"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <RadioGroup>
+              <div className={Styles["voucher-admin-container"]}>
+                <div className={Styles["voucher-admin-wrapper"]}>
+                  <VoucherCard role="admin">
+                    <Radio value={1} name="a"></Radio>
+                  </VoucherCard>
+                  <VoucherCard role="admin">
+                    <Radio value={2} name="b"></Radio>
+                  </VoucherCard>
+                  <VoucherCard role="admin">
+                    <Radio value={3} name="c"></Radio>
+                  </VoucherCard>
+                </div>
+              </div>
+            </RadioGroup>
+          </Modal>
+          <Modal
+            title="Vouchers"
+            open={isModalVendorOpen}
+            onOk={handleOkVendor}
+            onCancel={handleCancelVendor}
+          >
+            <RadioGroup>
+              <div className={Styles["voucher-admin-container"]}>
+                <div className={Styles["voucher-admin-wrapper"]}>
+                  <VoucherCard role="vendor">
+                    <Radio value={1} name="a"></Radio>
+                  </VoucherCard>
+                  <VoucherCard role="vendor">
+                    <Radio value={2} name="b"></Radio>
+                  </VoucherCard>
+                  <VoucherCard role="vendor">
+                    <Radio value={3} name="c"></Radio>
+                  </VoucherCard>
+                </div>
+              </div>
+            </RadioGroup>
+          </Modal>
         </Layout>
       </>
     );

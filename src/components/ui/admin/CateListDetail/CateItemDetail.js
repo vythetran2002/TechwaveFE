@@ -17,7 +17,7 @@ import Link from "next/link";
 
 function CateItemDetail(props) {
   const menuRef = useRef(null);
-  const { cate } = props;
+  const { cate, mutate } = props;
 
   const handlingOpenMenu = () => {
     menuRef.current.style.transform = "scale(1)";
@@ -32,10 +32,9 @@ function CateItemDetail(props) {
     props.handleOpenDetailDialog();
   };
 
-  const handleDeleteCate = () => {
-    const message = DeleteCategory(cate.category_id, props.token);
-    console.log(message);
-    window.location.reload();
+  const handleDeleteCate = async () => {
+    const message = await DeleteCategory(cate.category_id, props.token);
+    await mutate();
   };
 
   useEffect(() => {

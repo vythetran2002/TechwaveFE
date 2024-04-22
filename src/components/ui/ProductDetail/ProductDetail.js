@@ -23,6 +23,7 @@ import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import countElementOfArray from "@/assets/utils/countArrayElement";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast, { Toaster } from "react-hot-toast";
+import { Textfit } from "react-textfit";
 
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
@@ -95,7 +96,14 @@ function ProductDetail(props) {
   };
 
   const handleAddCart = () => {
-    if (id) {
+    if (product.option.length === 0) {
+      let temp = {
+        quantity: quantity,
+        price: parseInt(quantity) * parseInt(product.price),
+        product_id: product.product_id,
+      };
+      props.handleAddCart(temp);
+    } else if (id) {
       if (product) {
         if (id == null) {
           let temp = {
@@ -284,16 +292,19 @@ function ProductDetail(props) {
                     readOnly
                     precision={0.5}
                   />
-                  <span>{product.rating}/5</span>
+                  <span>{product.rating}</span>
                   <span
                     style={{
                       color: "var(--header-bg-top)",
                       textDecoration: "none",
                     }}
                   >
-                    {product.slReview} Đánh giá
+                    <Textfit mode="single">{product.slReview} Đánh giá</Textfit>
                   </span>
-                  |<span>{product.haveSales} đã bán</span>
+                  |
+                  <span>
+                    <Textfit mode="single">{product.haveSales} đã bán</Textfit>
+                  </span>
                 </div>
                 <span className={Styles["row-container"]}>
                   {product.quantity - product.haveSales == 0 ? (

@@ -16,10 +16,11 @@ import DialogContent from "@mui/material/DialogContent";
 import CommentPopUp from "@/components/ui/vendor/comment/popUp/CommentPopUp";
 import { Empty } from "antd";
 import { Pagination } from "@mui/material";
+import Cookies from "js-cookie";
 
 function Index() {
   // states
-  const [cookies] = useCookies(["token"]);
+  const token = Cookies.get("token");
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
   const [quantity, setQuantity] = useState(5);
@@ -139,7 +140,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             status={1}
             handleOpen={handleOpen}
             updateId={updateId}
@@ -151,7 +152,7 @@ function Index() {
             onClose={handleClose}
           >
             <DialogContent>
-              <CommentPopUp id={id} token={cookies["token"]} />
+              <CommentPopUp id={id} token={token} />
             </DialogContent>
           </Dialog>
           <div

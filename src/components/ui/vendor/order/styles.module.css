@@ -109,6 +109,11 @@
   align-items: center;
   flex-shrink: 0;
   justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  text-align: center;
 }
 .list-item-name-wrapper {
   display: flex;
@@ -140,6 +145,11 @@
   align-items: center;
   flex-shrink: 0;
   padding-left: 45px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  text-align: center;
 }
 .list-item-status-wrapper {
   display: flex;
@@ -290,4 +300,8 @@
   flex-direction: column;
   text-align: center;
   gap: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }

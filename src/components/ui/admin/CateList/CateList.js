@@ -14,9 +14,12 @@ function CateList(props) {
   const cates = useFetchAdminCategories(page, limit, token);
   // console.log(cates);
 
+  const handleMutate = () => {
+    cates.mutate();
+  };
+
   useEffect(() => {
     if (cates.data) {
-      console.log("---");
       updateMax(cates.data.total);
     }
   }, [cates.data]);
@@ -52,6 +55,7 @@ function CateList(props) {
               return (
                 <React.Fragment key={"cate" + index}>
                   <CateItem
+                    mutate={handleMutate}
                     updateCate={props.updateCate}
                     updateId={props.updateId}
                     cate={cate}

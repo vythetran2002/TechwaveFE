@@ -6,20 +6,39 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import { Input, Radio } from "antd";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Input, Radio, Form, Button, DatePicker, Select } from "antd";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import images from "@/assets/images";
 import { uploadImage } from "@/components/utils/Upload";
 import { UpdateCategory } from "@/api/admin/UpdateCategory";
-const Select = dynamic(() => import("react-select"), { ssr: false });
+import { CloudUploadOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
   subsets: ["latin"],
   display: "swap",
 });
+
+const sxStyle = {
+  "& .MuiDialog-container:hover": {
+    cursor: "pointer",
+  },
+  "& .MuiPaper-root": {
+    zIndex: "1002",
+
+    cursor: "default",
+  },
+  "& .MuiTypography-root": {
+    padding: "10px 14px 10px 24px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: "24px",
+  },
+  "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
+    right: 55,
+  },
+};
 
 function checkNullValues(obj) {
   const { image, name } = obj;
@@ -32,6 +51,7 @@ export default function EditCateDialog(props) {
 
   //Refs
   const messageRef = React.useRef();
+  const inputFileRef = React.useRef();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -58,63 +78,48 @@ export default function EditCateDialog(props) {
       });
   }
 
-  const handleChangeName = (e) => {
-    let temp = { ...cate, name: e.target.value };
-    updateCate(temp);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (checkNullValues(cate)) {
+  //     messageRef.current.style.display = "none";
+  //     let { name, image } = cate;
+  //     let temp = { name, image };
+  //     const message = UpdateCategory(cate.category_id, temp, props.token);
+  //     console.log(message);
+  //     // console.log(temp);
+  //     window.location.reload();
+  //   } else {
+  //     messageRef.current.style.display = "block";
+  //   }
+  // };
+
+  const handleCloseDialog = () => {
+    props.handleClose();
+    setAvatarSrc(null);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (checkNullValues(cate)) {
-      messageRef.current.style.display = "none";
-      let { name, image } = cate;
-      let temp = { name, image };
-      const message = UpdateCategory(cate.category_id, temp, props.token);
-      console.log(message);
-      // console.log(temp);
-      window.location.reload();
+  const onFinish = async (values) => {
+    let final = {};
+    if (avatarSrc) {
+      final = { ...values, image: avatarSrc };
     } else {
-      messageRef.current.style.display = "block";
+      final = { ...values, image: cate.image };
     }
+    const message = await UpdateCategory(cate.category_id, final, props.token);
+    await props.mutating();
+    setAvatarSrc(null);
+    handleCloseDialog();
   };
 
-  const dateFormat = "DD/MM/YYYY";
-
-  const { TextArea } = Input;
-  const sxStyle = {
-    "& .MuiDialog-container:hover": {
-      cursor: "pointer",
-    },
-    "& .MuiPaper-root": {
-      zIndex: "1002",
-
-      cursor: "default",
-    },
-    "& .MuiTypography-root": {
-      padding: "10px 14px 10px 24px",
-    },
-    "& .MuiDialogActions-root": {
-      padding: "24px",
-    },
-    "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
-      right: 55,
-    },
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
   };
 
-  // const categoryOptions = [
-  //   { value: "none", label: "Không" },
-  //   { value: "Điện tử", label: "Điện tử" },
-  //   { value: "Điện thoại", label: "Điện thoại" },
-  //   { value: "Máy tính bảng", label: "Máy tính bảng" },
-  //   { value: "Phụ kiện", label: "Phụ kiện" },
-  //   { value: "Sách", label: "Sách" },
-  //   { value: "Sách giáo khoa", label: "Sách giáo khoa" },
-  //   { value: "Sách văn học", label: "Sách văn học" },
-  //   { value: "Thời trang", label: "Thời trang" },
-  //   { value: "Quần áo nam", label: "Quần áo nam" },
-  //   { value: "Quần áo nữ", label: "Quần áo nữ" },
-  // ];
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
+  };
 
+  // States from parent component
   if (cate)
     return (
       <React.Fragment>
@@ -139,9 +144,15 @@ export default function EditCateDialog(props) {
           </DialogTitle>
 
           <DialogContent dividers>
-            <form
-              onSubmit={handleSubmit}
+            <Form
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
               className={Styles["add-user-form-container"]}
+              initialValues={{
+                category_id: cate.category_id,
+                name: cate.name,
+              }}
             >
               <div
                 className={Styles["add-user-field-container"]}
@@ -162,8 +173,17 @@ export default function EditCateDialog(props) {
                   <input
                     onChange={handleFileUpload}
                     type="file"
-                    style={{ backgroundColor: "white" }}
+                    ref={inputFileRef}
+                    accept="image/*"
+                    style={{ backgroundColor: "white", display: " none" }}
                   />
+                  <Button
+                    onClick={handlingClickUpload}
+                    type="primary"
+                    icon={<CloudUploadOutlined />}
+                  >
+                    Upload image
+                  </Button>
                   {avatarSrc != null ? (
                     <Image
                       width={150}
@@ -197,78 +217,36 @@ export default function EditCateDialog(props) {
               </div>
               <div className={Styles["add-user-field-container"]}>
                 <span className={Styles["add-user-field-label"]}>ID: </span>
-                <Input
-                  placeholder="ID"
-                  defaultValue={cate.category_id}
-                  disabled
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="category_id"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input placeholder="ID" disabled />
+                </Form.Item>
               </div>
               <div className={Styles["add-user-field-container"]}>
                 <span className={Styles["add-user-field-label"]}>
                   Tên Danh mục:{" "}
                 </span>
-                <Input
-                  onChange={handleChangeName}
-                  defaultValue={cate.name}
-                  placeholder="Username"
-                />
-              </div>
-              {/* <div
-              className={Styles["add-user-field-container"]}
-              style={{
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-              }}
-            >
-              <span className={Styles["add-user-field-label"]}>Mô tả:</span>
-              <TextArea
-                showCount
-                maxLength={100}
-                defaultValue={
-                  "Danh mục điện tử: công nghệ tiên tiến, tiện ích, giải trí, ..."
-                }
-                placeholder="Địa chỉ"
-                style={{ height: 100, resize: "none" }}
-              />
-            </div>{" "}
-            */}
-              {/* <div className={Styles["add-user-field-container"]}>
-              <span className={Styles["add-user-field-label"]}>
-                Danh mục cha
-              </span>
-              <Select
-                defaultValue={categoryOptions[0]}
-                options={categoryOptions}
-                isSearchable
-                placeholder="Chọn danh mục..."
-                className={`${Styles["select-container"]} `}
-              />
-            </div> */}
-              {/* <div
-              className={Styles["add-user-field-container"]}
-              style={{
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-              }}
-            >
-              <span className={Styles["add-user-field-label"]}>Hình ảnh</span>
-              <div className={Styles["img-container"]}>
-                <div
-                  className={Styles["img-wrapper"]}
-                  onClick={props.handleOpenImgDialog}
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tên danh mục chính",
+                    },
+                  ]}
                 >
-                  <Image
-                    width={100}
-                    height={100}
-                    objectFit="cover"
-                    src={props.imgSrc}
-                    alt=""
-                    priority
-                    className={Styles["img"]}
-                  />
-                </div>
+                  <Input placeholder="Tên danh mục" />
+                </Form.Item>
               </div>
-            </div> */}
+
               <div
                 className={Styles["add-user-field-submit-container"]}
                 style={{
@@ -294,7 +272,7 @@ export default function EditCateDialog(props) {
                   Cập nhật
                 </button>
               </div>
-            </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </React.Fragment>

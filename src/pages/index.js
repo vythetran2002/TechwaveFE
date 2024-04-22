@@ -20,12 +20,15 @@ import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import { addCartItem } from "@/api/user/addCartItem";
 import { useRouter } from "next/router";
 import useFetchProductByCateId from "@/api/products/useFetchProductByCateId";
+import useFetchCart from "@/api/user/useFetchCart";
+import Cookies from "js-cookie";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const [img, setImg] = useState(null);
+  const { mutate } = useFetchCart();
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
   const cateList02 = useFetchProductByCateId(19);
@@ -41,16 +44,25 @@ function Index() {
     setImg(null);
   };
 
-  const handlingAddFavouriteProduct = (id) => {
-    console.log("----");
-    const message = addFavouriteProduct(id, cookies["token"]);
-    console.log(message);
+  const mutateCateList01 = () => {
+    cateList01.mutate();
+  };
+  const mutateCateList02 = () => {
+    cateList02.mutate();
+  };
+
+  const mutateCateList03 = () => {
+    cateList03.mutate();
+  };
+
+  const handlingAddFavouriteProduct = async (id) => {
+    const message = await addFavouriteProduct(id, token);
   };
 
   const handlingAddCartItem = async (data) => {
-    console.log("----");
     try {
-      const message = await addCartItem(data, cookies["token"]);
+      const message = await addCartItem(data, token);
+      await mutate();
       // console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");
@@ -81,7 +93,8 @@ function Index() {
         />
 
         <ItemList
-          token={cookies["token"]}
+          mutate={mutateCateList01}
+          token={token}
           items={cateList01.data}
           loading={cateList01.isLoading}
           error={cateList01.isError}
@@ -100,7 +113,8 @@ function Index() {
           error={cateList02.isError}
         />
         <ItemList
-          token={cookies["token"]}
+          mutate={mutateCateList02}
+          token={token}
           items={cateList02.data}
           loading={cateList02.isLoading}
           error={cateList02.isError}
@@ -120,7 +134,8 @@ function Index() {
         />
 
         <ItemList
-          token={cookies["token"]}
+          mutate={mutateCateList03}
+          token={token}
           items={cateList03.data}
           loading={cateList03.isLoading}
           error={cateList03.isError}

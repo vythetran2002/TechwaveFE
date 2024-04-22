@@ -3,25 +3,25 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-import dynamic from "next/dynamic";
 import { Select } from "antd";
 import ProductList from "@/components/ui/vendor/ProductList";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import AddProductDialog from "@/components/ui/vendor/dialog/addProduct/AddProductDialog";
 import EditProductDialog from "@/components/ui/vendor/dialog/editProduct/EditProductDialog";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
-import Link from "next/link";
 import { useCookies } from "react-cookie";
 import { Pagination } from "@mui/material";
+import Cookies from "js-cookie";
+import useFetchProductsByPage from "@/api/vendor/useFetchProductsByPage";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
+  const { mutate } = useFetchProductsByPage(page, quantity, token);
+
   // states
   const [isOpenAddProductDialog, setIsOpenAddProductDialog] = useState(false);
   const [isOpenEditProductDialog, setIsOpenEditProductDialog] = useState(false);
@@ -90,7 +90,7 @@ function Index() {
             <button
               // href={"/vendor/product/add"}
               className={Styles["user-filter-button-wrapper"]}
-              onClick={setIsOpenAddProductDialog}
+              onClick={handlingOpenAddProductDialog}
             >
               <AddCircleOutlineOutlinedIcon />
               <span>Thêm Sản phẩm</span>
@@ -124,22 +124,24 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             updateProduct={handlingUpdateProduct}
             handleOpenDialog={handlingOpenEditProductDialog}
             handleCloseDialog={handlingOpenEditProductDialog}
           />
           <AddProductDialog
-            token={cookies["token"]}
+            token={token}
             isOpen={isOpenAddProductDialog}
             handleClose={handlingCloseAddProductDialog}
+            mutate={mutate}
           />
           <EditProductDialog
             updateProduct={handlingUpdateProduct}
             product={product}
-            token={cookies["token"]}
+            token={token}
             isOpen={isOpenEditProductDialog}
             handleClose={handlingCloseEditProductDialog}
+            mutate={mutate}
           />
           <div
             style={{ width: "100%", display: "flex", justifyContent: "center" }}

@@ -5,97 +5,34 @@ import Styles from "./styles.module.css";
 import { useRef } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import EditLocationIcon from "@mui/icons-material/EditLocation";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import images from "@/assets/images";
 import { Switch } from "antd";
 import Image from "next/image";
-import OutlinedFlagRoundedIcon from "@mui/icons-material/OutlinedFlagRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import DoneIcon from "@mui/icons-material/Done";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
-import { Radio, DatePicker, Checkbox, Input } from "antd";
+import { Radio, Button, Form, DatePicker, Checkbox, Input } from "antd";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
-import ProfileEditCard from "@/components/ui/ProfileEditCard/ProfileEditCard";
-import useFetch from "@/api/useFetch";
+import {
+  CloudUploadOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { sendPostRequestWithToken } from "@/api/user/sendPostRequestProfile";
-import MmsIcon from "@mui/icons-material/Mms";
-
+import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
 const { TextArea } = Input;
-
-function formatDate(isoDateString) {
-  return dayjs(isoDateString).format("DD-MM-YYYY");
-}
-function containsLetter(str) {
-  return /[a-zA-Z]/.test(str);
-}
-
-const extractUserDetails = (users) =>
-  users.map(
-    ({ fullname, email, phone, address, dob, gender, username, avatar }) => ({
-      fullname,
-      email,
-      phone,
-      address,
-      dob,
-      gender,
-      username,
-      avatar,
-    })
-  );
-
-function checkEmptyFields(userProfile) {
-  const { email, phone, address, dob, fullname } = userProfile;
-  return !email || !phone || !address || !dob || !fullname;
-}
+import Cookies from "js-cookie";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const user = useFetchUserProfile();
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [address, setAddress] = useState("");
+  const [passwdEditMode, setPasswdEditMode] = useState(false);
+  const [form] = Form.useForm();
 
-  const handlingChangeFullName = (e) => {
-    let temp = { ...userProfile, fullname: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeEmail = (e) => {
-    let temp = { ...userProfile, email: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangePhone = (e) => {
-    if (!containsLetter(e.target.value)) {
-      let temp = { ...userProfile, phone: e.target.value };
-      setUserProfile(temp);
-    }
-  };
-  const handlingChangeGender = (e) => {
-    let temp = { ...userProfile, gender: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeDob = (data, dateString) => {
-    let temp = { ...userProfile, dob: dateString };
-    setUserProfile(temp);
-  };
-  const hadnlingChangeOldPass = (e) => {
-    console.log(oldPass);
-    setOldPass(e.target.value);
-  };
-  const hadnlingChangeAddress = (e) => {
-    let temp = { ...userProfile, address: e.target.value };
-    setUserProfile(temp);
-  };
   const handlingChangeNewPass = (e) => {
     console.log(newPass);
     setNewPass(e.target.value);
@@ -123,12 +60,18 @@ function Index() {
   //Refs
   const passwdRef = useRef();
   const iconRef = useRef();
+  const pendingItem = useRef();
+  const cancledItem = useRef();
   const orderingItem = useRef();
   const orderedItem = useRef();
+
   const itemRef = useRef();
   // InputRefs
   const usernameRef = useRef();
   const messageRef = useRef();
+  const inputFileRef = useRef();
+  const passwdChangeLabel = useRef();
+  const switchRef = useRef();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState();
@@ -146,119 +89,53 @@ function Index() {
 
   const handlingDisplayPasswd = (e) => {
     if (e.target.checked) {
-      passwdRef.current.style.display = "block";
+      setPasswdEditMode(true);
     } else {
-      passwdRef.current.style.display = "none";
+      setPasswdEditMode(false);
     }
   };
 
-  const handlingSwitch = (e) => {
-    console.log("editmode: " + e);
-    setAvatarSrc(user.data.avatar);
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
+  };
+
+  const handlingSwitch = async (e) => {
+    await setAvatarSrc(user.data.avatar);
     let temp = { ...user.data, dob: dayjs(user.data.dob).format("YYYY/MM/DD") };
     setUserProfile(temp);
     setNewPass("");
     setOldPass("");
     setIsEditMode(e);
+    await form.resetFields();
+    await setPasswdEditMode(false);
+    passwdChangeLabel.current.style.opacity = 0;
   };
 
-  const handlingClickQLDH = () => {
-    iconRef.current.classList.toggle("rt-180");
-    itemRef.current.classList.toggle("show");
-    orderedItem.current.classList.toggle("appear");
-    orderingItem.current.classList.toggle("appear");
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (oldPass == newPass && oldPass == "" && newPass == "") {
-      if (checkEmptyFields(userProfile)) {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Vui lòng nhập đầy đủ thông tin";
+  const onFinish = async (values) => {
+    let final = {};
+    if (avatarSrc) {
+      final = { ...values, avatar: avatarSrc };
+    } else {
+      final = { ...values, avatar: user.data.avatar };
+    }
+    // Change Password
+    if (values?.oldPassword) {
+      if (values.oldPassword != user.data.password) {
+        passwdChangeLabel.current.style.opacity = 1;
+        return 0;
       } else {
-        // update profile
-        console.log("--------------------------------");
-        console.log(userProfile);
-        messageRef.current.style.display = "none";
-        const {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        } = userProfile;
-        const temp = {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        };
-        console.log(temp);
-        const message = sendPostRequestWithToken(temp, cookies["token"]);
-        console.log(message);
-        window.location.reload();
-      }
-    } else if (oldPass != "" && newPass != "") {
-      if (oldPass != newPass) {
-        if (oldPass != userProfile.password) {
-          messageRef.current.style.display = "block";
-          messageRef.current.textContent = "Mật khẩu cũ không đúng";
-        } else if (oldPass == userProfile.password) {
-          // change password
-          console.log("--------------------------------");
-          let temp = { ...userProfile, password: newPass };
-          const {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          } = temp;
-          const reqUser = {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          };
-          // console.log(reqUser);
-          const test = reqUser.modifiedAt;
-          const final = {
-            ...reqUser,
-            modifiedAt: dayjs(test).format("YYYY/MM/DD"),
-          };
-          messageRef.current.style.display = "none";
-          const message = sendPostRequestWithToken(final, cookies["token"]);
-          console.log(message);
-          window.location.reload();
-        }
-      } else {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Mật khẩu mới trùng với mật khẩu cũ";
+        passwdChangeLabel.current.style.opacity = 0;
       }
     }
+    await delete final.oldPassword;
+    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
+    const message = await sendPostRequestWithToken(final, token);
+    await switchRef.current.click();
+    await user.mutate(); // mutate data
   };
-
-  useFetch(() => {
-    console.log(userProfile);
-    console.log(newPass);
-    console.log(oldPass);
-  }, [userProfile, newPass, oldPass]);
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
+  };
 
   if (user.isLoading) {
     return <>Loading...</>;
@@ -272,263 +149,216 @@ function Index() {
       <Head>
         <title>Thông tin tài khoản</title>
       </Head>
-      <UserLayout>
+      <UserLayout user={user} path={"/profile"}>
         <Toaster />
-        <div className={Styles["profile-edit-card-container"]}>
-          <div className={Styles["profile-edit-card-wrapper"]}>
-            <div className={Styles["profile-edit-form-wrapper"]}>
-              <div className={Styles["profile-left-edit-form-wrapper"]}>
-                <div className={Styles["profile-avatar-container"]}>
-                  {user.data.avatar ? (
-                    <div className={Styles["profile-avatar-wrapper"]}>
-                      <Image
-                        width={150}
-                        height={150}
-                        src={user.data.avatar}
-                        className={Styles["avatar"]}
-                        alt=""
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div className={Styles["profile-avatar-wrapper"]}>
-                        <Image
-                          width={150}
-                          height={150}
-                          src={images.nonAvatar}
-                          className={Styles["avatar"]}
-                          alt=""
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {user.data ? (
-                    <div className={Styles["name-phone-container"]}>
-                      <span>{user.data.fullname}</span>
-                      <span>{user.data.phone}</span>
-                    </div>
-                  ) : (
-                    <>Loading</>
-                  )}
-                </div>
-                <div className={Styles["nav-list-container"]}>
-                  <Link
-                    href={"/user/account/profile/"}
-                    className={`${Styles["nav-item-container"]} ${Styles["active"]}`}
-                  >
-                    <AccountCircleIcon />
-                    <span>Thông tin tài khoản</span>
-                  </Link>
-                  <Link
-                    href={"/user/account/favourites"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <FavoriteBorderIcon />
-                    <span>Danh sách yêu thích</span>
-                  </Link>
-                  <div
-                    // href={"/user/account/purchase/1"}
-                    className="nav-order-item-container "
-                    onClick={handlingClickQLDH}
-                    ref={itemRef}
-                  >
-                    <div className="al-center">
-                      <InventoryIcon />
-                      <span>Quản lý đơn hàng</span>
-                      <KeyboardArrowDownIcon
-                        className="ml-120 "
-                        ref={iconRef}
-                      />
-                    </div>
-                    <Link
-                      href={"/user/account/order"}
-                      className="drop-down-item"
-                      ref={orderingItem}
-                    >
-                      <LocalShippingIcon />
-                      <span>Đơn hàng của tôi</span>
-                    </Link>
-                    <Link
-                      href={"/user/account/received"}
-                      className="drop-down-item"
-                      ref={orderedItem}
-                    >
-                      <DoneIcon />
-                      <span>Đơn hàng đã nhận</span>
-                    </Link>
-                  </div>
-                  <Link
-                    href={"/user/account/report"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <OutlinedFlagRoundedIcon />
-                    <span>Báo cáo</span>
-                  </Link>
-                  <Link
-                    href={"/user/account/follow"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <BookmarkOutlinedIcon />
-                    <span>Theo dõi</span>
-                  </Link>
-                  <Link
-                    href={"/user/account/review"}
-                    className={Styles["nav-item-container"]}
-                  >
-                    <MmsIcon />
-                    <span>Đánh giá</span>
-                  </Link>
-                </div>
-              </div>
+        <div className={Styles["profile-right-edit-form-wrapper"]}>
+          <div className={Styles["profile-title-wrapper"]}>
+            <div className={Styles["profile-title-container"]}>
+              <span style={{ fontWeight: "400", fontSize: "20px" }}>
+                Hồ Sơ Của Tôi
+              </span>
+              <span>Quản lý thông tin hồ sơ để bảo mật tài khoản</span>
             </div>
-            <div className={Styles["profile-right-edit-form-wrapper"]}>
-              <div className={Styles["profile-title-wrapper"]}>
-                <div className={Styles["profile-title-container"]}>
-                  <span style={{ fontWeight: "400", fontSize: "20px" }}>
-                    Hồ Sơ Của Tôi
-                  </span>
-                  <span>Quản lý thông tin hồ sơ để bảo mật tài khoản</span>
-                </div>
-                <div className={Styles["switch-edit-container"]}>
-                  <Switch onChange={handlingSwitch} />
-                  {isEditMode ? (
-                    <span>Hiển thị thông tin</span>
-                  ) : (
-                    <span>Điều chỉnh thông tin</span>
-                  )}
-                </div>
+            <div className={Styles["switch-edit-container"]}>
+              <Switch onChange={handlingSwitch} ref={switchRef} />
+              {isEditMode ? (
+                <span>Hiển thị thông tin</span>
+              ) : (
+                <span>Điều chỉnh thông tin</span>
+              )}
+            </div>
+          </div>
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            form={form}
+            className={Styles["profile-form-avatar-change-container"]}
+            initialValues={{
+              fullname: user.data.fullname,
+              email: user.data.email,
+              phone: user.data.phone,
+              address: user.data.address,
+              gender: user.data.gender,
+              dob: dayjs(user.data.dob, "YYYY/MM/DD"),
+            }}
+          >
+            <div className={Styles["profile-form-input-container"]}>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Tên đăng nhập</span>
+                <span className={Styles["profile-row2"]}>
+                  {user.data.username}
+                </span>
               </div>
-              <form
-                onSubmit={handleSubmit}
-                className={Styles["profile-form-avatar-change-container"]}
-              >
-                <div className={Styles["profile-form-input-container"]}>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>
-                      Tên đăng nhập
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Họ và tên</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="fullname"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập họ và tên",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Họ và tên" />
+                    </Form.Item>
+                  </span>
+                ) : (
+                  <span>{user.data.fullname}</span>
+                )}
+              </div>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Email</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập email",
+                        },
+                        {
+                          pattern: mailformat,
+                          message: "Email không hợp lệ",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Email" />
+                    </Form.Item>
+                  </span>
+                ) : (
+                  <span>{user.data.email}</span>
+                )}
+              </div>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Số điện thoại</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="phone"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập số điện thoại",
+                        },
+                        {
+                          pattern: regexPhoneNumber,
+                          message: "Số điện thoại không hợp lệ",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Số điện thoại" />
+                    </Form.Item>
+                  </span>
+                ) : (
+                  <span>{user.data.phone}</span>
+                )}
+              </div>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Địa chỉ</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="address"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập địa chỉ",
+                        },
+                      ]}
+                    >
+                      <TextArea
+                        placeholder="Địa chỉ"
+                        autoSize={{
+                          minRows: 2,
+                          maxRows: 6,
+                        }}
+                      />
+                    </Form.Item>
+                  </span>
+                ) : (
+                  <span>{user.data.address}</span>
+                )}
+              </div>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Giới tính</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <span>
+                      <Form.Item
+                        className={Styles["input-wrapper"]}
+                        name="gender"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Hãy nhập giới tính",
+                          },
+                        ]}
+                      >
+                        <Radio.Group ref={usernameRef} name="radiogroup">
+                          <Radio value={"Nam"}>Nam</Radio>
+                          <Radio value={"Nữ"}>Nữ</Radio>
+                          <Radio value={"Khác"}>Khác</Radio>
+                        </Radio.Group>
+                      </Form.Item>
                     </span>
-                    <span className={Styles["profile-row2"]}>
-                      {user.data.username}
-                    </span>
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>Họ và tên</span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          defaultValue={userProfile.fullname}
-                          onChange={handlingChangeFullName}
-                        />
-                      </span>
-                    ) : (
-                      <span>{user.data.fullname}</span>
-                    )}
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>Email</span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          defaultValue={userProfile.email}
-                          onChange={handlingChangeEmail}
-                        />
-                      </span>
-                    ) : (
-                      <span>{user.data.email}</span>
-                    )}
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>
-                      Số điện thoại
-                    </span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          value={userProfile.phone}
-                          onChange={handlingChangePhone}
-                        />
-                      </span>
-                    ) : (
-                      <span>{user.data.phone}</span>
-                    )}
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>Địa chỉ</span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <TextArea
-                          placeholder="Địa chỉ"
-                          autoSize={{
-                            minRows: 2,
-                            maxRows: 6,
-                          }}
-                          onChange={hadnlingChangeAddress}
-                          defaultValue={userProfile.address}
-                        />
-                      </span>
-                    ) : (
-                      <span>{user.data.address}</span>
-                    )}
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>Giới tính</span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <span>
-                          <Radio.Group
-                            ref={usernameRef}
-                            name="radiogroup"
-                            defaultValue={userProfile.gender}
-                            onChange={handlingChangeGender}
-                          >
-                            <Radio value={"Nam"}>Nam</Radio>
-                            <Radio value={"Nữ"}>Nữ</Radio>
-                            <Radio value={"Khác"}>Khác</Radio>
-                          </Radio.Group>
-                        </span>
-                      </span>
-                    ) : (
-                      <span className={Styles["profile-row2"]}>
-                        {user.data.gender}
-                      </span>
-                    )}
-                  </div>
-                  <div className={Styles["profile-col"]}>
-                    <span className={Styles["profile-row1"]}>Ngày sinh:</span>
-                    {isEditMode ? (
-                      <span className={Styles["profile-row2"]}>
-                        <DatePicker
-                          style={{ width: "100%" }}
-                          defaultValue={dayjs(
-                            formatDate(userProfile.dob),
-                            "DD-MM-YYYY"
-                          )}
-                          format={dateFormat}
-                          onChange={handlingChangeDob}
-                        />
-                      </span>
-                    ) : (
-                      <span>{formatDate(user.data.dob)}</span>
-                    )}
-                  </div>
-                  {isEditMode && (
-                    <div className={Styles["profile-col"]}>
-                      <span className={Styles["profile-row1"]}>
-                        Thay đổi mật khẩu
-                      </span>
-                      <span className={Styles["profile-row2"]}>
-                        <Checkbox
-                          onChange={handlingDisplayPasswd}
-                          defaultChecked={false}
-                        />
-                      </span>
-                    </div>
-                  )}
+                  </span>
+                ) : (
+                  <span className={Styles["profile-row2"]}>
+                    {user.data.gender}
+                  </span>
+                )}
+              </div>
+              <div className={Styles["profile-col"]}>
+                <span className={Styles["profile-row1"]}>Ngày sinh:</span>
+                {isEditMode ? (
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="dob"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập ngày sinh",
+                        },
+                      ]}
+                    >
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        // defaultValue={dayjs(formatDate(userProfile.dob))}
+                        format={dateFormat}
+                        // onChange={handlingChangeDob}
+                      />
+                    </Form.Item>
+                  </span>
+                ) : (
+                  <span>{dayjs(user.data.dob).format("DD/MM/YYYY")}</span>
+                )}
+              </div>
+              {isEditMode && (
+                <div className={Styles["profile-col"]}>
+                  <span className={Styles["profile-row1"]}>
+                    Thay đổi mật khẩu
+                  </span>
+                  <span className={Styles["profile-row2"]}>
+                    <Checkbox
+                      onChange={handlingDisplayPasswd}
+                      defaultChecked={false}
+                    />
+                  </span>
+                </div>
+              )}
 
+              {passwdEditMode ? (
+                <>
                   <div className={Styles["passwd-container"]} ref={passwdRef}>
                     <div
                       className={Styles["profile-col"]}
@@ -537,14 +367,30 @@ function Index() {
                       <span className={Styles["profile-row1"]}>
                         Nhập mật khẩu cũ
                       </span>
+
                       <span className={Styles["profile-row2"]}>
-                        <Input.Password
-                          placeholder="Nhập mật khẩu cũ"
-                          onChange={hadnlingChangeOldPass}
-                          iconRender={(visible) =>
-                            visible ? <VisibilityIcon /> : <VisibilityOffIcon />
-                          }
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="oldPassword"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập mật khẩu cũ",
+                            },
+                          ]}
+                        >
+                          <Input.Password
+                            placeholder="Nhập mật khẩu cũ"
+                            onChange={hadnlingChangeOldPass}
+                            iconRender={(visible) =>
+                              visible ? (
+                                <EyeOutlined />
+                              ) : (
+                                <EyeInvisibleOutlined />
+                              )
+                            }
+                          />
+                        </Form.Item>
                       </span>
                     </div>
                     <div className={Styles["profile-col"]}>
@@ -552,126 +398,167 @@ function Index() {
                         Nhập mật khẩu mới
                       </span>
                       <span className={Styles["profile-row2"]}>
-                        <Input.Password
-                          onChange={handlingChangeNewPass}
-                          placeholder="Nhập mật khẩu mới"
-                          iconRender={(visible) =>
-                            visible ? <VisibilityIcon /> : <VisibilityOffIcon />
-                          }
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="password"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập mật khẩu mới",
+                            },
+                          ]}
+                        >
+                          <Input.Password
+                            onChange={handlingChangeNewPass}
+                            placeholder="Nhập mật khẩu mới"
+                            iconRender={(visible) =>
+                              visible ? (
+                                <EyeOutlined />
+                              ) : (
+                                <EyeInvisibleOutlined />
+                              )
+                            }
+                          />
+                        </Form.Item>
                       </span>
                     </div>
                   </div>
-                  <div className={Styles["submit-btn-wrapper"]}>
-                    {isEditMode && (
-                      <span
-                        style={{ color: "red", display: "none" }}
-                        ref={messageRef}
-                      >
-                        Vui lòng nhập đầy đủ thông tin
-                      </span>
-                    )}
-                  </div>
-                  <div className={Styles["submit-btn-wrapper"]}>
-                    {isEditMode && (
-                      <button type="submit" className={Styles["submit-btn"]}>
-                        <div style={{ textDecoration: "none", color: "white" }}>
-                          {" "}
-                          Lưu thay đổi
-                        </div>
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div className={Styles["profile-form-avatar-container"]}>
-                  {isEditMode ? (
-                    <div className={Styles["profile-avt-input-container"]}>
-                      {avatarSrc ? (
-                        <div
-                          className={Styles["profile-avt-preview-wrapper"]}
-                          onClick={handlingOpenDialog}
-                        >
-                          <Image
-                            width={150}
-                            height={150}
-                            src={avatarSrc}
-                            alt=""
-                            className={Styles["avt-preview"]}
-                          />
-                        </div>
-                      ) : (
-                        <div
-                          className={Styles["profile-avt-preview-wrapper"]}
-                          onClick={handlingOpenDialog}
-                        >
-                          <Image
-                            width={150}
-                            height={150}
-                            src={images.nonAvatar}
-                            alt=""
-                            className={Styles["avt-preview"]}
-                          />
-                        </div>
-                      )}
+                </>
+              ) : (
+                <></>
+              )}
 
-                      {/* <input
+              <div className={Styles["submit-btn-wrapper"]}>
+                {isEditMode && (
+                  <span
+                    style={{ color: "red", display: "none" }}
+                    ref={messageRef}
+                  >
+                    Vui lòng nhập đầy đủ thông tin
+                  </span>
+                )}
+              </div>
+              <span
+                ref={passwdChangeLabel}
+                className={Styles["password-change-label"]}
+              >
+                Mật khẩu cũ không khớp
+              </span>
+
+              <div className={Styles["submit-btn-wrapper"]}>
+                {isEditMode && (
+                  <button className={Styles["submit-btn"]}>
+                    <div
+                      href={""}
+                      style={{ textDecoration: "none", color: "white" }}
+                    >
+                      {" "}
+                      Lưu thay đổi
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className={Styles["profile-form-avatar-container"]}>
+              {isEditMode ? (
+                <div className={Styles["profile-avt-input-container"]}>
+                  {avatarSrc ? (
+                    <div
+                      className={Styles["profile-avt-preview-wrapper"]}
+                      onClick={handlingClickUpload}
+                      // onClick={handlingOpenDialog}
+                    >
+                      <Image
+                        width={150}
+                        height={150}
+                        src={avatarSrc}
+                        alt=""
+                        className={Styles["avt-preview"]}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={Styles["profile-avt-preview-wrapper"]}
+                      // onClick={handlingOpenDialog}
+                    >
+                      <Image
+                        width={150}
+                        height={150}
+                        src={images.nonAvatar}
+                        alt=""
+                        className={Styles["avt-preview"]}
+                      />
+                    </div>
+                  )}
+
+                  {/* <input
                         className={Styles["submit-avt-btn"]}
                         // onClick={handlingOpenDialog}
                       >
                         Chọn ảnh
                       </input> */}
-                      <input
-                        onChange={handleFileUpload}
-                        type="file"
-                        className={Styles["submit-avt-input"]}
-                      />
+                  <div className={Styles["submit-avt-input-wrapper"]}>
+                    <Button
+                      onClick={handlingClickUpload}
+                      type="primary"
+                      icon={<CloudUploadOutlined />}
+                    >
+                      Upload Image
+                    </Button>
+                    <input
+                      ref={inputFileRef}
+                      onChange={handleFileUpload}
+                      type="file"
+                      className={Styles["submit-avt-input"]}
+                      style={{ display: "none" }}
+                      accept=".jpg, .png, image/jpeg, image/png"
+                    />
+                  </div>
 
-                      {/* <Upload {...props}>
+                  {/* <Upload {...props}>
                         <Button icon={<UploadOutlined />}>
                           Click to Select File
                         </Button>
                       </Upload> */}
-                      <div className={Styles["desc-wrapper"]}>
-                        <span className={Styles["desc"]}>
-                          Dung lượng tối đa: 1MB
-                        </span>
-                        <span className={Styles["desc"]}>
-                          Định dạng:.JPEG, .PNG
-                        </span>
-                      </div>
-                    </div>
+                  <div className={Styles["desc-wrapper"]}>
+                    <span className={Styles["desc"]}>
+                      Dung lượng tối đa: 1MB
+                    </span>
+                    <span className={Styles["desc"]}>
+                      Định dạng:.JPEG, .PNG
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className={Styles["avtar-display-wrapper"]}>
+                  {user.data && user.data.avatar ? (
+                    <Image
+                      width={150}
+                      height={150}
+                      src={user.data.avatar}
+                      alt=""
+                      priority={true}
+                      className={Styles["avtar-display"]}
+                    />
                   ) : (
-                    <div className={Styles["avtar-display-wrapper"]}>
-                      {user.data && user.data.avatar ? (
-                        <Image
-                          width={150}
-                          height={150}
-                          src={user.data.avatar}
-                          alt=""
-                          priority={true}
-                          className={Styles["avtar-display"]}
-                        />
-                      ) : (
-                        <Image
-                          width={150}
-                          height={150}
-                          src={images.nonAvatar}
-                          alt=""
-                          priority={true}
-                          className={Styles["avtar-display"]}
-                        />
-                      )}
-                    </div>
+                    <Image
+                      width={150}
+                      height={150}
+                      src={images.nonAvatar}
+                      alt=""
+                      priority={true}
+                      className={Styles["avtar-display"]}
+                    />
                   )}
                 </div>
-                {/* <EditImageDialog
+              )}
+            </div>
+            {/* <EditImageDialog
                   isOpen={isOpenDialog}
                   onClose={handlingCloseDialog}
                   onChange={setAvatarSrc}
                 /> */}
-              </form>
-            </div>
-          </div>
+          </Form>
         </div>
       </UserLayout>
     </>

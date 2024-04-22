@@ -12,15 +12,16 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import AddUserDialog from "@/components/ui/admin/dialog/addUser/AddUserDialog";
 import EditUserDialog from "@/components/ui/admin/dialog/editUser/EditUserDialog";
 import Link from "next/link";
-import useFetch from "@/api/useFetch";
 import { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import DetailUserDialog from "@/components/ui/admin/dialog/detailUser/DetailUserDialog";
-import { useRouter } from "next/router";
 import { Pagination } from "@mui/material";
+import useFetchAccount from "@/api/admin/useFetchAccount";
 
 function Index() {
-  const [cookies] = useCookies();
+  // const [cookies] = useCookies();
+  const token = Cookies.get("token");
   // console.log(router.query);
   // states
   const [isOpenAddUserDialog, setIsOpenAddUserDialog] = useState(false);
@@ -31,7 +32,7 @@ function Index() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
-
+  const { mutate } = useFetchAccount(1, page, quantity, token);
   const handlingOpenAddUserDialog = () => {
     setIsOpenAddUserDialog(true);
   };
@@ -75,6 +76,10 @@ function Index() {
 
   const updateMax = (value) => {
     setMax(value);
+  };
+
+  const mutating = () => {
+    mutate();
   };
 
   // if (account.isLoading) return <>Loading</>;
@@ -191,7 +196,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             updateAccount={updateAccount}
             updateId={updateId}
             status={1}
@@ -200,12 +205,14 @@ function Index() {
             handleOpenDetailDialog={handlingOpenDetailUserDialog}
           />
           <AddUserDialog
-            token={cookies["token"]}
+            mutating={mutating}
+            token={token}
             isOpen={isOpenAddUserDialog}
             handleClose={handlingCloseAddUserDialog}
           />
           <EditUserDialog
-            token={cookies["token"]}
+            mutating={mutating}
+            token={token}
             data={account}
             updateData={updateAccount}
             id={id}
@@ -213,7 +220,7 @@ function Index() {
             handleClose={handlingCloseEditUserDialog}
           />
           <DetailUserDialog
-            token={cookies["token"]}
+            token={token}
             data={account}
             updateData={updateAccount}
             id={id}

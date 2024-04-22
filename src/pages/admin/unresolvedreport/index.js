@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import AdminLayout from "@/components/layout/AdminLayout";
 import Head from "next/head";
+import { Roboto } from "next/font/google";
 import Styles from "../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-// import dynamic from "next/dynamic";
-// import { Button } from "antd";
-import { Badge } from "antd";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
-// import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-// import AddCateDialog from "@/components/ui/admin/dialog/addCate/AddCateDialog";
-// import EditCateDialog from "@/components/ui/admin/dialog/editCate/EditUserDialog";
-// import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
-// import images from "@/assets/images";
 import Link from "next/link";
 import ReportList from "@/components/ui/vendor/report/ReportList";
 import Dialog from "@mui/material/Dialog";
@@ -22,6 +14,7 @@ import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import { Pagination } from "@mui/material";
 import { Select } from "antd";
+import Cookies from "js-cookie";
 
 function Index() {
   // states
@@ -30,7 +23,7 @@ function Index() {
   //   const [isOpenEditImgDialog, setIsOpenEditImgDialog] = useState(false);
   //   const [avatarSrc, setAvatarSrc] = useState(images.empty);
   const [id, setId] = useState();
-  const [cookie] = useCookies();
+  const token = Cookies.get("token");
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
@@ -167,7 +160,7 @@ function Index() {
             status={0}
             updateId={updateId}
             handleOpenDialog={handlingOpen}
-            token={cookie["token"]}
+            token={token}
           />
           <Dialog
             fullWidth={true}

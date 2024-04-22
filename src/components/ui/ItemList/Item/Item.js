@@ -12,6 +12,7 @@ import { Tooltip } from "antd";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast from "react-hot-toast";
+import { Textfit } from "react-textfit";
 
 function Item(props) {
   // console.log(props.item);
@@ -21,16 +22,20 @@ function Item(props) {
     props.handlingOpenDialog();
   };
 
-  const handlingAddFavouriteProduct = () => {
+  const handlingAddFavouriteProduct = async () => {
     let temp = { ...props.item };
     if (temp.product_id) {
-      props.addFavourite(temp.product_id);
+      await props.addFavourite(temp.product_id);
+      await props.mutate();
     }
   };
 
-  const handleRemoveFavProduct = () => {
-    const message = DeleteFavouriteItem(props.item.product_id, props.token);
-    console.log(message);
+  const handleRemoveFavProduct = async () => {
+    const message = await DeleteFavouriteItem(
+      props.item.product_id,
+      props.token
+    );
+    await props.mutate();
   };
 
   const handlingAddCartItem = () => {
@@ -59,7 +64,7 @@ function Item(props) {
           <div className={Styles["item-card-container"]}>
             <div className={Styles["item-img-container"]}>
               <div className={Styles["comparision-btn-wrapper"]}>
-                <div className={Styles["dot-wrapper"]}>-36%</div>
+                {/* <div className={Styles["dot-wrapper"]}>-36%</div> */}
                 <div
                   className={Styles["comparision-btn-container"]}
                   aria-describedby="trash-desc"
@@ -90,18 +95,21 @@ function Item(props) {
                 </Link>
               )}
             </div>
-            <div className={Styles["item-title-container"]}>
-              <span>{props.item.name}</span>
-            </div>
+            <span className={Styles["item-title-container"]}>
+              {props.item.name}
+            </span>
+
             <div className={Styles["item-price-container"]}>
               <span>{FormatPrice(props.item.price)}</span>
               <span id={Styles["promo-price"]}>
                 {FormatPrice(props.item.promotional_price)}
               </span>
             </div>
-            <div className={Styles["item-rating-container"]}>
-              <div className={Styles["item-rating-wrapper"]}>
-                {/* {props.item.rating ? (
+
+            <Textfit mode="single">
+              <div className={Styles["item-rating-container"]}>
+                <div className={Styles["item-rating-wrapper"]}>
+                  {/* {props.item.rating ? (
                 <Rating value={0} precision={0.5} readOnly size="small" />
               ) : (
                 <Rating
@@ -111,17 +119,21 @@ function Item(props) {
                   size="small"
                 />
               )} */}
-                <Rating
-                  value={parseInt(props.item.rating)}
-                  precision={0.5}
-                  readOnly
-                  size="small"
-                />
+                  <Rating
+                    sx={{
+                      fontSize: "16px",
+                    }}
+                    value={parseInt(props.item.rating)}
+                    precision={0.5}
+                    readOnly
+                    size="small"
+                  />
+                </div>
+                <span className={Styles["buy-count"]}>
+                  Đã bán {props.item.haveSales}
+                </span>
               </div>
-              <span className={Styles["buy-count"]}>
-                Đã bán {props.item.haveSales}
-              </span>
-            </div>
+            </Textfit>
             <div className={Styles["item-rating-container"]}>
               <span className={Styles["buy-count"]}>{props.item.place}</span>
             </div>

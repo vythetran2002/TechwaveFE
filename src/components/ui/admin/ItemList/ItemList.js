@@ -8,18 +8,17 @@ import { Empty } from "antd";
 
 function ItemList(props) {
   const { status, limit, page, token, updatePage, updateMax } = props;
-
   const account = useFetchAccount(status, page, limit, token);
-  console.log(account);
-  const reload = account.mutate;
 
   useEffect(() => {
     if (account.data) {
-      console.log("---");
       updateMax(account.data.total);
-      reload();
     }
   }, [account.data]);
+
+  const handlingMutate = () => {
+    account.mutate();
+  };
 
   if (account.isLoading) {
     return <>Loading</>;
@@ -66,8 +65,8 @@ function ItemList(props) {
                 return (
                   <React.Fragment key={"account" + index}>
                     <ListItem
+                      reload={handlingMutate}
                       token={props.token}
-                      handleReload={reload}
                       updateAccount={props.updateAccount}
                       updateId={props.updateId}
                       status={props.status}

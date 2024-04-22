@@ -13,19 +13,16 @@ import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
+import Cookies from "js-cookie";
 
 function VendorHeader() {
+  const token = Cookies.get("token");
   const user = useFetchVendorProfile();
-
-  console.log(user);
-
   const route = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies();
 
   const handlingLogout = async () => {
-    const message = LogOutAccount(cookies["token"]);
-    await removeCookie("token");
-    console.log(message);
+    const message = await LogOutAccount(token);
+    await Cookies.remove("token");
     route.push("/auth/login");
     // toast.success("logged out");
   };

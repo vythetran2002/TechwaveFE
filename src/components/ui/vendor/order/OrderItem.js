@@ -1,21 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import Styles from "./styles.module.css";
-import FemaleOutlinedIcon from "@mui/icons-material/FemaleOutlined";
-import { memo } from "react";
-import MaleOutlinedIcon from "@mui/icons-material/MaleOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import dayjs from "dayjs";
 import { AcceptOrder } from "@/api/vendor/AcceptOrder";
 import { RejectOrder } from "@/api/vendor/RejectOrder";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
-
+import { Tooltip } from "antd";
 function OrderItem(props) {
-  const { order } = props;
+  const { order, mutate } = props;
 
   // console.log(order);
 
@@ -29,14 +21,14 @@ function OrderItem(props) {
     props.handleOpenDialog();
   };
 
-  const handlingAccept = () => {
-    const message = AcceptOrder(order.bill_id, props.token);
-    console.log(message);
+  const handlingAccept = async () => {
+    const message = await AcceptOrder(order.bill_id, props.token);
+    await mutate();
   };
 
-  const handlingReject = () => {
+  const handlingReject = async () => {
     const message = RejectOrder(order.bill_id, props.token);
-    console.log(message);
+    await mutate();
   };
 
   //   useEffect(() => {
@@ -60,26 +52,33 @@ function OrderItem(props) {
   return (
     <>
       <div className={Styles["list-item-container"]}>
-        <div className={Styles["list-item-id-wrapper"]}>{order.fullname}</div>
+        <div className={Styles["list-item-id-wrapper"]}>
+          <Tooltip title={order.fullname}>{order.fullname}</Tooltip>
+        </div>
         <div className={Styles["list-item-name-wrapper"]}>{order.phone}</div>
 
         <div
           className={Styles["list-item-gender-wrapper"]}
           style={{ justifyContent: "center" }}
         >
-          {order.address}
+          <Tooltip title={order.address}> {order.address}</Tooltip>
         </div>
         <div className={Styles["list-item-shop-wrapper"]}>
           {order.cart_id.option ? (
             <>
               <div className={Styles["list-product-name-container"]}>
-                {order.cart_id.option.name}
+                <Tooltip title={order.cart_id.option.name}>
+                  {" "}
+                  {order.cart_id.option.name}
+                </Tooltip>
               </div>
             </>
           ) : (
             <>
               <div className={Styles["list-product-name-container"]}>
-                {order.cart_id.product.name}
+                <Tooltip title={order.cart_id.product.name}>
+                  {order.cart_id.product.name}
+                </Tooltip>
               </div>
             </>
           )}

@@ -23,6 +23,8 @@
   padding-right: 25px;
   box-sizing: border-box;
   width: 30%;
+  gap: 10px;
+  padding: 10px;
 }
 .shop-avatar-container {
   width: 80px;

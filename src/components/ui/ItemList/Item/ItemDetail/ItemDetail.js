@@ -17,7 +17,9 @@ import useFetchProductById from "@/api/products/useFetchProductById";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast from "react-hot-toast";
 import { Rating } from "@mui/material";
-
+import { Tooltip } from "@mui/material";
+import { FacebookShareButton, TwitterShareButton } from "react-share";
+import { FacebookIcon, TwitterIcon } from "react-share";
 const ReactOwl = dynamic(() => import("react-owl-carousel"), { ssr: false });
 
 const roboto = Roboto({
@@ -144,10 +146,6 @@ function ItemDetail(props) {
   //   setIsActive((prevState) => !prevState);
   // }
 
-  useEffect(() => {
-    console.log(img);
-  }, [img]);
-
   if (item)
     return (
       <>
@@ -239,13 +237,19 @@ function ItemDetail(props) {
                 <div className={Styles["item-name-exit-button-container"]}>
                   <div
                     style={{
+                      boxSizing: "border-box",
                       display: "flex",
                       gap: "20px",
                       alignItems: "center",
+                      width: "90%",
                     }}
                   >
                     {item ? (
-                      <span style={{ cursor: "auto" }}>{item.name}</span>
+                      <Tooltip title={item.name}>
+                        <span className={Styles["item-title-wrapper"]}>
+                          {item.name}
+                        </span>
+                      </Tooltip>
                     ) : (
                       <span style={{ cursor: "auto" }}>Untitled</span>
                     )}
@@ -371,7 +375,9 @@ function ItemDetail(props) {
                       })
                     ) : (
                       <>
-                        <div className={Styles["empty-div-container"]}></div>
+                        <div className={Styles["empty-div-container"]}>
+                          <span>ABC</span>
+                        </div>
                       </>
                     )}
                   </div>
@@ -397,32 +403,21 @@ function ItemDetail(props) {
                 <div className={Styles["share-options-container"]}>
                   <span>Chia sẻ:</span>
                   <div className={Styles["medias-container"]}>
-                    <Link href={"/"} className={Styles["link"]}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="35px"
-                        width="35px"
-                        viewBox="0 0 448 512"
-                        style={{
-                          fill: "#005eff",
-                        }}
-                      >
-                        <path d="M400 32H48A48 48 0 0 0 0 80v352a48 48 0 0 0 48 48h137.25V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.27c-30.81 0-40.42 19.12-40.42 38.73V256h68.78l-11 71.69h-57.78V480H400a48 48 0 0 0 48-48V80a48 48 0 0 0-48-48z" />
-                      </svg>
-                    </Link>
-                    <Link href={"/"} className={Styles["link"]}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="35px"
-                        width="35px"
-                        viewBox="0 0 448 512"
-                        style={{
-                          fill: "black",
-                        }}
-                      >
-                        <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm297.1 84L257.3 234.6 379.4 396H283.8L209 298.1 123.3 396H75.8l111-126.9L69.7 116h98l67.7 89.5L313.6 116h47.5zM323.3 367.6L153.4 142.9H125.1L296.9 367.6h26.3z" />
-                      </svg>
-                    </Link>
+                    <FacebookShareButton
+                      url={"https://github.com/nygardk/react-share"}
+                      hashtag={"#techwave"}
+                      description={"techwave"}
+                    >
+                      <FacebookIcon size={32} style={{ borderRadius: "5px" }} />
+                    </FacebookShareButton>
+
+                    <TwitterShareButton
+                      title={"techwave"}
+                      url={"https://github.com/nygardk/react-share"}
+                      hashtag={"#techwave"}
+                    >
+                      <TwitterIcon size={32} style={{ borderRadius: "5px" }} />
+                    </TwitterShareButton>
                   </div>
                 </div>
                 <div className={Styles["navigate-link"]}>

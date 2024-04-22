@@ -47,6 +47,11 @@
   --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
+img {
+  object-fit: cover;
+  border-radius: 5px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -57,10 +62,6 @@
 
 .mg-0 {
   margin: 0;
-}
-
-* {
-  scroll-behavior: smooth;
 }
 
 .banner {
@@ -118,21 +119,25 @@
   background-color: var(--bg-button-profile);
 }
 .drop-down-item {
-  margin-left: 30px;
-  display: none;
+  display: flex;
   flex-direction: row;
+  padding: 10px 12px 10px 12px;
+  box-sizing: border-box;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  margin-top: 20px;
   text-decoration: none;
   color: #606060;
+  border-radius: 5px;
+  font-size: 16px;
+  gap: 10px;
 }
 .drop-down-item:hover {
   color: #0079f2;
 }
 .appear {
-  display: flex;
+  display: flex !important;
+}
+.disappear {
+  display: none;
 }
 .active {
   color: #0079f2;
@@ -143,10 +148,26 @@
 .opacity-1 {
   opacity: 1;
 }
+
+/* ANTD CUSTOMIZE*/
+
 .ant-switch .css-dev-only-do-not-override-qgg3xn {
   background-color: #b02a37;
 }
-.container {
+.ant-picker-dropdown {
+  z-index: 99999999;
+  width: 600px;
+}
+.ant-picker-panel {
+  width: 100%;
+}
+.ant-picker-date-panel {
+  width: 100% !important;
+}
+.ant-picker-content {
+  width: 100% !important;
+}
+/* .container {
   background: linear-gradient(
     to right,
     rgb(55, 65, 81),
@@ -156,7 +177,7 @@
   width: 100%;
   height: 100%;
   color: var(--white);
-}
+} */
 ul {
   list-style: none;
 }
@@ -164,7 +185,7 @@ a {
   text-decoration: none;
   color: var(--white);
 }
-.header {
+/* .header {
   width: 100%;
   height: 100px;
 }
@@ -353,7 +374,7 @@ input::placeholder {
   box-shadow: -20px -24px 16px 0px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: -20px -24px 16px 0px rgb(17, 24, 39);
   -moz-box-shadow: -20px -24px 16px 0px rgba(0, 0, 0, 0.75);
-}
+} */
 
 /* /// QUILL /// */
 

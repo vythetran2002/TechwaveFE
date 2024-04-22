@@ -28,6 +28,7 @@ import queryString from "query-string";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import { Empty } from "antd";
 import useFetchCart from "@/api/user/useFetchCart";
+import Cookies from "js-cookie";
 import useFetchSearchProduct from "@/api/useFetchSearchProduct";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SearchItemCard from "@/components/ui/SearchItemCard/SearchItemCard";
@@ -97,7 +98,7 @@ function countElementsWithStatusOne(array) {
 
 function Header(props) {
   const router = useRouter();
-  const [cookies, removeCookie] = useCookies();
+  const token = Cookies.get("token");
   const [isLogin, setIsLogin] = useState(null);
   const [cartItems, setCartItems] = useState(null);
   const [select, setSelect] = useState([]);
@@ -116,15 +117,13 @@ function Header(props) {
   //refs
   const searchContainerRef = useRef();
 
-  const logOut = () => {
-    const message = LogOutAccount(cookies["token"]);
-    removeCookie("token");
-    console.log(message);
+  const logOut = async () => {
+    const message = await LogOutAccount(token);
+    Cookies.remove("token");
     router.push("/auth/login");
   };
 
   const showDrawer = () => {
-    console.log("----");
     setCartItems(cart.data);
     setOpen(true);
   };
@@ -151,9 +150,8 @@ function Header(props) {
 
   const handlingDeleteCartItem = async (id) => {
     try {
-      console.log("----");
-      const message = await DeleteCartItem(id, cookies["token"]);
-      console.log(message);
+      const message = await DeleteCartItem(id, token);
+      await cart.mutate();
     } catch (error) {
       console.log(error);
     }
@@ -165,6 +163,10 @@ function Header(props) {
     } else {
       setIsChecked(true);
     }
+  };
+
+  const mutateCart = () => {
+    cart.mutate();
   };
 
   const handlingClickDelete = () => {
@@ -209,8 +211,6 @@ function Header(props) {
       setCartItems(cart.data);
     }
     setAmount(calculateTotalValue(select));
-    console.log("---------------------");
-    console.log(select.length);
   }, [select, cart.data, select]);
 
   // if (user.isLoading) {
@@ -532,8 +532,9 @@ function Header(props) {
                     return (
                       <React.Fragment key={"cartItem" + index}>
                         <CartItem
+                          mutate={mutateCart}
                           resetSelect={resetSelect}
-                          token={cookies["token"]}
+                          token={token}
                           isChecked={isChecked}
                           item={cartItem}
                           onClickDelete={handlingClickDelete}

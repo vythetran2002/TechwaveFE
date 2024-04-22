@@ -38,11 +38,11 @@
 .service-item-container:hover .service-item-icon {
   color: white;
 }
-
 .service-item-title {
   color: var(--header-bg-top);
   font-size: 22px;
   margin: 0px 0 5px 0;
+  text-align: center;
 }
 .service-item-desc {
   font-size: 15px;

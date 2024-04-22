@@ -7,13 +7,14 @@ import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
 import dynamic from "next/dynamic";
-import { Input } from "antd";
+import { Input, Form, Button } from "antd";
 import Image from "next/image";
 import images from "@/assets/images";
 import { uploadImage } from "@/components/utils/Upload";
 import { Toaster } from "react-hot-toast";
 import { CreateCategory } from "@/api/admin/CreateCategory";
-const Select = dynamic(() => import("react-select"), { ssr: false });
+import { CloudUploadOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -21,17 +22,25 @@ const roboto = Roboto({
   display: "swap",
 });
 
-function checkPropertiesNotNull(obj) {
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key) && obj[key] === null) {
-      return false;
-    }
-  }
+const sxStyle = {
+  "& .MuiDialog-container:hover": {
+    cursor: "pointer",
+  },
+  "& .MuiPaper-root": {
+    zIndex: "1002",
 
-  return true;
-}
-
-const { TextArea } = Input;
+    cursor: "default",
+  },
+  "& .MuiTypography-root": {
+    padding: "10px 14px 10px 24px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: "24px",
+  },
+  "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
+    right: 55,
+  },
+};
 
 export default function AddCateDialog(props) {
   //states
@@ -39,31 +48,12 @@ export default function AddCateDialog(props) {
 
   //Refs
   const messageRef = React.useRef();
+  const inputFileRef = React.useRef();
 
   const [cate, setCate] = useState({
     name: null,
     image: null,
   });
-
-  const sxStyle = {
-    "& .MuiDialog-container:hover": {
-      cursor: "pointer",
-    },
-    "& .MuiPaper-root": {
-      zIndex: "1002",
-
-      cursor: "default",
-    },
-    "& .MuiTypography-root": {
-      padding: "10px 14px 10px 24px",
-    },
-    "& .MuiDialogActions-root": {
-      padding: "24px",
-    },
-    "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
-      right: 55,
-    },
-  };
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -82,37 +72,26 @@ export default function AddCateDialog(props) {
         console.error("Lỗi:", error);
       });
   }
-
-  const handleChangeName = (e) => {
-    let temp = { ...cate, name: e.target.value };
-    setCate(temp);
+  const handleCloseDialog = () => {
+    props.handleClose();
+    setAvatarSrc(null);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (checkPropertiesNotNull(cate)) {
-      messageRef.current.style.display = "none";
-      const message = CreateCategory(cate, props.token);
-      console.log(message);
-      // window.location.reload();
-    } else {
-      messageRef.current.style.display = "block";
-    }
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
   };
 
-  // const categoryOptions = [
-  //   { value: "none", label: "Không" },
-  //   { value: "Điện tử", label: "Điện tử" },
-  //   { value: "Điện thoại", label: "Điện thoại" },
-  //   { value: "Máy tính bảng", label: "Máy tính bảng" },
-  //   { value: "Phụ kiện", label: "Phụ kiện" },
-  //   { value: "Sách", label: "Sách" },
-  //   { value: "Sách giáo khoa", label: "Sách giáo khoa" },
-  //   { value: "Sách văn học", label: "Sách văn học" },
-  //   { value: "Thời trang", label: "Thời trang" },
-  //   { value: "Quần áo nam", label: "Quần áo nam" },
-  //   { value: "Quần áo nữ", label: "Quần áo nữ" },
-  // ];
+  const onFinish = async (values) => {
+    let final = { ...values, image: avatarSrc };
+    const message = await CreateCategory(final, props.token);
+    await props.mutating();
+    setAvatarSrc(null);
+    handleCloseDialog();
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
+  };
 
   return (
     <React.Fragment>
@@ -120,7 +99,7 @@ export default function AddCateDialog(props) {
       <Dialog
         fullWidth={true}
         maxWidth="md"
-        onClose={props.handleClose}
+        onClose={handleCloseDialog}
         open={props.isOpen}
         sx={sxStyle}
         className={roboto.className}
@@ -138,8 +117,10 @@ export default function AddCateDialog(props) {
         </DialogTitle>
 
         <DialogContent dividers>
-          <form
-            onSubmit={handleSubmit}
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
             className={Styles["add-user-form-container"]}
           >
             <div
@@ -159,10 +140,19 @@ export default function AddCateDialog(props) {
                 }}
               >
                 <input
+                  ref={inputFileRef}
                   onChange={handleFileUpload}
                   type="file"
-                  style={{ backgroundColor: "white" }}
+                  accept="image/*"
+                  style={{ backgroundColor: "white", display: "none" }}
                 />
+                <Button
+                  onClick={handlingClickUpload}
+                  type="primary"
+                  icon={<CloudUploadOutlined />}
+                >
+                  Upload image
+                </Button>
                 {avatarSrc != null ? (
                   <Image
                     width={150}
@@ -186,7 +176,18 @@ export default function AddCateDialog(props) {
               <span className={Styles["add-user-field-label"]}>
                 Tên danh mục:{" "}
               </span>
-              <Input placeholder="Tên danh mục" onChange={handleChangeName} />
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập tên danh mục chính",
+                  },
+                ]}
+              >
+                <Input placeholder="Tên danh mục" />
+              </Form.Item>
             </div>
 
             {/* <div
@@ -243,7 +244,7 @@ export default function AddCateDialog(props) {
                 THÊM
               </button>
             </div>
-          </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </React.Fragment>

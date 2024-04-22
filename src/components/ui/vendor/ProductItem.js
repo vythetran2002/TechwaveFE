@@ -1,13 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Styles from "./styles.module.css";
-import FemaleOutlinedIcon from "@mui/icons-material/FemaleOutlined";
-import { memo } from "react";
-import MaleOutlinedIcon from "@mui/icons-material/MaleOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Image from "next/image";
 import images from "@/assets/images";
 import dayjs from "dayjs";
@@ -15,6 +10,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import Link from "next/link";
 import { DeleteProduct } from "@/api/vendor/DeleteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import { Tooltip } from "antd";
 
 function ProductItem(props) {
   const menuRef = useRef(null);
@@ -29,9 +25,9 @@ function ProductItem(props) {
     props.handleOpenDialog();
   };
 
-  const handleDelete = () => {
-    const message = DeleteProduct(props.product.product_id, props.token);
-    console.log(message);
+  const handleDelete = async () => {
+    const message = await DeleteProduct(props.product.product_id, props.token);
+    await props.mutate();
     // window.location.reload();
   };
 
@@ -51,7 +47,7 @@ function ProductItem(props) {
     <>
       <div className={Styles["list-item-container"]}>
         <div className={Styles["list-item-id-wrapper"]}>
-          {props.product.name}
+          <Tooltip title={props.product.name}>{props.product.name}</Tooltip>
         </div>
         <div className={Styles["list-item-name-wrapper"]}>
           {" "}
@@ -93,9 +89,11 @@ function ProductItem(props) {
           className={Styles["list-item-gender-wrapper"]}
           style={{ marginRight: "10px" }}
         >
-          <div className={Styles["list-item-status-active-button-wrapper"]}>
-            {props.product.category.name}
-          </div>
+          <Tooltip title={props.product.category.name}>
+            <div className={Styles["list-item-status-active-button-wrapper"]}>
+              {props.product.category.name}
+            </div>
+          </Tooltip>
         </div>
         <div className={Styles["list-item-more-option-wrapper"]}>
           <div

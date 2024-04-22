@@ -1,7 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { Modal, Upload } from "antd";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Styles from "./styles.module.css";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -12,9 +9,10 @@ import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import dynamic from "next/dynamic";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Input, Radio } from "antd";
+import { Input, Radio, Form, Select } from "antd";
+import { DollarOutlined, CloudUploadOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { InputNumber } from "antd";
+import { InputNumber, Button } from "antd";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -27,10 +25,8 @@ import images from "@/assets/images";
 import Checkbox from "@mui/material/Checkbox";
 import useFetch from "@/api/useFetch";
 import { uploadImage } from "@/components/utils/Upload";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { AddProduct } from "@/api/vendor/addProduct";
-
-const Select = dynamic(() => import("react-select"), { ssr: false });
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -72,17 +68,20 @@ function checkValidFields(obj) {
 
 export default function AddProductDialog(props) {
   // console.log(props.product);
-
+  const { Option } = Select;
   const [open, setOpen] = React.useState(false);
   const [genderValue, setGenderValue] = useState(1);
   const [checked, setChecked] = useState(false);
+
   const categories = useFetch("http://localhost:3000/api/category");
   const [product, setProduct] = useState({});
   const [avatarSrc, setAvatarSrc] = useState(null);
   const [categoryChild, setCategoryChild] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
   //Refs
   const selectRef = useRef();
   const messageRef = useRef();
+  const inputFileRef = useRef(null);
 
   const handleChangeCheck = (event) => {
     setChecked(event.target.checked);
@@ -93,8 +92,16 @@ export default function AddProductDialog(props) {
     }
   };
 
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
+  };
+
   const handleSelectChange = (value) => {
     console.log(value);
+  };
+
+  const handleChangeCountry = (value, option) => {
+    setSelectedCountry(option.value);
   };
 
   const handleClickOpen = () => {
@@ -135,7 +142,7 @@ export default function AddProductDialog(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    //console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
     promiseResult
@@ -150,6 +157,26 @@ export default function AddProductDialog(props) {
         console.error("Lỗi:", error);
       });
   }
+
+  const onFinish = async (values) => {
+    let final = {};
+    if (categoryChild) {
+      final = { ...values, image: avatarSrc, category_child: categoryChild };
+    } else {
+      final = { ...values, image: avatarSrc, category_child: null };
+    }
+    const message = await AddProduct(final, props.token);
+    await props.mutate();
+    props.handleClose();
+  };
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
+  };
+  const handlingCloseDialog = async () => {
+    await props.handleClose();
+    await setChecked(false);
+    await setAvatarSrc(null);
+  };
 
   const handlingSubmit = (e) => {
     e.preventDefault();
@@ -187,16 +214,12 @@ export default function AddProductDialog(props) {
 
   const categoryOptions = transformArray(categories.data);
 
-  // useEffect(() => {
-  //   console.log(product);
-  // }, [product]);
-
   return (
     <React.Fragment>
       <Dialog
         fullWidth={true}
         maxWidth="md"
-        onClose={props.handleClose}
+        onClose={handlingCloseDialog}
         open={props.isOpen}
         sx={sxStyle}
         className={roboto.className}
@@ -215,18 +238,30 @@ export default function AddProductDialog(props) {
 
         <DialogContent dividers>
           <Toaster />
-          <form
-            onSubmit={handlingSubmit}
+
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
             className={Styles["add-user-form-container"]}
           >
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Hình ảnh:</span>
               <div className={Styles["input-img-container"]}>
                 <input
-                  style={{ backgroundColor: "white" }}
+                  ref={inputFileRef}
+                  style={{ backgroundColor: "white", display: "none" }}
                   type="file"
+                  accept=".jpg, .png, image/jpeg, image/png"
                   onChange={handleFileUpload}
                 ></input>
+                <Button
+                  onClick={handlingClickUpload}
+                  type="primary"
+                  icon={<CloudUploadOutlined />}
+                >
+                  Upload Image
+                </Button>
                 <div className={Styles["img-container"]}>
                   {avatarSrc ? (
                     <Image src={avatarSrc} alt="" width={100} height={100} />
@@ -243,105 +278,193 @@ export default function AddProductDialog(props) {
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Tên</span>
-              <Input
-                onChange={handlingChangeName}
-                placeholder="Tên sản phẩm"
-                style={{
-                  width: "100%",
-                }}
-              />
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập tên sản phẩm",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={handlingChangeName}
+                  placeholder="Tên sản phẩm"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Số lượng</span>
-              <InputNumber
-                onChange={handlingChangeQuantity}
-                min={1}
-                max={100}
-                placeholder="số lượng"
-                style={{
-                  width: "100%",
-                }}
-              />
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="quantity"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập số lượng sản phẩm",
+                  },
+                ]}
+              >
+                <InputNumber
+                  className={Styles["input-wrapper"]}
+                  onChange={handlingChangeQuantity}
+                  min={1}
+                  max={10000}
+                  placeholder="số lượng"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Xuất xứ: </span>
-              <Autocomplete
-                id="country-select-demo"
-                sx={{ width: "100%" }}
-                options={countries}
-                autoHighlight
-                onChange={(event, country) => {
-                  if (country) {
-                    let temp = { ...product, origin: country.label };
-                    setProduct(temp);
-                  }
-                }}
-                getOptionLabel={(option) => option.label}
-                renderOption={(props, option) => (
-                  <Box
-                    component="li"
-                    sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-                    {...props}
-                  >
-                    <img
-                      loading="lazy"
-                      width="20"
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      alt=""
-                    />
-                    {option.label}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="xuất xứ"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password", // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
+              <Form.Item
+                getValueFromEvent={(country) => country && country.value}
+                className={Styles["input-wrapper"]}
+                name="origin"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập xuất xứ sản phẩm",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder={"Xuất xứ"}
+                  dropdownStyle={{ width: "600px", zIndex: "99999999" }}
+                  placement="bottomRight"
+                  showSearch
+                  // onChange={handleChangeCountry}
+                  labelInValue={true}
+                  className={`phone-input-selector ${Styles["phone-input-selector"]}`}
+                  // value={selectedCountry}
+                >
+                  {countries.map((country) => {
+                    return (
+                      <Option key={country.phone} value={country.label}>
+                        <div className="country-option">
+                          <img
+                            style={{ marginRight: "5px", borderRadius: "2px" }}
+                            loading="lazy"
+                            className="country-img"
+                            srcSet={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png 2x`}
+                            src={`https://flagcdn.com/w20/${country.code.toLowerCase()}.png`}
+                            alt=""
+                          />
+                          <span>{country.label}</span>
+                        </div>
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>
                 Giá niêm yết :
               </span>
-              <InputNumber
-                onChange={handlingChangePrice}
-                min={10000}
-                max={1000000000}
-                placeholder="giá niêm yết"
-                style={{
-                  width: "100%",
-                }}
-              />
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="price"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập giá niêm yết",
+                  },
+                ]}
+              >
+                <InputNumber
+                  addonAfter={<DollarOutlined />}
+                  onChange={handlingChangePrice}
+                  min={10000}
+                  max={1000000000}
+                  placeholder="giá niêm yết"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Giá KM:</span>
-              <InputNumber
-                onChange={handlingChangePromoPrice}
-                min={10000}
-                max={1000000000}
-                placeholder="giá khuyến mãi"
-                style={{
-                  width: "100%",
-                }}
-              />
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="promotional_price"
+                rules={[
+                  {
+                    required: false,
+                    message: "Hãy nhập giá khuyến mãi",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const priceValue = getFieldValue("price");
+                      if (value && priceValue && value >= priceValue) {
+                        return Promise.reject(
+                          "Giá khuyến mãi phải nhỏ hơn giá niêm yết"
+                        );
+                      } else {
+                        return Promise.resolve();
+                      }
+                    },
+                  }),
+                ]}
+              >
+                <InputNumber
+                  addonAfter={<DollarOutlined />}
+                  onChange={handlingChangePromoPrice}
+                  min={10000}
+                  max={1000000000}
+                  placeholder="giá khuyến mãi"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>
                 Danh mục cha
               </span>
-              <Select
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="category_id"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập danh mục cha",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Danh mục cha"
+                  dropdownStyle={{ width: "600px", zIndex: "99999999" }}
+                  showSearch
+                >
+                  {categories.data &&
+                    categories.data.map((cate) => {
+                      return (
+                        <Option
+                          key={"cate" + cate.category_id}
+                          value={cate.category_id}
+                        >
+                          {cate.name}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Form.Item>
+              {/* <Select
                 options={categoryOptions}
                 isSearchable
                 placeholder="Chọn danh mục cha"
                 className={`${Styles["select-container"]} `}
                 onChange={handlingChangeCategory}
-              />
+              /> */}
             </div>
             <div className={Styles["add-user-field-container"]}>
               <Checkbox
@@ -362,6 +485,7 @@ export default function AddProductDialog(props) {
               >
                 Danh mục con
               </span>
+
               <Input
                 onChange={handlingChangeChildCate}
                 placeholder="Tên Danh mục con"
@@ -395,7 +519,7 @@ export default function AddProductDialog(props) {
                 THÊM
               </button>
             </div>
-          </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </React.Fragment>

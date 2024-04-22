@@ -3,29 +3,19 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-// import dynamic from "next/dynamic";
-// import { Button } from "antd";
 import { Select } from "antd";
 import OrderList from "@/components/ui/vendor/order/OrderList";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import toast, { Toaster } from "react-hot-toast";
-import useFetchPendingOrders from "@/api/vendor/useFetchPendingOrder";
-import dynamic from "next/dynamic";
-import OrderPreview from "@/components/ui/vendor/order/preview-dialog/OrderPreview";
 import { Pagination } from "@mui/material";
-// import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-// import AddCateDialog from "@/components/ui/admin/dialog/addCate/AddCateDialog";
-// import EditCateDialog from "@/components/ui/admin/dialog/editCate/EditUserDialog";
-// import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
-// import images from "@/assets/images";
 import Link from "next/link";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
+import OrderPreview from "@/components/ui/vendor/order/preview-dialog/OrderPreview";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   // console.log(pendingOrders);
   const [open, setOpen] = useState(false);
   const [order, setOrder] = useState({});
@@ -145,7 +135,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             status={0}
             updateOrder={handlingUpdateOrder}
             handleOpen={handleOpen}

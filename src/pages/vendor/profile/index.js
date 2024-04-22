@@ -3,62 +3,48 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "./styles.module.css";
 import { useRef, useState } from "react";
-import { Divider } from "antd";
 import Image from "next/image";
-import Link from "next/link";
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import OutlinedFlagRoundedIcon from "@mui/icons-material/OutlinedFlagRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import DoneIcon from "@mui/icons-material/Done";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
 import { Radio, DatePicker, Checkbox, Input } from "antd";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Switch } from "antd";
+import { Switch, Form, Button } from "antd";
 import images from "@/assets/images";
 import dayjs from "dayjs";
 import { useCookies } from "react-cookie";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  CloudUploadOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 import { PutVendorProfile } from "@/api/vendor/PutVendorProfile";
+import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
+import Cookies from "js-cookie";
 
 const { TextArea } = Input;
 
-function formatDate(isoDateString) {
-  return dayjs(isoDateString).format("YYYY-MM-DD");
-}
 const dateFormat = "DD/MM/YYYY";
 
 function containsLetter(str) {
   return /[a-zA-Z]/.test(str);
 }
-function checkEmptyFields(userProfile) {
-  const { email, phone, address, dob, fullname } = userProfile;
-  return !email || !phone || !address || !dob || !fullname;
-}
 
 function Home() {
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const token = Cookies.get("token");
   const user = useFetchVendorProfile();
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
+  const [passwdEditMode, setPasswdEditMode] = useState(false);
+  const [form] = Form.useForm();
 
   //Refs
-  const passwdRef = useRef();
-  const iconRef = useRef();
-  const orderingItem = useRef();
-  const orderedItem = useRef();
-  const itemRef = useRef();
+  const passwdRef = useRef(null);
   const usernameRef = useRef();
   const messageRef = useRef();
+  const inputFileRef = useRef();
+  const passwdChangeLabel = useRef();
+  const switchRef = useRef();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState();
@@ -72,36 +58,8 @@ function Home() {
   //   setIsOpenDialog(false);
   // };
 
-  const handlingChangeFullName = (e) => {
-    let temp = { ...userProfile, fullname: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeEmail = (e) => {
-    let temp = { ...userProfile, email: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangePhone = (e) => {
-    if (!containsLetter(e.target.value)) {
-      let temp = { ...userProfile, phone: e.target.value };
-      setUserProfile(temp);
-    }
-  };
-  const handlingChangeGender = (e) => {
-    let temp = { ...userProfile, gender: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeDob = (data, dateString) => {
-    let date = dayjs(dateString, "DD/MM/YYYY");
-    let newDate = date.format("YYYY/MM/DD");
-    let temp = { ...userProfile, dob: newDate };
-    setUserProfile(temp);
-  };
   const hadnlingChangeOldPass = (e) => {
     setOldPass(e.target.value);
-  };
-  const hadnlingChangeAddress = (e) => {
-    let temp = { ...userProfile, address: e.target.value };
-    setUserProfile(temp);
   };
   const handlingChangeNewPass = (e) => {
     setNewPass(e.target.value);
@@ -123,106 +81,56 @@ function Home() {
         console.error("Lỗi:", error);
       });
   }
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
+  };
 
   const handlingDisplayPasswd = (e) => {
     if (e.target.checked) {
-      passwdRef.current.style.display = "block";
+      setPasswdEditMode(true);
     } else {
-      passwdRef.current.style.display = "none";
+      setPasswdEditMode(false);
     }
   };
 
-  const handlingSwitch = (e) => {
-    console.log("editmode: " + e);
-    setAvatarSrc(user.data.avatar);
+  const handlingSwitch = async (e) => {
+    await setAvatarSrc(user.data.avatar);
     let temp = { ...user.data, dob: dayjs(user.data.dob).format("YYYY/MM/DD") };
     setUserProfile(temp);
     setNewPass("");
     setOldPass("");
     setIsEditMode(e);
+    await form.resetFields();
+    await setPasswdEditMode(false);
+    passwdChangeLabel.current.style.opacity = 0;
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (oldPass == newPass && oldPass == "" && newPass == "") {
-      if (checkEmptyFields(userProfile)) {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Vui lòng nhập đầy đủ thông tin";
+  const onFinish = async (values) => {
+    let final = {};
+    if (avatarSrc) {
+      final = { ...values, avatar: avatarSrc };
+    } else {
+      final = { ...values, avatar: user.data.avatar };
+    }
+    // Change Password
+    if (values?.oldPassword) {
+      if (values.oldPassword != user.data.password) {
+        passwdChangeLabel.current.style.opacity = 1;
+        return 0;
       } else {
-        // update profile
-        console.log("--------------------------------");
-        console.log(userProfile);
-        messageRef.current.style.display = "none";
-        const {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        } = userProfile;
-        const temp = {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        };
-        console.log(temp);
-        const message = PutVendorProfile(temp, cookies["token"]);
-        console.log(message);
-      }
-    } else if (oldPass != "" && newPass != "") {
-      if (oldPass != newPass) {
-        if (oldPass != userProfile.password) {
-          messageRef.current.style.display = "block";
-          messageRef.current.textContent = "Mật khẩu cũ không đúng";
-        } else if (oldPass == userProfile.password) {
-          // change password
-          console.log("--------------------------------");
-          let temp = { ...userProfile, password: newPass };
-          const {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          } = temp;
-          const reqUser = {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          };
-          console.log(reqUser);
-          messageRef.current.style.display = "none";
-          const message = PutVendorProfile(temp, cookies["token"]);
-          console.log(message);
-        }
-      } else {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Mật khẩu mới trùng với mật khẩu cũ";
+        passwdChangeLabel.current.style.opacity = 0;
       }
     }
+    await delete final.oldPassword;
+    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
+    const message = await PutVendorProfile(final, token);
+    console.log(message);
+    await switchRef.current.click();
+    await user.mutate(); // mutate data
   };
-
-  useEffect(() => {
-    console.log(userProfile);
-  }, [userProfile]);
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
+  };
 
   if (user.isLoading) {
     return <>Loading...</>;
@@ -266,7 +174,7 @@ function Home() {
                   <span>Quản lý thông tin hồ sơ để bảo mật tài khoản</span>
                 </div>
                 <div className={Styles["switch-edit-container"]}>
-                  <Switch onChange={handlingSwitch} />
+                  <Switch onChange={handlingSwitch} ref={switchRef} />
                   {isEditMode ? (
                     <span>Hiển thị thông tin</span>
                   ) : (
@@ -274,9 +182,20 @@ function Home() {
                   )}
                 </div>
               </div>
-              <form
-                onSubmit={handleSubmit}
+              <Form
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+                form={form}
                 className={Styles["profile-form-avatar-change-container"]}
+                initialValues={{
+                  fullname: user.data.fullname,
+                  email: user.data.email,
+                  phone: user.data.phone,
+                  address: user.data.address,
+                  gender: user.data.gender,
+                  dob: dayjs(user.data.dob, "YYYY/MM/DD"),
+                }}
               >
                 <div className={Styles["profile-form-input-container"]}>
                   <div className={Styles["profile-col"]}>
@@ -291,11 +210,18 @@ function Home() {
                     <span className={Styles["profile-row1"]}>Họ và tên</span>
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          defaultValue={userProfile.fullname}
-                          onChange={handlingChangeFullName}
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="fullname"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập họ và tên",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Họ và tên" />
+                        </Form.Item>
                       </span>
                     ) : (
                       <span>{user.data.fullname}</span>
@@ -305,11 +231,22 @@ function Home() {
                     <span className={Styles["profile-row1"]}>Email</span>
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          defaultValue={userProfile.email}
-                          onChange={handlingChangeEmail}
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="email"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập email",
+                            },
+                            {
+                              pattern: mailformat,
+                              message: "Email không hợp lệ",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Email" />
+                        </Form.Item>
                       </span>
                     ) : (
                       <span>{user.data.email}</span>
@@ -321,11 +258,22 @@ function Home() {
                     </span>
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
-                        <Input
-                          placeholder="Họ và tên"
-                          value={userProfile.phone}
-                          onChange={handlingChangePhone}
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="phone"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập số điện thoại",
+                            },
+                            {
+                              pattern: regexPhoneNumber,
+                              message: "Số điện thoại không hợp lệ",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Số điện thoại" />
+                        </Form.Item>
                       </span>
                     ) : (
                       <span>{user.data.phone}</span>
@@ -335,15 +283,24 @@ function Home() {
                     <span className={Styles["profile-row1"]}>Địa chỉ</span>
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
-                        <TextArea
-                          placeholder="Địa chỉ"
-                          autoSize={{
-                            minRows: 2,
-                            maxRows: 6,
-                          }}
-                          onChange={hadnlingChangeAddress}
-                          defaultValue={userProfile.address}
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="address"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập địa chỉ",
+                            },
+                          ]}
+                        >
+                          <TextArea
+                            placeholder="Địa chỉ"
+                            autoSize={{
+                              minRows: 2,
+                              maxRows: 6,
+                            }}
+                          />
+                        </Form.Item>
                       </span>
                     ) : (
                       <span>{user.data.address}</span>
@@ -354,16 +311,22 @@ function Home() {
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
                         <span>
-                          <Radio.Group
-                            ref={usernameRef}
-                            name="radiogroup"
-                            defaultValue={userProfile.gender}
-                            onChange={handlingChangeGender}
+                          <Form.Item
+                            className={Styles["input-wrapper"]}
+                            name="gender"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Hãy nhập giới tính",
+                              },
+                            ]}
                           >
-                            <Radio value={"Nam"}>Nam</Radio>
-                            <Radio value={"Nữ"}>Nữ</Radio>
-                            <Radio value={"Khác"}>Khác</Radio>
-                          </Radio.Group>
+                            <Radio.Group ref={usernameRef} name="radiogroup">
+                              <Radio value={"Nam"}>Nam</Radio>
+                              <Radio value={"Nữ"}>Nữ</Radio>
+                              <Radio value={"Khác"}>Khác</Radio>
+                            </Radio.Group>
+                          </Form.Item>
                         </span>
                       </span>
                     ) : (
@@ -376,12 +339,23 @@ function Home() {
                     <span className={Styles["profile-row1"]}>Ngày sinh:</span>
                     {isEditMode ? (
                       <span className={Styles["profile-row2"]}>
-                        <DatePicker
-                          style={{ width: "100%" }}
-                          defaultValue={dayjs(formatDate(userProfile.dob))}
-                          format={dateFormat}
-                          onChange={handlingChangeDob}
-                        />
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="dob"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập ngày sinh",
+                            },
+                          ]}
+                        >
+                          <DatePicker
+                            style={{ width: "100%" }}
+                            // defaultValue={dayjs(formatDate(userProfile.dob))}
+                            format={dateFormat}
+                            // onChange={handlingChangeDob}
+                          />
+                        </Form.Item>
                       </span>
                     ) : (
                       <span>{dayjs(user.data.dob).format("DD/MM/YYYY")}</span>
@@ -401,39 +375,80 @@ function Home() {
                     </div>
                   )}
 
-                  <div className={Styles["passwd-container"]} ref={passwdRef}>
-                    <div
-                      className={Styles["profile-col"]}
-                      style={{ marginBottom: "20px" }}
-                    >
-                      <span className={Styles["profile-row1"]}>
-                        Nhập mật khẩu cũ
-                      </span>
-                      <span className={Styles["profile-row2"]}>
-                        <Input.Password
-                          placeholder="Nhập mật khẩu cũ"
-                          onChange={hadnlingChangeOldPass}
-                          iconRender={(visible) =>
-                            visible ? <VisibilityIcon /> : <VisibilityOffIcon />
-                          }
-                        />
-                      </span>
-                    </div>
-                    <div className={Styles["profile-col"]}>
-                      <span className={Styles["profile-row1"]}>
-                        Nhập mật khẩu mới
-                      </span>
-                      <span className={Styles["profile-row2"]}>
-                        <Input.Password
-                          onChange={handlingChangeNewPass}
-                          placeholder="Nhập mật khẩu mới"
-                          iconRender={(visible) =>
-                            visible ? <VisibilityIcon /> : <VisibilityOffIcon />
-                          }
-                        />
-                      </span>
-                    </div>
-                  </div>
+                  {passwdEditMode ? (
+                    <>
+                      <div
+                        className={Styles["passwd-container"]}
+                        ref={passwdRef}
+                      >
+                        <div
+                          className={Styles["profile-col"]}
+                          style={{ marginBottom: "20px" }}
+                        >
+                          <span className={Styles["profile-row1"]}>
+                            Nhập mật khẩu cũ
+                          </span>
+
+                          <span className={Styles["profile-row2"]}>
+                            <Form.Item
+                              className={Styles["input-wrapper"]}
+                              name="oldPassword"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Hãy nhập mật khẩu cũ",
+                                },
+                              ]}
+                            >
+                              <Input.Password
+                                placeholder="Nhập mật khẩu cũ"
+                                onChange={hadnlingChangeOldPass}
+                                iconRender={(visible) =>
+                                  visible ? (
+                                    <EyeOutlined />
+                                  ) : (
+                                    <EyeInvisibleOutlined />
+                                  )
+                                }
+                              />
+                            </Form.Item>
+                          </span>
+                        </div>
+                        <div className={Styles["profile-col"]}>
+                          <span className={Styles["profile-row1"]}>
+                            Nhập mật khẩu mới
+                          </span>
+                          <span className={Styles["profile-row2"]}>
+                            <Form.Item
+                              className={Styles["input-wrapper"]}
+                              name="password"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Hãy nhập mật khẩu mới",
+                                },
+                              ]}
+                            >
+                              <Input.Password
+                                onChange={handlingChangeNewPass}
+                                placeholder="Nhập mật khẩu mới"
+                                iconRender={(visible) =>
+                                  visible ? (
+                                    <EyeOutlined />
+                                  ) : (
+                                    <EyeInvisibleOutlined />
+                                  )
+                                }
+                              />
+                            </Form.Item>
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+
                   <div className={Styles["submit-btn-wrapper"]}>
                     {isEditMode && (
                       <span
@@ -444,6 +459,13 @@ function Home() {
                       </span>
                     )}
                   </div>
+                  <span
+                    ref={passwdChangeLabel}
+                    className={Styles["password-change-label"]}
+                  >
+                    Mật khẩu cũ không khớp
+                  </span>
+
                   <div className={Styles["submit-btn-wrapper"]}>
                     {isEditMode && (
                       <button className={Styles["submit-btn"]}>
@@ -464,6 +486,7 @@ function Home() {
                       {avatarSrc ? (
                         <div
                           className={Styles["profile-avt-preview-wrapper"]}
+                          onClick={handlingClickUpload}
                           // onClick={handlingOpenDialog}
                         >
                           <Image
@@ -496,10 +519,20 @@ function Home() {
                         Chọn ảnh
                       </input> */}
                       <div className={Styles["submit-avt-input-wrapper"]}>
+                        <Button
+                          onClick={handlingClickUpload}
+                          type="primary"
+                          icon={<CloudUploadOutlined />}
+                        >
+                          Upload Image
+                        </Button>
                         <input
+                          ref={inputFileRef}
                           onChange={handleFileUpload}
                           type="file"
                           className={Styles["submit-avt-input"]}
+                          style={{ display: "none" }}
+                          accept=".jpg, .png, image/jpeg, image/png"
                         />
                       </div>
 
@@ -546,7 +579,7 @@ function Home() {
                   onClose={handlingCloseDialog}
                   onChange={setAvatarSrc}
                 /> */}
-              </form>
+              </Form>
             </div>
           </div>
         </div>

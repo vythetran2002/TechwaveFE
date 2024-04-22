@@ -17,21 +17,21 @@ import Link from "next/link";
 import CommentListAdmin from "@/components/ui/admin/CommentList/CommentList";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import ReportDetailDialog from "@/components/ui/admin/dialog/reportDialog/ReportDetailDialog";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
 import { Pagination } from "@mui/material";
 import { Select } from "antd";
 import CommentPopup from "@/components/ui/admin/CommentList/Popup/CommentPopup";
 
 function Index() {
+  const token = Cookies.get("token");
   // states
   //   const [isOpenAddCateDialog, setIsOpenAddCateDialog] = useState(false);
   //   const [isOpenEditCateDialog, setIsOpenEditCaterDialog] = useState(false);
   //   const [isOpenEditImgDialog, setIsOpenEditImgDialog] = useState(false);
   //   const [avatarSrc, setAvatarSrc] = useState(images.empty);
   const [id, setId] = useState(null);
-  const [cookie] = useCookies();
+
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
@@ -168,7 +168,7 @@ function Index() {
             status={0}
             updateId={updateId}
             handleOpenDialog={handlingOpen}
-            token={cookie["token"]}
+            token={token}
           />
           <Dialog
             fullWidth={true}
@@ -180,7 +180,7 @@ function Index() {
               <CommentPopup
                 handleCloseDialog={handlingClose}
                 id={id}
-                token={cookie["token"]}
+                token={token}
               />
             </DialogContent>
           </Dialog>

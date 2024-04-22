@@ -18,7 +18,7 @@ export const DeleteFavouriteItem = async (id, token) => {
       `http://localhost:3000/api/product/deletefavor/${id}`,
       config
     );
-    toast.success("Removed Favourite Product Successfully!");
+    toast.success("Huỷ sản phẩm yêu thích thành công");
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

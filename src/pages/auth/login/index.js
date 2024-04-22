@@ -14,6 +14,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 const LoginScheme = Yup.object().shape({
   email: Yup.string()
@@ -43,16 +44,6 @@ function Index() {
         password,
       });
 
-      // // Lấy token từ response
-      // const { token } = response.data.data;
-      // console.log(response.data);
-      // // Lưu token vào localStorage
-      // localStorage.setItem("token", access_token);
-      // // Redirect người dùng hoặc làm mới trạng thái của component/app
-      // // ...
-      // console.log("Đăng nhập thành công");
-      // toast.success("Đăng nhập thành công");
-      // // router.push("/");
       // Kiểm tra xem response có đúng định dạng không và có chứa access_token hay không
       if (
         response.data &&
@@ -62,8 +53,9 @@ function Index() {
         // Lấy access_token từ response
         const access_token = response.data.data.access_token;
         console.log(response.data);
-        // Lưu access_token vào localStorage
-        setCookie("token", access_token);
+        // Lưu access_token vào cookie
+        Cookies.set("token", access_token);
+        //setCookie("token", access_token);
         // Redirect người dùng hoặc làm mới trạng thái của component/app
         // ...
         toast.success("Đăng nhập thành công");
@@ -71,19 +63,15 @@ function Index() {
         //auth
         switch (response.data.data.groupWithRole.permission_id) {
           case 3:
-            console.log("user");
             router.push("/");
             break;
           case 2:
-            console.log("vendor");
             router.push("/vendor/home");
             break;
           case 1:
-            console.log("admin");
             router.push("/admin/home");
             break;
           default:
-            console.log("No Permission founded");
             break;
         }
       } else {
@@ -96,10 +84,6 @@ function Index() {
       toast.error("Đăng nhập thất bại");
       // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
     }
-  };
-
-  const submit = (data) => {
-    console.log(data);
   };
 
   const {
@@ -117,20 +101,20 @@ function Index() {
   // }, [cookies]);
 
   return (
-    <>
+    <div className={Styles["container"]}>
       <Head>
         <title>Techwave - Login</title>
       </Head>
-      <div className="container" style={{ height: "100vh" }}>
+      <div>
         <Toaster />
-        <header className="header">
-          <nav className="nav">
-            <div className="nav-left">
+        <header className={Styles["header"]}>
+          <nav className={Styles["nav"]}>
+            <div className={Styles["nav-left"]}>
               {/* <Link href="/">
                 <Image src={images.techwave2} width={100} height={80} alt="" />
               </Link> */}
             </div>
-            <div className="nav-right">
+            <div className={Styles["nav-right"]}>
               <ul>
                 <li
                   className="active"
@@ -173,24 +157,32 @@ function Index() {
             </div>
           </nav>
         </header>
-        <div className="login">
-          <div className="left">
+        <div className={Styles["login"]}>
+          <div className={Styles["left"]}>
             <form onSubmit={handleSubmit(handleLogin)}>
-              <div className="top">
+              <div className={Styles["top"]}>
                 <h2 style={{ color: "white" }}>Welcome to Techwave</h2>
                 <h4 style={{ color: "white" }}>Please login</h4>
               </div>
-              <div className="input">
-                <input placeholder="Email" {...register("email")} />
+              <div>
+                <input
+                  className={Styles["input"]}
+                  placeholder="Email"
+                  {...register("email")}
+                  style={{
+                    padding: "5px 20px",
+                  }}
+                />
               </div>
               {errors.email && (
                 <p className={Styles["validate-message"]}>
                   {errors.email.message}
                 </p>
               )}
-              <div className="input">
+              <div className={Styles["input"]}>
                 <input
                   type="password"
+                  className={Styles["input"]}
                   placeholder="Password"
                   {...register("password")}
                 />
@@ -200,7 +192,7 @@ function Index() {
                   {errors.password.message}
                 </p>
               )}
-              <div className="forget" style={{ marginTop: "10px" }}>
+              <div className={Styles["forget"]} style={{ marginTop: "10px" }}>
                 <Link
                   href="/auth/forgot-password"
                   style={{ textDecoration: "none" }}
@@ -208,13 +200,15 @@ function Index() {
                   Forget password?
                 </Link>
               </div>
-              <div className="btn">
-                <button type="submit">Login</button>
+              <div className={Styles["btn"]}>
+                <button className={Styles["button"]} type="submit">
+                  Login
+                </button>
               </div>
-              <div className="or">
+              <div className={Styles["or"]}>
                 <p style={{ color: "white" }}>Or Login with</p>
               </div>
-              <div className="icon">
+              <div className={Styles["icon"]}>
                 <a
                   href="#"
                   style={{
@@ -242,12 +236,12 @@ function Index() {
               </div>
             </form>
           </div>
-          <div className="right">
+          <div className={Styles["right"]}>
             <Image src={images.loginBg} alt="" priority />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

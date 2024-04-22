@@ -34,7 +34,7 @@ function ReportDetailDialog(props) {
   } else
     return (
       <>
-        <div className={roboto.className}>
+        <div>
           <div className={Styles["report-container"]}>
             {report.data.account_report.avatar != null ? (
               <>

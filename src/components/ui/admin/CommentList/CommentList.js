@@ -2,10 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import Styles from "./styles.module.css";
 import SortOutlinedIcon from "@mui/icons-material/SortOutlined";
-import { Pagination } from "@mui/material";
-import ReportItem from "./CommentItem";
-import useFetchAdminReport from "@/api/admin/useFetchAdminReport";
-import index from "@/pages/admin/home";
 import { Empty } from "antd";
 import useFetchCommentAdmin from "@/api/admin/useFetchCommentAdmin";
 import CommentItemAdmin from "./CommentItem";
@@ -15,7 +11,9 @@ function CommentListAdmin(props) {
   const { limit, page, token, updateMax, status } = props;
   // const reports = useFetchAdminReport(status, page, limit, token);
   const cmts = useFetchCommentAdmin();
-  console.log(cmts);
+  const handleMutate = () => {
+    cmts.mutate();
+  };
   // console.log(reports);
   // useEffect(() => {
   //   if (reports.data) {
@@ -55,6 +53,7 @@ function CommentListAdmin(props) {
               return (
                 <React.Fragment key={"report" + index}>
                   <CommentItemAdmin
+                    mutate={handleMutate}
                     status={props.status}
                     updateId={props.updateId}
                     cmt={cmt}

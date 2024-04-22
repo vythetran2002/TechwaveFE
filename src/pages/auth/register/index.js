@@ -160,19 +160,19 @@ function Index() {
       <Head>
         <title>Techwave - Register</title>
       </Head>
-      <div className="container">
+      <div className={Styles["container"]}>
         <Toaster />
-        <header className="header">
-          <nav className="nav">
-            <div className="nav-left">
+        <header className={Styles["header"]}>
+          <nav className={Styles["nav"]}>
+            <div className={Styles["nav-left"]}>
               {/* <Link href="/">
                 <Image src={images.techwave2} width={100} height={80} alt="" />
               </Link> */}
             </div>
-            <div className="nav-right">
+            <div className={Styles["nav-right"]}>
               <ul>
                 <li
-                  className="active"
+                  className={Styles["active"]}
                   onClick={() => {
                     router.push("/");
                   }}
@@ -211,18 +211,19 @@ function Index() {
             </div>
           </nav>
         </header>
-        <div className="login">
-          <div className="left">
+        <div className={Styles["login"]}>
+          <div className={Styles["left"]}>
             <form
               onSubmit={handleResgiter}
               className={Styles["form-container"]}
             >
-              <div className="top">
+              <div className={Styles["top"]}>
                 <h2 style={{ color: "white" }}>User Register</h2>
                 <h4 style={{ color: "white" }}>Please fill out the form</h4>
               </div>
-              <div className="input">
+              <div>
                 <input
+                  className={Styles["input"]}
                   placeholder="Username"
                   {...register("Username")}
                   onChange={(e) => {
@@ -230,8 +231,9 @@ function Index() {
                   }}
                 />
               </div>
-              <div className="input">
+              <div>
                 <input
+                  className={Styles["input"]}
                   placeholder="Họ và tên"
                   {...register("fullName")}
                   onChange={(e) => {
@@ -244,8 +246,9 @@ function Index() {
                   {errors.email.message}
                 </p>
               )} */}
-              <div className="input">
+              <div>
                 <input
+                  className={Styles["input"]}
                   placeholder="Email"
                   // {...register("email")}
                   onChange={(e) => {
@@ -258,8 +261,9 @@ function Index() {
                   {errors.email.message}
                 </p>
               )} */}
-              <div className="input">
+              <div>
                 <input
+                  className={Styles["input"]}
                   placeholder="Số điện thoại"
                   // {...register("phoneNumber")}
                   onChange={(e) => {
@@ -267,7 +271,7 @@ function Index() {
                   }}
                 />
               </div>
-              <div className="input" style={{ color: "white" }}>
+              <div className={Styles["alt-input"]} style={{ color: "white" }}>
                 <Radio.Group
                   name="radiogroup"
                   defaultValue={gender}
@@ -287,9 +291,9 @@ function Index() {
                   {errors.phoneNumber.message}
                 </p>
               )} */}
-              <div className="input">
+              <div className={Styles["alt-input"]}>
                 <textarea
-                  className={Styles.input}
+                  className={Styles.textarea}
                   placeholder="Địa chỉ"
                   // {...register("phoneNumber")}
                   onChange={(e) => {
@@ -297,12 +301,12 @@ function Index() {
                   }}
                 />
               </div>
-              <div className="input">
+              <div className={Styles["alt-input"]}>
                 <DatePicker
                   style={{
                     backgroundColor: "#88A3D2",
                     border: "none",
-                    color: "white",
+                    color: "white !important",
                     height: "45px",
                     width: "100%",
                     color: "white",
@@ -318,8 +322,9 @@ function Index() {
                   {errors.date.message}
                 </p>
               )} */}
-              <div className="input">
+              <div>
                 <input
+                  className={Styles["input"]}
                   type="password"
                   placeholder="Password"
                   // {...register("password")}
@@ -328,7 +333,7 @@ function Index() {
                   }}
                 />
               </div>
-              <div className="input" style={{ color: "white" }}>
+              <div className={Styles["alt-input"]} style={{ color: "white" }}>
                 <Radio.Group
                   name="radiogroup"
                   defaultValue={role}
@@ -360,7 +365,7 @@ function Index() {
               >
                 Yêu cầu điền đủ thông tin
               </p>
-              <div className="btn">
+              <div className={Styles["btn"]}>
                 <button type="submit">Resgister</button>
               </div>
               {/* <div className="or">
@@ -394,7 +399,7 @@ function Index() {
               </div> */}
             </form>
           </div>
-          <div className="right">
+          <div className={Styles["right"]}>
             <Image src={images.loginBg} alt="" />
           </div>
         </div>

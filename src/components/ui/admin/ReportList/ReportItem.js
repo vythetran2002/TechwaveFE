@@ -1,17 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Styles from "./styles.module.css";
-import FemaleOutlinedIcon from "@mui/icons-material/FemaleOutlined";
-import { memo } from "react";
-import MaleOutlinedIcon from "@mui/icons-material/MaleOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Image from "next/image";
 import images from "@/assets/images";
 import dayjs from "dayjs";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Tooltip } from "antd";
+import { Textfit } from "react-textfit";
 
 function ReportItem(props) {
   //   const menuRef = useRef(null);
@@ -19,9 +13,6 @@ function ReportItem(props) {
   const handlingOpenMenu = () => {
     menuRef.current.style.transform = "scale(1)";
   };
-
-  console.log(props.report);
-
   const handleOpenDialog = () => {
     props.handleOpen(true);
     props.updateReport(props.report);
@@ -50,7 +41,10 @@ function ReportItem(props) {
             {props.report.report_id}
           </div>
           <div className={Styles["list-item-name-wrapper"]}>
-            {props.report.content}
+            <Tooltip title={props.report.content}>
+              {" "}
+              {props.report.content}
+            </Tooltip>
           </div>
 
           <div className={Styles["list-item-status-wrapper"]}>
@@ -80,7 +74,11 @@ function ReportItem(props) {
           </div>
           <div className={Styles["list-item-date-wrapper"]}>
             {props.report.createAt ? (
-              <>{dayjs(props.report.createAt).format("DD/MM/YYYY")}</>
+              <>
+                <Textfit mode="single">
+                  {dayjs(props.report.createAt).format("DD/MM/YYYY")}
+                </Textfit>
+              </>
             ) : (
               <></>
             )}

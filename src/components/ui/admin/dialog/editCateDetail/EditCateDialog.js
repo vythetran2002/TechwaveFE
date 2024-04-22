@@ -6,20 +6,42 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import { Input, Radio } from "antd";
+import { Input, Form, Button } from "antd";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import images from "@/assets/images";
 import { uploadImage } from "@/components/utils/Upload";
 import { UpdateCategory } from "@/api/admin/UpdateCategory";
-const Select = dynamic(() => import("react-select"), { ssr: false });
+import { Toaster } from "react-hot-toast";
+import { CloudUploadOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
   subsets: ["latin"],
   display: "swap",
 });
+
+const sxStyle = {
+  "& .MuiDialog-container:hover": {
+    cursor: "pointer",
+  },
+  "& .MuiPaper-root": {
+    zIndex: "1002",
+
+    cursor: "default",
+  },
+  "& .MuiTypography-root": {
+    padding: "10px 14px 10px 24px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: "24px",
+  },
+  "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
+    right: 55,
+  },
+};
 
 function checkNullValues(obj) {
   const { image, name } = obj;
@@ -32,13 +54,7 @@ export default function EditCateDialogDetail(props) {
 
   //Refs
   const messageRef = React.useRef();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const inputFileRef = React.useRef();
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -79,42 +95,37 @@ export default function EditCateDialogDetail(props) {
     }
   };
 
-  const dateFormat = "DD/MM/YYYY";
-
-  const { TextArea } = Input;
-  const sxStyle = {
-    "& .MuiDialog-container:hover": {
-      cursor: "pointer",
-    },
-    "& .MuiPaper-root": {
-      zIndex: "1002",
-
-      cursor: "default",
-    },
-    "& .MuiTypography-root": {
-      padding: "10px 14px 10px 24px",
-    },
-    "& .MuiDialogActions-root": {
-      padding: "24px",
-    },
-    "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
-      right: 55,
-    },
+  const handleCloseDialog = () => {
+    props.handleClose();
+    setAvatarSrc(null);
   };
 
-  // const categoryOptions = [
-  //   { value: "none", label: "Không" },
-  //   { value: "Điện tử", label: "Điện tử" },
-  //   { value: "Điện thoại", label: "Điện thoại" },
-  //   { value: "Máy tính bảng", label: "Máy tính bảng" },
-  //   { value: "Phụ kiện", label: "Phụ kiện" },
-  //   { value: "Sách", label: "Sách" },
-  //   { value: "Sách giáo khoa", label: "Sách giáo khoa" },
-  //   { value: "Sách văn học", label: "Sách văn học" },
-  //   { value: "Thời trang", label: "Thời trang" },
-  //   { value: "Quần áo nam", label: "Quần áo nam" },
-  //   { value: "Quần áo nữ", label: "Quần áo nữ" },
-  // ];
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
+  };
+
+  const onFinish = async (values) => {
+    let final = {};
+    if (avatarSrc) {
+      final = {
+        ...values,
+        image: avatarSrc,
+      };
+    } else {
+      final = {
+        ...values,
+        image: cate.image,
+      };
+    }
+    const message = await UpdateCategory(cate.category_id, final, props.token);
+    await props.mutating();
+    setAvatarSrc(null);
+    handleCloseDialog();
+  };
+
+  const onFinishFailed = () => {
+    toast.error("Mời nhập lại thông tin");
+  };
 
   if (cate)
     return (
@@ -122,7 +133,7 @@ export default function EditCateDialogDetail(props) {
         <Dialog
           fullWidth={true}
           maxWidth="md"
-          onClose={props.handleClose}
+          onClose={handleCloseDialog}
           open={props.isOpen}
           sx={sxStyle}
           className={roboto.className}
@@ -133,16 +144,21 @@ export default function EditCateDialogDetail(props) {
             </span>
             <div
               className={Styles["close-icon-wrapper"]}
-              onClick={props.handleClose}
+              onClick={handleCloseDialog}
             >
               <CancelOutlinedIcon />
             </div>
           </DialogTitle>
 
           <DialogContent dividers>
-            <form
-              onSubmit={handleSubmit}
+            <Form
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
               className={Styles["add-user-form-container"]}
+              initialValues={{
+                name: cate.name,
+              }}
             >
               <div
                 className={Styles["add-user-field-container"]}
@@ -161,10 +177,19 @@ export default function EditCateDialogDetail(props) {
                   }}
                 >
                   <input
+                    ref={inputFileRef}
                     onChange={handleFileUpload}
                     type="file"
-                    style={{ backgroundColor: "white" }}
+                    accept="image/*"
+                    style={{ backgroundColor: "white", display: "none" }}
                   />
+                  <Button
+                    onClick={handlingClickUpload}
+                    type="primary"
+                    icon={<CloudUploadOutlined />}
+                  >
+                    Upload image
+                  </Button>
                   {avatarSrc != null ? (
                     <Image
                       width={150}
@@ -197,79 +222,23 @@ export default function EditCateDialogDetail(props) {
                 </div>
               </div>
               <div className={Styles["add-user-field-container"]}>
-                <span className={Styles["add-user-field-label"]}>ID: </span>
-                <Input
-                  placeholder="ID"
-                  defaultValue={cate.category_id}
-                  disabled
-                />
-              </div>
-              <div className={Styles["add-user-field-container"]}>
                 <span className={Styles["add-user-field-label"]}>
-                  Tên Danh mục:{" "}
+                  Tên danh mục con:{" "}
                 </span>
-                <Input
-                  onChange={handleChangeName}
-                  defaultValue={cate.name}
-                  placeholder="Username"
-                />
-              </div>
-              {/* <div
-              className={Styles["add-user-field-container"]}
-              style={{
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-              }}
-            >
-              <span className={Styles["add-user-field-label"]}>Mô tả:</span>
-              <TextArea
-                showCount
-                maxLength={100}
-                defaultValue={
-                  "Danh mục điện tử: công nghệ tiên tiến, tiện ích, giải trí, ..."
-                }
-                placeholder="Địa chỉ"
-                style={{ height: 100, resize: "none" }}
-              />
-            </div>{" "}
-            */}
-              {/* <div className={Styles["add-user-field-container"]}>
-              <span className={Styles["add-user-field-label"]}>
-                Danh mục cha
-              </span>
-              <Select
-                defaultValue={categoryOptions[0]}
-                options={categoryOptions}
-                isSearchable
-                placeholder="Chọn danh mục..."
-                className={`${Styles["select-container"]} `}
-              />
-            </div> */}
-              {/* <div
-              className={Styles["add-user-field-container"]}
-              style={{
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-              }}
-            >
-              <span className={Styles["add-user-field-label"]}>Hình ảnh</span>
-              <div className={Styles["img-container"]}>
-                <div
-                  className={Styles["img-wrapper"]}
-                  onClick={props.handleOpenImgDialog}
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tên danh mục của " + props.cateHeading,
+                    },
+                  ]}
                 >
-                  <Image
-                    width={100}
-                    height={100}
-                    objectFit="cover"
-                    src={props.imgSrc}
-                    alt=""
-                    priority
-                    className={Styles["img"]}
-                  />
-                </div>
+                  <Input placeholder="Tên danh mục" />
+                </Form.Item>
               </div>
-            </div> */}
+
               <div
                 className={Styles["add-user-field-submit-container"]}
                 style={{
@@ -284,6 +253,7 @@ export default function EditCateDialogDetail(props) {
               >
                 Vui lòng nhập đầy đủ thông tin
               </div>
+
               <div className={Styles["add-user-field-submit-container"]}>
                 <span
                   className={Styles["add-user-field-cancle-btn"]}
@@ -295,7 +265,7 @@ export default function EditCateDialogDetail(props) {
                   Cập nhật
                 </button>
               </div>
-            </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </React.Fragment>

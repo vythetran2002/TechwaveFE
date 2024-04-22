@@ -99,3 +99,7 @@
 .vendor-content-container {
   padding-left: 50px;
 }
+.responseLabel {
+  font-size: 15px;
+  font-weight: 600;
+}

@@ -20,14 +20,13 @@ import { useCookies } from "react-cookie";
 import ShopItemList from "@/components/ui/ShopItemList/ShopItemList";
 import { addCartItem } from "@/api/user/addCartItem";
 import { Cookie } from "next/font/google";
-
-function getRandomNumber() {
-  return Math.floor(Math.random() * 10) + 1;
-}
+import useFetchCart from "@/api/user/useFetchCart";
+import Cookies from "js-cookie";
+import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 
 function ShopIndex() {
   const router = useRouter();
-  const [cookies, removeCookie] = useCookies();
+  const token = Cookies.get("token");
   const [count, setCount] = useState(0);
   const [reload, setReload] = useState(false);
   const [favouriteChanged, setFavouriteChanged] = useState(false);
@@ -38,6 +37,7 @@ function ShopIndex() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState(2);
+  const { mutate } = useFetchCart();
   const slug = router.query.slug;
   let id0 = null;
   let id1 = null;
@@ -65,23 +65,22 @@ function ShopIndex() {
   };
 
   const handlingAddFavouriteProduct = async (id) => {
+    const message = await addFavouriteProduct(id, token);
+  };
+
+  const handlingRemoveFavouriteVendor = async (id) => {
     try {
-      const message = await addFollowVendor(id, cookies["token"]);
-      console.log(message);
-      toast.success("Followed");
-      window.location.reload();
+      const message = await RemoveFollowVendor(id, token);
     } catch (error) {
-      toast.error("error");
+      console.log(error);
     }
   };
 
-  const handlingRemoveFavouriteProduct = async (id) => {
+  const handlingAddFavouriteVendor = async (id) => {
     try {
-      const message = await RemoveFollowVendor(id, cookies["token"]);
-      console.log(message);
-      window.location.reload();
+      const message = await addFollowVendor(id, token);
     } catch (error) {
-      toast.error("error");
+      //console.log(error);
     }
   };
 
@@ -107,9 +106,10 @@ function ShopIndex() {
   };
 
   const handlingAddCartItem = async (data) => {
-    console.log("----");
+    // console.log("----");
     try {
-      const message = await addCartItem(data, cookies["token"]);
+      const message = await addCartItem(data, token);
+      await mutate();
       // console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");
@@ -119,7 +119,7 @@ function ShopIndex() {
       }
     } catch (error) {
       toast.error("Cần đăng nhập");
-      route.push("/auth/login");
+      router.push("/auth/login");
     }
   };
 
@@ -140,7 +140,7 @@ function ShopIndex() {
     return (
       <>
         <Head>
-          <title>{store.data.info.info.username}</title>
+          <title>{store.data?.info.info.username}</title>
         </Head>
         <Layout>
           <Toaster />
@@ -149,8 +149,9 @@ function ShopIndex() {
             handleOpenDialog={handleOpenDialog}
             count={count}
             store={store.data}
-            addFavourite={handlingAddFavouriteProduct}
-            removeFollow={handlingRemoveFavouriteProduct}
+            removeFollow={handlingRemoveFavouriteVendor}
+            mutate={store.mutate}
+            addFavourite={handlingAddFavouriteVendor}
           />
 
           <ShopBio />
@@ -225,6 +226,8 @@ function ShopIndex() {
                   handleOpenDialog={handlingOpenDialog}
                   handleCloseDialog={handlingCloseDialog}
                   handlingAddCartItem={handlingAddCartItem}
+                  token={token}
+                  addFavourite={handlingAddFavouriteProduct}
                 />
                 <div className={Styles["pagination-container"]}>
                   {page && (
@@ -257,7 +260,7 @@ function ShopIndex() {
               <ReportForm
                 handlingCloseDialog={handlingCloseDialog}
                 id={id0}
-                token={cookies["token"]}
+                token={token}
               />
             </DialogContent>
           </Dialog>

@@ -1,18 +1,16 @@
 import useSWR from "swr";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchUserProfile = () => {
-  const [cookies] = useCookies();
+  const acToken = Cookies.get("token");
   const url = "http://localhost:3000/api/user/account/detail";
 
-  const token =
-    cookies["token"] && cookies["token"] != "undefined"
-      ? `Bearer ${cookies["token"]}`
-      : null;
+  const token = acToken && acToken != "undefined" ? `Bearer ${acToken}` : null;
 
   const headers = {
     Accept: "application/json",

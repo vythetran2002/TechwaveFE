@@ -91,23 +91,23 @@ function Index() {
   });
 
   return (
-    <>
+    <div className={Styles["container"]}>
       <Head>
         <title>Techwave - Login</title>
       </Head>
-      <div className="container" style={{ height: "100vh" }}>
+      <div style={{ height: "100vh" }}>
         <Toaster />
-        <header className="header">
-          <nav className="nav">
-            <div className="nav-left">
+        <header className={Styles["header"]}>
+          <nav className={Styles["nav"]}>
+            <div className={Styles["nav-left"]}>
               {/* <Link href="/">
                 <Image src={images.techwave2} width={100} height={80} alt="" />
               </Link> */}
             </div>
-            <div className="nav-right">
+            <div className={Styles["nav-right"]}>
               <ul>
                 <li
-                  className="active"
+                  className={Styles["active"]}
                   onClick={() => {
                     router.push("/");
                   }}
@@ -147,15 +147,19 @@ function Index() {
             </div>
           </nav>
         </header>
-        <div className="login">
-          <div className="left">
+        <div className={Styles["login"]}>
+          <div className={Styles["left"]}>
             <form onSubmit={handleSubmit(handleLogin)}>
-              <div className="top">
+              <div className={Styles["top"]}>
                 <h2 style={{ color: "white" }}>Forgot password</h2>
                 <h4 style={{ color: "white" }}>Please fill out the form</h4>
               </div>
-              <div className="input">
-                <input placeholder="Email" {...register("email")} />
+              <div>
+                <input
+                  className={Styles["input"]}
+                  placeholder="Email"
+                  {...register("email")}
+                />
               </div>
               {errors.email && (
                 <p className={Styles["validate-message"]}>
@@ -168,7 +172,7 @@ function Index() {
                   Forget password?
                 </a>
               </div> */}
-              <div className="btn">
+              <div className={Styles["btn"]}>
                 <button type="submit">Submit</button>
               </div>
               {/* <div className="or">
@@ -202,12 +206,12 @@ function Index() {
               </div> */}
             </form>
           </div>
-          <div className="right">
+          <div className={Styles["right"]}>
             <Image src={images.loginBg} alt="" />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

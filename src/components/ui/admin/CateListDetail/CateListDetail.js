@@ -18,11 +18,12 @@ function CateListDetail(props) {
 
   // const cates = useFetch("http://localhost:3000/api/category/");
   const cates = useFetchCateGoryDetail(id, page, limit, token);
-  console.log(cates);
+  const handleMutate = () => {
+    cates.mutate();
+  };
 
   useEffect(() => {
     if (cates.data) {
-      console.log("---");
       if (cates.data.cate_child) {
         updateMax(cates.data.cate_child.total);
       }
@@ -62,6 +63,7 @@ function CateListDetail(props) {
                 return (
                   <React.Fragment key={"cate" + index}>
                     <CateItemDetail
+                      mutate={handleMutate}
                       updateCate={props.updateCate}
                       updateId={props.updateId}
                       cate={cate}

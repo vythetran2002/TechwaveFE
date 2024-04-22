@@ -1,15 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Styles from "./styles.module.css";
-import FemaleOutlinedIcon from "@mui/icons-material/FemaleOutlined";
-import { memo } from "react";
-import MaleOutlinedIcon from "@mui/icons-material/MaleOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import dayjs from "dayjs";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Tooltip } from "antd";
 
 function CommentItem(props) {
   //   const menuRef = useRef(null);
@@ -44,11 +37,14 @@ function CommentItem(props) {
           {comment.account.username}
         </div>
         <div className={Styles["list-item-name-wrapper"]}>
-          {comment.product.name}
+          <Tooltip title={comment.product.name}>
+            {" "}
+            {comment.product.name}
+          </Tooltip>
         </div>
 
         <div className={Styles["list-item-status-wrapper"]}>
-          {comment.content}
+          <Tooltip title={comment.content}> {comment.content}</Tooltip>
         </div>
         <div className={Styles["list-item-shop-wrapper"]}>
           {dayjs(comment.createAt).format("DD/MM/YYYY")}

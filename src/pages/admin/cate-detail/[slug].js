@@ -26,6 +26,7 @@ import Link from "next/link";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddCateDialogDetail from "@/components/ui/admin/dialog/addCateDetail/AddCateDialogDetail";
 import EditCateDialogDetail from "@/components/ui/admin/dialog/editCateDetail/EditCateDialog";
+import useFetchCateGoryDetail from "@/api/admin/useFetchCategoryDetail";
 
 function Index() {
   const [cookies] = useCookies();
@@ -44,6 +45,12 @@ function Index() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
+  const { mutate } = useFetchCateGoryDetail(
+    query.slug,
+    page,
+    quantity,
+    cookies["token"]
+  );
 
   const handlingOpenAddCateDialog = () => {
     setIsOpenAddCateDialog(true);
@@ -153,14 +160,6 @@ function Index() {
             </div>
           </div>
           <div className={Styles["markup-container"]}>
-            {/* <div className={Styles["markup-item"]}>
-              <span>Foundation</span>
-              <ClearOutlinedIcon className={Styles["markup-icon"]} />
-            </div>
-            <div className={Styles["markup-item"]}>
-              <span>HaTHH</span>
-              <ClearOutlinedIcon className={Styles["markup-icon"]} />
-            </div> */}
             <Select
               onChange={updateQuantity}
               defaultValue={quantity}
@@ -189,14 +188,18 @@ function Index() {
             token={cookies["token"]}
           />
           <AddCateDialogDetail
+            mutating={mutate}
             id={query}
             token={cookies["token"]}
             isOpen={isOpenAddCateDialog}
             handleClose={handlingCloseAddCateDialog}
             imgSrc={avatarSrc}
             handleOpenImgDialog={handlingOpenEditImgDialog}
+            cateHeading={cateHeading}
           />
           <EditCateDialogDetail
+            mutating={mutate}
+            cateHeading={cateHeading}
             token={cookies["token"]}
             cate={cate}
             updateCate={updateCate}
@@ -206,6 +209,7 @@ function Index() {
             handleOpenImgDialog={handlingOpenEditImgDialog}
           />
           <EditImageDialog
+            cateParent={cateHeading}
             isOpen={isOpenEditImgDialog}
             onClose={handlingCloseEditImgDialog}
             onChange={setAvatarSrc}

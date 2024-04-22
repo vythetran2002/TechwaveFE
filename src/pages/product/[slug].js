@@ -9,28 +9,31 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import Blog from "@/components/ui/Blog/Blog";
 import CommentForm from "@/components/ui/CommentForm/CommentForm";
-import CateHeading from "@/components/ui/CateHeading/CateHeading";
 import ItemList from "@/components/ui/ItemList/ItemList";
 import ShopDetailCard from "@/components/ui/ShopDetailCard/ShopDetailCard";
 import useFetchProductById from "@/api/products/useFetchProductById";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import UserProfile from "@/components/ui/UserProfile/UserProfile";
 import { addCartItem } from "@/api/user/addCartItem";
 import toast from "react-hot-toast";
 import { Element, scroller } from "react-scroll";
+import Cookies from "js-cookie";
+import useFetchCart from "@/api/user/useFetchCart";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const router = useRouter();
   const slug = router.query.slug;
   const [img, setImg] = useState(null);
   const [reload, setReload] = useState(false);
+  const { mutate } = useFetchCart();
+
   // console.log(slug);
-  const product = useFetchProductById(slug, cookies["token"]);
+  const product = useFetchProductById(slug, token);
   // console.log(product);
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState();
@@ -52,9 +55,10 @@ function Index() {
   };
 
   const handlingAddCartItem = async (data) => {
-    console.log("----");
+    // console.log("----");
     try {
-      const message = await addCartItem(data, cookies["token"]);
+      const message = await addCartItem(data, token);
+      await mutate();
       if (message) {
         toast.success("Đã thêm vào giỏ");
       } else {
@@ -77,7 +81,7 @@ function Index() {
       });
     }
     setReload(!reload);
-  }, [router.query.nav, product.data, img]);
+  }, [router.query.nav, product.data]);
 
   if (product.isLoading) {
     return <>Loading</>;
@@ -143,7 +147,7 @@ function Index() {
             handleOpenDialog={handleOpenDialog}
             review={product.data.review}
             productId={product.data.product_id}
-            token={cookies["token"]}
+            token={token}
             status={product.data.statusReview}
           />
           <Dialog
@@ -154,7 +158,7 @@ function Index() {
           >
             <DialogContent>
               <UserProfile
-                token={cookies["token"]}
+                token={token}
                 handleCloseDialog={handleCloseDialog}
                 id={id}
               />

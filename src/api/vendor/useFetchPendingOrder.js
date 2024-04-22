@@ -1,15 +1,16 @@
 import useSWR from "swr";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchPendingOrders = (status, page, limit, myToken) => {
-  const [cookies] = useCookies();
+  const acToken = Cookies.get("token");
   const url = "http://localhost:3000/api/vendor/bill/";
 
-  const token = "Bearer " + cookies["token"];
+  const token = "Bearer " + acToken;
 
   const headers = {
     Accept: "application/json",
@@ -21,8 +22,7 @@ const useFetchPendingOrders = (status, page, limit, myToken) => {
 
   const { data, error, mutate, isValidating } = useSWR(
     page && limit ? `${url}?${queryParams}` : null,
-    () => fetcher(`${url}?${queryParams}`, headers),
-    { refreshInterval: 1000 }
+    () => fetcher(`${url}?${queryParams}`, headers)
   );
 
   return {

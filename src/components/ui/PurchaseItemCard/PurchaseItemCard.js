@@ -42,9 +42,9 @@ function PurchaseItemCard(props) {
     router.push("/user/account/received");
   };
 
-  const handleCancle = () => {
-    const message = HandleCancleOrder(oderItem.bill_id, props.token);
-    console.log(message);
+  const handleCancle = async () => {
+    const message = await HandleCancleOrder(oderItem.bill_id, props.token);
+    await props.handleMutateCancleOrder();
   };
 
   if (oderItem.payment_id) {

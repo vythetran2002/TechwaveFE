@@ -19,9 +19,10 @@ import AddOptionDialog from "@/components/ui/vendor/dialog/addOption/AddOptionDi
 import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import EditOptionDialog from "@/components/ui/vendor/dialog/editOption/EditOptionDialog";
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const router = useRouter();
   const slug = router.query.slug;
 
@@ -152,19 +153,19 @@ function Index() {
             </div>
             <OptionList
               productId={slug}
-              token={cookies["token"]}
+              token={token}
               setOption={updateCurrentOption}
               handleOpenDialog={handlingOpenEditProductDialog}
               handleCloseDialog={handlingOpenEditProductDialog}
             />
             <AddOptionDialog
               id={product.data.product_id}
-              token={cookies["token"]}
+              token={token}
               isOpen={isOpenAddProductDialog}
               handleClose={handlingCloseAddProductDialog}
             />
             <EditOptionDialog
-              token={cookies["token"]}
+              token={token}
               productId={slug}
               option={currentOption}
               updateName={updateName}

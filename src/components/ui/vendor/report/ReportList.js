@@ -7,14 +7,16 @@ import ReportItem from "./ReportItem";
 import useFetchAdminReport from "@/api/admin/useFetchAdminReport";
 import index from "@/pages/admin/home";
 import { Empty } from "antd";
+import { Textfit } from "react-textfit";
 
 function ReportList(props) {
   const { limit, page, token, updateMax, status } = props;
   const reports = useFetchAdminReport(status, page, limit, token);
-  console.log(reports);
+  const handleMutate = () => {
+    reports.mutate();
+  };
   useEffect(() => {
     if (reports.data) {
-      console.log("---");
       updateMax(reports.data.total);
     }
   }, [reports.data]);
@@ -49,6 +51,7 @@ function ReportList(props) {
               return (
                 <React.Fragment key={"report" + index}>
                   <ReportItem
+                    mutate={handleMutate}
                     status={props.status}
                     updateId={props.updateId}
                     report={report}

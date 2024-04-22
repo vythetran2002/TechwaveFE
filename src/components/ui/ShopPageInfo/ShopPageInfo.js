@@ -14,14 +14,17 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 
 function ShopPageInfo(props) {
   const [store, setStore] = useState(props.store);
+
   // console.log(store);
 
   const handlingAddFavourite = async () => {
     await props.addFavourite(store.info.info.account_id);
+    await props.mutate();
   };
 
   const handlingRemoveFollow = async () => {
     await props.removeFollow(store.info.info.account_id);
+    await props.mutate();
   };
 
   const handleOpenDialog = () => {

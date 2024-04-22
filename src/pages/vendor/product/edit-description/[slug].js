@@ -17,6 +17,7 @@ import toast, { Toaster } from "react-hot-toast";
 import useFetchProductDesc from "@/api/vendor/useFetchProductDesc";
 import { useCookies } from "react-cookie";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Cookies from "js-cookie";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -26,7 +27,7 @@ function HtmlContent({ htmlString }) {
 
 function Index() {
   const router = useRouter();
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const slug = router.query.slug;
   const product0 = useFetchDetailProduct(slug);
   console.log(product0);
@@ -40,7 +41,7 @@ function Index() {
 
   const handlingUpdateDesc = async () => {
     try {
-      const message = await PutProductDesc(slug, value, cookies["token"]);
+      const message = await PutProductDesc(slug, value, token);
       await console.log(message);
 
       setTimeout(() => {

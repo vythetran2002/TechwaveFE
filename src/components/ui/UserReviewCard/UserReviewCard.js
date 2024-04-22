@@ -126,6 +126,7 @@ function UserReviewCard(props) {
                 style={{ borderRadius: "5px" }}
               />
             )}
+
             <Link
               href={"/product/" + review.product.product_id}
               className={Styles["product-name"]}

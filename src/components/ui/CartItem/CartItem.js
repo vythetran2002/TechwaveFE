@@ -55,15 +55,15 @@ function CartItem(props) {
     setIsEditMode(!isEditMode);
   };
 
-  const handleUpdateCartItem = () => {
-    const message = UpdateCartItem(
+  const handleUpdateCartItem = async () => {
+    const message = await UpdateCartItem(
       props.item.cart_id,
       quantity,
       props.item.option_id,
       props.item.product.price,
       token
     );
-    console.log(message);
+    await props.mutate();
     setIsEditMode(false);
     props.resetSelect();
   };

@@ -8,10 +8,10 @@ import Rating from "@mui/material/Rating";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 import CircularProgress from "@mui/joy/CircularProgress";
-import Textarea from "@mui/joy/Textarea";
+
 import Button from "@mui/joy/Button";
 import { ResponseComment } from "@/api/vendor/ResponseComment";
-import { message, Empty } from "antd";
+import { Form, Input } from "antd";
 import { uploadImage } from "@/components/utils/Upload";
 import toast from "react-hot-toast";
 
@@ -22,6 +22,7 @@ const roboto = Roboto({
 });
 
 function CommentPopUp(props) {
+  const { TextArea } = Input;
   const { id, token } = props;
 
   const [response, setResponse] = useState();
@@ -41,18 +42,6 @@ function CommentPopUp(props) {
   const handleDeleteImg = () => {
     setImgSrc(null);
     toast.success("Deleted image");
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let temp = {
-      content: response,
-      picture: imgSrc,
-      review_id: id,
-    };
-    const message = ResponseComment(temp, token);
-    console.log(message);
-    props.handleClose();
   };
 
   const onClickImgUpload = () => {
@@ -75,13 +64,33 @@ function CommentPopUp(props) {
       });
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let temp = {
+      content: response,
+      picture: imgSrc,
+      review_id: id,
+    };
+    const message = ResponseComment(temp, token);
+    console.log(message);
+    props.handleClose();
+  };
+
+  const onFinish = async (values) => {
+    let final = { ...values, picture: imgSrc, review_id: id };
+    const message = await ResponseComment(final, token);
+    props.handleClose();
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
+  };
+
   //   useEffect(() => {
   //     console.log(response);
   //   }, [response]);
 
   const cmt = useFetchDetailComment(id, token);
-
-  console.log(cmt);
 
   if (cmt.isLoading) {
     return (
@@ -268,24 +277,45 @@ function CommentPopUp(props) {
                     </div>
                   )}
                 </div>
-                <div className={Styles["response-container"]}>
-                  <span>Phản hồi</span>
-                  <Textarea
-                    placeholder="Nhập phản hồi"
-                    size="lg"
-                    onChange={upadateResponse}
-                  />
+                <Form
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+                  autoComplete="off"
+                  className={Styles["response-container"]}
+                >
+                  <span className={Styles.responseLabel}>Phản hồi</span>
+                  <Form.Item
+                    name="content"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Hãy nhập nội dung",
+                      },
+                    ]}
+                  >
+                    <TextArea
+                      placeholder="Nhập phản hồi"
+                      size="lg"
+                      showCount
+                      autoSize={{
+                        minRows: 3,
+                        maxRows: 6,
+                      }}
+                      maxLength={100}
+                      onChange={upadateResponse}
+                    />
+                  </Form.Item>
                   <Button
                     color="primary"
                     disabled={false}
-                    onClick={handleSubmit}
+                    type="submit"
                     size="sm"
                     variant="solid"
                     style={{ width: "100px", marginTop: "10px" }}
                   >
                     Gửi
                   </Button>
-                </div>
+                </Form>
               </>
             )}
           </div>

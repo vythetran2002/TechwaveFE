@@ -22,6 +22,7 @@ function ItemList(props) {
               return (
                 <React.Fragment key={props.itemKey + index}>
                   <Item
+                    mutate={props.mutate}
                     addFavourite={props.addFavourite}
                     item={item}
                     token={props.token}

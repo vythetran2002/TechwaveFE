@@ -1,16 +1,15 @@
 import useSWR from "swr";
 import axios from "axios";
 import { useState } from "react";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
-const fetcher = (url, headers) =>
-  axios.get(url, { headers }).then((res) => res.data);
+const fetcher = (url, headers) => axios.get(url).then((res) => res.data);
 
 const useFetchProductByCateId = (id) => {
-  const [cookies] = useCookies(["token"]);
+  const acToken = Cookies.get("token");
   const url = "http://localhost:3000/api/category/" + id;
 
-  const token = "Bearer " + cookies["token"];
+  const token = "Bearer " + acToken;
 
   // const headers = {
   //   Accept: "application/json",
@@ -23,14 +22,12 @@ const useFetchProductByCateId = (id) => {
     "Content-Type": "application/json",
   };
 
-  if (cookies["token"] && cookies["token"] != "undefined") {
+  if (acToken && acToken != "undefined") {
     headers.Authorization = ` ${token}`;
   }
 
-  const { data, error, mutate, isValidating } = useSWR(
-    token ? url : null,
-    () => fetcher(url, headers),
-    { refreshInterval: 1000 }
+  const { data, error, mutate, isValidating } = useSWR(token ? url : null, () =>
+    fetcher(url, headers)
   );
 
   return {

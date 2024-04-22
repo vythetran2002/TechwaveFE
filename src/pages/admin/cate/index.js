@@ -15,13 +15,14 @@ import images from "@/assets/images";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import CateDetailDialog from "@/components/ui/admin/dialog/detailCate/CateDetailDialog";
-import { useCookies } from "react-cookie";
 import useFetchCategories from "@/api/vendor/useFetchCategories";
 import { Select } from "antd";
 import { Pagination } from "@mui/material";
+import useFetchAdminCategories from "@/api/admin/useFetchCategories";
+import Cookies from "js-cookie";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   // states
   const [isOpenAddCateDialog, setIsOpenAddCateDialog] = useState(false);
   const [isOpenEditCateDialog, setIsOpenEditCaterDialog] = useState(false);
@@ -33,6 +34,7 @@ function Index() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
+  const { mutate } = useFetchAdminCategories(1, page, quantity, token);
 
   const handlingOpenAddCateDialog = () => {
     setIsOpenAddCateDialog(true);
@@ -159,23 +161,25 @@ function Index() {
             handleCloseDialog={handlingOpenEditCateDialog}
             handleOpenDetailDialog={handlingOpenDetailCate}
             updateId={updateId}
-            token={cookies["token"]}
+            token={token}
           />
           <AddCateDialog
-            token={cookies["token"]}
+            token={token}
             isOpen={isOpenAddCateDialog}
             handleClose={handlingCloseAddCateDialog}
             imgSrc={avatarSrc}
             handleOpenImgDialog={handlingOpenEditImgDialog}
+            mutating={mutate}
           />
           <EditCateDialog
-            token={cookies["token"]}
+            token={token}
             cate={cate}
             updateCate={updateCate}
             isOpen={isOpenEditCateDialog}
             handleClose={handlingCloseEditCateDialog}
             imgSrc={avatarSrc}
             handleOpenImgDialog={handlingOpenEditImgDialog}
+            mutating={mutate}
           />
           <EditImageDialog
             isOpen={isOpenEditImgDialog}

@@ -10,14 +10,14 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
+import Cookies from "js-cookie";
 
 function UserHeader() {
-  const [cookies, removeCookie] = useCookies();
+  const token = Cookies.get("token");
   const route = useRouter();
   const logout = async () => {
-    const message = LogOutAccount(cookies["token"]);
-    removeCookie("token");
-    console.log(message);
+    const message = LogOutAccount(token);
+    Cookies.remove("token");
     route.push("/auth/login");
     // toast.success("Logged out");
   };

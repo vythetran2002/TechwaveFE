@@ -21,7 +21,7 @@ function ShopItemList(props) {
 
   useEffect(() => {
     if (products.data) {
-      console.log("---");
+      //console.log("---");
       if (products.data.data[cateId]) {
         updateMax(products.data.data[cateId].products.total);
       }
@@ -36,8 +36,8 @@ function ShopItemList(props) {
   } else
     return (
       <div className={Styles["filter-item-list-container"]}>
-        {products.data.data[cateId].products.results.length != 0 ? (
-          products.data.data[cateId].products.results.map(
+        {products.data?.data[cateId].products.results.length != 0 ? (
+          products.data?.data[cateId].products.results.map(
             (productItem, index) => {
               return (
                 <React.Fragment key={"productItem" + index}>
@@ -47,6 +47,9 @@ function ShopItemList(props) {
                     item={productItem}
                     setDeTailItem={setDeTailItem}
                     handlingOpenDialog={handleOpenDialog}
+                    mutate={products.mutate}
+                    token={props.token}
+                    addFavourite={props.addFavourite}
                   />
                 </React.Fragment>
               );

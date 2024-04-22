@@ -4,33 +4,27 @@ import Image from "next/image";
 import { useRef } from "react";
 import images from "@/assets/images";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import Link from "next/link";
 import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
-import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
-import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
-import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
-import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
+import Cookies from "js-cookie";
 
+import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
 function VendorSidebar(props) {
   const route = useRouter();
-  const [cookies, removeCookie] = useCookies();
+  const token = Cookies.get("token");
   const handlingLogout = async () => {
-    const message = await LogOutAccount(cookies["token"]);
-    removeCookie("token");
-    console.log(message);
+    const message = await LogOutAccount(token);
+    await Cookies.remove("token");
     route.push("/auth/login");
     // toast.success("logged out");
   };
@@ -241,6 +235,29 @@ function VendorSidebar(props) {
                 </span>
               </Link>
             )}
+
+            {props.path === "/vouchers" ? (
+              <Link
+                href={"/vendor/vouchers"}
+                className={`${Styles["nav-link"]} ${Styles["active"]}`}
+              >
+                <div className={Styles["nav-icon"]}>
+                  <DiscountOutlinedIcon />
+                </div>
+                <span ref={storeRef} className={Styles["nav-title"]}>
+                  Quản lý khuyến mãi
+                </span>
+              </Link>
+            ) : (
+              <Link href={"/vendor/vouchers"} className={Styles["nav-link"]}>
+                <div className={Styles["nav-icon"]}>
+                  <DiscountOutlinedIcon />
+                </div>
+                <span ref={storeRef} className={Styles["nav-title"]}>
+                  Quản lý khuyến mãi
+                </span>
+              </Link>
+            )}
           </div>
         </div>
         <div className={Styles["log-out-wrapper"]}>
@@ -253,7 +270,7 @@ function VendorSidebar(props) {
               <LogoutOutlinedIcon />
             </div>
             <span ref={logOutRef} className="transt-all-ease">
-              Logout
+              Đăng xuất
             </span>
           </div>
         </div>

@@ -83,6 +83,7 @@
   transform: translateX(0px);
 }
 .item-name-exit-button-container {
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -222,4 +223,10 @@
 .price-rate-container {
   display: flex;
   gap: 20px;
+}
+.item-title-wrapper {
+  max-width: 50%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

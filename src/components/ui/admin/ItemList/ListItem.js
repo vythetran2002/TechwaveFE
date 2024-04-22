@@ -15,10 +15,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import { ActiveAccount } from "@/api/admin/ActiveAccount";
 import { ApproveAccount } from "@/api/admin/ApproveAccount";
-import { mutate } from "swr";
 
 function ListItem(props) {
-  const { account, handleReload } = props;
+  const { account } = props;
 
   const menuRef = useRef(null);
 
@@ -32,38 +31,32 @@ function ListItem(props) {
     props.handleOpenDialog();
   };
 
-  const handleSoftDelete = () => {
-    const message = DeleteSoftAccount(account.account_id, props.token);
-    console.log(message);
-    // window.location.reload();
-  };
-
-  const handleDelteAccount = () => {
-    const message = DeleteAccount(account.account_id, props.token);
-    console.log(message);
-    // window.location.reload();
-  };
-
   const handleOpenDetailDialog = () => {
     props.updateId(account.account_id);
     props.updateAccount(account);
     props.handleOpenDetailDialog();
   };
 
-  const handlingActiveAccount = () => {
-    const message = ActiveAccount(account.account_id, props.token);
-    console.log(message);
-    mutate([
-      "http://localhost:3000/api/admin/account/?status=2&page=1&limit=1",
-    ]);
-    handleReload();
-    // handleReload();
+  const handleSoftDelete = async () => {
+    const message = await DeleteSoftAccount(account.account_id, props.token);
+    await props.reload();
     // window.location.reload();
   };
 
-  const handlineApproveAccount = () => {
-    const message = ApproveAccount(account.account_id, props.token);
-    console.log(message);
+  const handleDelteAccount = async () => {
+    const message = await DeleteAccount(account.account_id, props.token);
+    await props.reload();
+    // window.location.reload();
+  };
+
+  const handlingActiveAccount = async () => {
+    const message = await ActiveAccount(account.account_id, props.token);
+    await props.reload();
+  };
+
+  const handlineApproveAccount = async () => {
+    const message = await ApproveAccount(account.account_id, props.token);
+    await props.reload();
   };
 
   useEffect(() => {

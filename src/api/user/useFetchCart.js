@@ -25,8 +25,7 @@ const useFetchCart = () => {
 
   const { data, error, mutate, isValidating } = useSWR(
     token ? url : null, // Only fetch if the token exists
-    token ? () => fetcher(url, headers) : null, // Provide fetcher function only if token exists
-    { refreshInterval: 1000 }
+    token ? () => fetcher(url, headers) : null // Provide fetcher function only if token exists
   );
 
   return {

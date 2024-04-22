@@ -17,7 +17,7 @@ import { DeleteComment } from "@/api/admin/DeleteComment";
 function CommentItemAdmin(props) {
   //   const menuRef = useRef(null);
 
-  const { cmt, token } = props;
+  const { cmt, token, mutate } = props;
   // console.log(report);
   const handlingOpenMenu = () => {
     menuRef.current.style.transform = "scale(1)";
@@ -28,10 +28,10 @@ function CommentItemAdmin(props) {
     props.handleOpenDialog();
   };
 
-  const handleClickDelReview = () => {
-    console.log(cmt.review_id);
-    const message = DeleteComment(cmt.review_id, token);
-    console.log(message);
+  const handleClickDelReview = async () => {
+    // console.log(cmt.review_id);
+    const message = await DeleteComment(cmt.review_id, token);
+    await mutate();
   };
 
   const handlingAcceptReport = () => {

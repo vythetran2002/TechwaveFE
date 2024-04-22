@@ -1,12 +1,11 @@
 import React from "react";
 import Styles from "./styles.module.css";
 import SortOutlinedIcon from "@mui/icons-material/SortOutlined";
-import ReportItem from "./OrderItem";
 import { useEffect } from "react";
-import { Pagination } from "@mui/material";
 import OrderItem from "./OrderItem";
 import useFetchPendingOrders from "@/api/vendor/useFetchPendingOrder";
 import Empty from "antd/lib/empty";
+import { Textfit } from "react-textfit";
 
 function OrderList(props) {
   const { status, limit, page, token, updateMax } = props;
@@ -16,7 +15,6 @@ function OrderList(props) {
 
   useEffect(() => {
     if (pendingOrders.data) {
-      console.log("---");
       updateMax(pendingOrders.data.total);
     }
   }, [pendingOrders.data]);
@@ -31,27 +29,44 @@ function OrderList(props) {
         <div className={Styles["item-list-container"]}>
           <div className={Styles["item-list-heading-container"]}>
             <div className={Styles["id-wrapper"]}>
-              <span className={Styles["head-title"]}>Tên khách hàng</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Tên khách hàng</Textfit>
+              </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["fullname-wrapper"]}>
-              <span className={Styles["head-title"]}>Số điện thoại</span>
+              <span className={Styles["head-title"]}>
+                {" "}
+                <Textfit mode="single">Số điện thoại</Textfit>
+              </span>
             </div>
             <div className={Styles["email-wrapper"]}>
-              <span className={Styles["head-title"]}>Địa chỉ</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Địa chỉ</Textfit>
+              </span>
             </div>
             <div className={Styles["dob-wrapper"]}>
-              <span className={Styles["head-title"]}>Sản phẩm</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Sản phẩm</Textfit>
+              </span>
             </div>
             <div className={Styles["gender-wrapper"]}>
-              <span className={Styles["head-title"]}>Tổng đơn</span>
+              <span className={Styles["head-title"]}>
+                {" "}
+                <Textfit mode="single">Tổng đơn</Textfit>
+              </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
-              <span className={Styles["head-title"]}>Ngày đặt</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Ngày đặt</Textfit>
+              </span>
             </div>
             <div className={Styles["status-wrapper"]}>
-              <span className={Styles["head-title"]}>Hành động</span>
+              <span className={Styles["head-title"]}>
+                {" "}
+                <Textfit mode="single">Hành động</Textfit>
+              </span>
             </div>
           </div>
           {pendingOrders.data.results.length != 0 ? (
@@ -64,6 +79,7 @@ function OrderList(props) {
                     updateOrder={props.updateOrder}
                     mode={props.status}
                     order={order}
+                    mutate={pendingOrders.mutate}
                   />
                 </React.Fragment>
               );

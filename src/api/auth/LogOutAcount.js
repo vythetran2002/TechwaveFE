@@ -8,7 +8,6 @@ export const LogOutAccount = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     toast.success("Logout Successfully");
     return response.data;
   } catch (error) {

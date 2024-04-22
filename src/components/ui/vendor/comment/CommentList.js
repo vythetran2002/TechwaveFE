@@ -7,6 +7,7 @@ import CommentItem from "./CommentItem";
 import { useEffect } from "react";
 import useFetchComment from "@/api/vendor/useFetchComment";
 import { Empty } from "antd";
+import { Textfit } from "react-textfit";
 
 function CommentList(props) {
   const { status, limit, page, token, updateMax } = props;
@@ -15,7 +16,6 @@ function CommentList(props) {
 
   useEffect(() => {
     if (comments.data) {
-      console.log("---");
       updateMax(comments.data.total);
     }
   }, [comments.data]);
@@ -28,22 +28,32 @@ function CommentList(props) {
         <div className={Styles["item-list-container"]}>
           <div className={Styles["item-list-heading-container"]}>
             <div className={Styles["id-wrapper"]}>
-              <span className={Styles["head-title"]}>Tài khoản</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single"> Tài khoản</Textfit>
+              </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["fullname-wrapper"]}>
-              <span className={Styles["head-title"]}>Sản phẩm</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Sản phẩm</Textfit>
+              </span>
             </div>
             <div className={Styles["email-wrapper"]}>
-              <span className={Styles["head-title"]}>Nội dung </span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Nội dung</Textfit>
+              </span>
             </div>
 
             <div className={Styles["gender-wrapper"]}>
-              <span className={Styles["head-title"]}>Ngày đánh giá </span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Ngày đánh giá</Textfit>
+              </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
-              <span className={Styles["head-title"]}>Hành động</span>
+              <span className={Styles["head-title"]}>
+                <Textfit mode="single">Hành động</Textfit>
+              </span>
             </div>
           </div>
           {comments.data.results.length != 0 ? (

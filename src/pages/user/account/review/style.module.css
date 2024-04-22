@@ -161,3 +161,19 @@
   background-color: #888; /* Màu nền của thanh cuộn */
   border-radius: 4px; /* Bo tròn các góc của thanh cuộn */
 }
+.nav-order-item-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.qldh-title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.qldh-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

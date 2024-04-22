@@ -126,8 +126,6 @@ function FavouriteItemCard(props) {
 
               <span className="flex1 center">
                 <InputNumber
-                  min={1}
-                  max={props.product.product.quantity}
                   defaultValue={props.product.product.quantity}
                   disabled
                 />

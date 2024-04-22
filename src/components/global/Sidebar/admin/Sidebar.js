@@ -4,31 +4,30 @@ import Image from "next/image";
 import { useRef } from "react";
 import images from "@/assets/images";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import Link from "next/link";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
-import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
+import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
+import Cookies from "js-cookie";
 
 function AdminSidebar(props) {
   const route = useRouter();
-  const [cookies, removeCookie] = useCookies();
+  // const [cookies, removeCookie] = useCookies();
   const handlingLogout = async () => {
-    const message = await LogOutAccount(cookies["token"]);
-    await removeCookie("token");
-    console.log(message);
+    const token = Cookies.get("token");
+    const message = await LogOutAccount(token);
+    await Cookies.remove("token");
+
     route.push("/auth/login");
     // toast.success("logged out");
   };
@@ -244,6 +243,29 @@ function AdminSidebar(props) {
               </Link>
             )}
 
+            {props.path === "/vouchers" ? (
+              <Link
+                href={"/admin/vouchers"}
+                className={`${Styles["nav-link"]} ${Styles["active"]}`}
+              >
+                <div className={Styles["nav-icon"]}>
+                  <DiscountOutlinedIcon />
+                </div>
+                <span ref={perminssionRef} className={Styles["nav-title"]}>
+                  Quản lý khuyến mãi
+                </span>
+              </Link>
+            ) : (
+              <Link href={"/admin/vouchers"} className={Styles["nav-link"]}>
+                <div className={Styles["nav-icon"]}>
+                  <DiscountOutlinedIcon />
+                </div>
+                <span ref={perminssionRef} className={Styles["nav-title"]}>
+                  Quản lý khuyến mãi
+                </span>
+              </Link>
+            )}
+
             {props.path === "/userpermission" ? (
               <Link
                 href={"/admin/userpermission"}
@@ -281,7 +303,7 @@ function AdminSidebar(props) {
               <LogoutOutlinedIcon />
             </div>
             <span ref={logOutRef} className="transt-all-ease">
-              Logout
+              Đăng xuất
             </span>
           </div>
         </div>
