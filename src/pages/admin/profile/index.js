@@ -4,13 +4,10 @@ import Head from "next/head";
 import Styles from "./styles.module.css";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Radio, DatePicker, Checkbox, Input } from "antd";
-import { Switch, Form, Button } from "antd";
+import { Switch, Form, Button, Select, Empty } from "antd";
 import images from "@/assets/images";
 import dayjs from "dayjs";
-import { useCookies } from "react-cookie";
 import useFetchAdminProfile from "@/api/admin/useFetchAdminProfile";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
@@ -21,12 +18,11 @@ import {
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
+import { GHN_API } from "@/api/GHN/GHN";
+import Cookies from "js-cookie";
 
 const { TextArea } = Input;
 
-function formatDate(isoDateString) {
-  return dayjs(isoDateString).format("YYYY-MM-DD");
-}
 const dateFormat = "DD/MM/YYYY";
 
 function containsLetter(str) {
@@ -38,21 +34,28 @@ function checkEmptyFields(userProfile) {
   return !email || !phone || !address || !dob || !fullname;
 }
 
+const LocationProvider = new GHN_API();
+
 function Home() {
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const token = Cookies.get("token");
   const user = useFetchAdminProfile();
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [passwdEditMode, setPasswdEditMode] = useState(false);
   const [form] = Form.useForm();
+  const [provinceId, setProvinceId] = useState(false);
+  const [districtId, setDistrictId] = useState(false);
+  const [wardId, setWardId] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
+  const [isDisabledWards, setIsDisabledWards] = useState(true);
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
 
   //Refs
-
-  const iconRef = useRef();
-  const orderingItem = useRef();
-  const orderedItem = useRef();
-  const itemRef = useRef();
   const usernameRef = useRef();
   const messageRef = useRef();
   const inputFileRef = useRef();
@@ -72,56 +75,44 @@ function Home() {
   //   setIsOpenDialog(false);
   // };
 
-  const handlingChangeFullName = (e) => {
-    let temp = { ...userProfile, fullname: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeEmail = (e) => {
-    let temp = { ...userProfile, email: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangePhone = (e) => {
-    if (!containsLetter(e.target.value)) {
-      let temp = { ...userProfile, phone: e.target.value };
-      setUserProfile(temp);
-    }
-  };
-  const handlingChangeGender = (e) => {
-    let temp = { ...userProfile, gender: e.target.value };
-    setUserProfile(temp);
-  };
-  const handlingChangeDob = (data, dateString) => {
-    let date = dayjs(dateString, "DD/MM/YYYY");
-    let newDate = date.format("YYYY/MM/DD");
-    let temp = { ...userProfile, dob: newDate };
-    setUserProfile(temp);
-  };
   const hadnlingChangeOldPass = (e) => {
     setOldPass(e.target.value);
   };
-  const hadnlingChangeAddress = (e) => {
-    let temp = { ...userProfile, address: e.target.value };
-    setUserProfile(temp);
-  };
+
   const handlingChangeNewPass = (e) => {
     setNewPass(e.target.value);
   };
+
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId("");
+    setWardId("");
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+  };
+
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...userProfile, avatar: imagePath };
-        setUserProfile(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
   const handlingClickUpload = () => {
@@ -183,7 +174,7 @@ function Home() {
         let tempDOB = dayjs(temp.dob).format("YYYY/MM/DD");
         let result = { ...temp, dob: tempDOB };
         console.log(result);
-        const message = EditProfile(result, cookies["token"]);
+        const message = EditProfile(result, token);
         console.log(message);
         window.location.reload();
       }
@@ -222,7 +213,7 @@ function Home() {
           let result = { ...reqUser, dob: tempDOB };
           console.log(result);
           messageRef.current.style.display = "none";
-          const message = EditProfile(result, cookies["token"]);
+          const message = EditProfile(result, token);
           console.log(message);
           window.location.reload();
         }
@@ -251,14 +242,28 @@ function Home() {
     }
     await delete final.oldPassword;
     final.dob = dayjs(final.dob).format("YYYY/MM/DD");
-    const message = await EditProfile(final, cookies["token"]);
-    console.log(message);
-    await switchRef.current.click();
-    await user.mutate(); // mutate data
+    console.log(final);
+    // const message = await EditProfile(final, token);
+    // console.log(message);
+    // await switchRef.current.click();
+    // await user.mutate(); // mutate data
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");
   };
+
+  useEffect(() => {
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
+  }, [provinceId, districtId]);
 
   if (user.isLoading) {
     return <>Loading...</>;
@@ -323,6 +328,19 @@ function Home() {
                   address: user.data.address,
                   gender: user.data.gender,
                   dob: dayjs(user.data.dob, "YYYY/MM/DD"),
+                  province: {
+                    value: "Đắk Lắk",
+                    key: "210",
+                  },
+                  district: {
+                    value: "Krong Buk",
+                    key: "1463",
+                  },
+                  ward: {
+                    value: "Chư KBô",
+                    key: "21805",
+                  },
+                  address: "89 Thôn An Bình, Xã ChuKPo, Huỵen KrongBuk ",
                 }}
               >
                 <div className={Styles["profile-form-input-container"]}>
@@ -407,6 +425,165 @@ function Home() {
                       <span>{user.data.phone}</span>
                     )}
                   </div>
+
+                  {isEditMode ? (
+                    <div className={Styles["profile-col"]}>
+                      <span className={Styles["profile-row1"]}>Tỉnh</span>
+                      <span className={Styles["profile-row2"]}>
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="province"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập tỉnh thành",
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder={"Tỉnh thành"}
+                            dropdownStyle={{
+                              width: "430px",
+                              zIndex: "99999999",
+                            }}
+                            placement="bottomRight"
+                            labelInValue={true}
+                            showSearch
+                            size="middle"
+                            onChange={handleChangeSelectProvince}
+                          >
+                            {provinces.isLoading && (
+                              <>
+                                <Option>HELLO</Option>
+                              </>
+                            )}
+                            {provinces.data ? (
+                              provinces.data.data.map((province) => {
+                                return (
+                                  <Option
+                                    key={province.ProvinceID}
+                                    value={province.ProvinceName}
+                                  >
+                                    {province.ProvinceName}
+                                  </Option>
+                                );
+                              })
+                            ) : (
+                              <>
+                                <Empty />
+                              </>
+                            )}
+                            {/* <Option value={1}>ABC</Option> */}
+                          </Select>
+                        </Form.Item>
+                      </span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+
+                  {isEditMode ? (
+                    <div className={Styles["profile-col"]}>
+                      <span className={Styles["profile-row1"]}>
+                        Quận, huyện
+                      </span>
+                      <span className={Styles["profile-row2"]}>
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="district"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập quận, huyện",
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder={"Quận huyện"}
+                            dropdownStyle={{
+                              width: "430px",
+                              zIndex: "99999999",
+                            }}
+                            placement="bottomRight"
+                            labelInValue={true}
+                            showSearch
+                            onChange={handleChangeSelectDistrict}
+                            disabled={isDisabledDistricts}
+                          >
+                            {districts.data ? (
+                              districts.data.data.map((district) => {
+                                return (
+                                  <Option
+                                    value={district.DistrictName}
+                                    key={district.DistrictID}
+                                  >
+                                    {district.DistrictName}
+                                  </Option>
+                                );
+                              })
+                            ) : (
+                              <Empty />
+                            )}
+                            {/* <Option value={1}>ABC</Option> */}
+                          </Select>
+                        </Form.Item>
+                      </span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+
+                  {isEditMode ? (
+                    <div className={Styles["profile-col"]}>
+                      <span className={Styles["profile-row1"]}>Xã, Phường</span>
+                      <span className={Styles["profile-row2"]}>
+                        <Form.Item
+                          className={Styles["input-wrapper"]}
+                          name="ward"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Hãy nhập xã, phường",
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder={"Xã, Phường"}
+                            dropdownStyle={{
+                              width: "430px",
+                              zIndex: "99999999",
+                            }}
+                            placement="bottomRight"
+                            labelInValue={true}
+                            showSearch
+                            onChange={handleChangeSelectWard}
+                            disabled={isDisabledWards}
+                          >
+                            {wards.data ? (
+                              wards.data.data.map((ward) => {
+                                return (
+                                  <Option
+                                    value={ward.WardName}
+                                    key={ward.WardCode}
+                                  >
+                                    {ward.WardName}
+                                  </Option>
+                                );
+                              })
+                            ) : (
+                              <>
+                                <Empty />
+                              </>
+                            )}
+                            {/* <Option value={1}>ABC</Option> */}
+                          </Select>
+                        </Form.Item>
+                      </span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+
                   <div className={Styles["profile-col"]}>
                     <span className={Styles["profile-row1"]}>Địa chỉ</span>
                     {isEditMode ? (

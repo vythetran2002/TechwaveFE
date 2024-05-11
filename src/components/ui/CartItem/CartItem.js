@@ -177,7 +177,6 @@ function CartItem(props) {
           <div className={Styles["item-info-container"]}>
             <div className={Styles["item-name-cate-container"]}>
               <Link
-                style={{ color: "black" }}
                 href={"/product/" + props.item.product.product_id}
                 className={Styles["name"]}
               >

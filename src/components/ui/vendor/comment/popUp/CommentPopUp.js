@@ -50,18 +50,30 @@ function CommentPopUp(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
         setImgSrc(imagePath);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
+    // promiseResult
+    //   .then((result) => {
+    //     const imagePath = result.imagePath;
+    //     console.log("imagePath:", imagePath);
+    //     setAvatarSrc(imagePath);
+    //     let temp = { ...props.product, image: imagePath };
+    //     props.updateProduct(temp);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Lỗi:", error);
+    //   });
   }
 
   const handleSubmit = (e) => {

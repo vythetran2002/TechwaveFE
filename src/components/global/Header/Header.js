@@ -447,15 +447,7 @@ function Header(props) {
               </button>
               <button className={Styles["cart-button"]} onClick={showDrawer}>
                 <div className={Styles["cart-title-container"]}>
-                  <span
-                    style={{
-                      textAlign: "start",
-                      flex: "1",
-                      marginTop: "3px",
-                    }}
-                  >
-                    Giỏ hàng
-                  </span>
+                  <span className={Styles["cart-label"]}>Giỏ hàng</span>
                   {/* <span style={{ textAlign: "start", flex: "0.9" }}>
                     của tôi
                   </span> */}

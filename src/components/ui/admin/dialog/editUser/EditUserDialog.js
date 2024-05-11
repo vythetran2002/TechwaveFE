@@ -6,7 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import { Input, Radio, Form, Button, DatePicker, Select } from "antd";
+import { Input, Radio, Form, Button, DatePicker, Select, Empty } from "antd";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Image from "next/image";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
+import { GHN_API } from "@/api/GHN/GHN";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -51,12 +52,25 @@ const sxStyle = {
   },
 };
 
+const LocationProvider = new GHN_API();
+
 export default function EditUserDialog(props) {
   const { id, data, updateData, token, mutating } = props;
   const account = useFetchAccountById(id);
   const messageRef = useRef();
 
   const [avatarSrc, setAvatarSrc] = useState(null);
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+  const [wardId, setWardId] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(false);
+  const [isDisabledWards, setIsDisabledWards] = useState(false);
+  const [isDisabledAdress, setIsDisabledAddress] = useState(false);
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
 
   //Refs
   const inputFileRef = useRef();
@@ -70,22 +84,54 @@ export default function EditUserDialog(props) {
   //   console.log(data);
   // }, [data]);
 
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId(null);
+    setWardId(null);
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+  };
+
+  // useEffect(() => {
+  //   if (provinceId) {
+  //     setIsDisabledDistricts(false);
+  //   } else {
+  //     setIsDisabledDistricts(true);
+  //   }
+  //   if (districtId) {
+  //     setIsDisabledWards(false);
+  //   } else {
+  //     setIsDisabledWards(true);
+  //   }
+  //   if (wardId) {
+  //     setIsDisabledAddress(false);
+  //   } else {
+  //     setIsDisabledAddress(true);
+  //   }
+  // }, [provinceId, districtId, wardId]);
+
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        // console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...data, avatar: imagePath };
-        updateData(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
   const onFinish = async (values) => {
@@ -159,6 +205,19 @@ export default function EditUserDialog(props) {
                 password: data.password,
                 phone: data.phone,
                 username: data.username,
+                province: {
+                  value: "Đắk Lắk",
+                  key: "210",
+                },
+                district: {
+                  value: "Krong Buk",
+                  key: "1463",
+                },
+                ward: {
+                  value: "Chư KBô",
+                  key: "21805",
+                },
+                address: "89 Thôn An Bình, Xã ChuKPo, Huỵen KrongBuk ",
               }}
             >
               <div className={Styles["add-user-field-container"]}>
@@ -318,6 +377,140 @@ export default function EditUserDialog(props) {
                   <Input placeholder="Số điện thoại" />
                 </Form.Item>
               </div>
+              <div className={Styles["add-user-field-container"]}>
+                <span className={Styles["add-user-field-label"]}>
+                  Tỉnh thành:
+                </span>
+
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tỉnh thành",
+                    },
+                  ]}
+                >
+                  <Select
+                    value={provinceId}
+                    placeholder={"Tỉnh thành"}
+                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectProvince}
+                  >
+                    {provinces.isLoading && (
+                      <>
+                        <Option>HELLO</Option>
+                      </>
+                    )}
+                    {provinces.data ? (
+                      provinces.data.data.map((province) => {
+                        return (
+                          <Option
+                            key={province.ProvinceID}
+                            value={province.ProvinceName}
+                          >
+                            {province.ProvinceName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Empty />
+                      </>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className={Styles["add-user-field-container"]}>
+                <span className={Styles["add-user-field-label"]}>
+                  Quận, huyện:
+                </span>
+
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="district"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập quận, huyện",
+                    },
+                  ]}
+                >
+                  <Select
+                    value={districtId}
+                    placeholder={"Quận huyện"}
+                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectDistrict}
+                    disabled={isDisabledDistricts}
+                  >
+                    {districts.data ? (
+                      districts.data.data.map((district) => {
+                        return (
+                          <Option
+                            value={district.DistrictName}
+                            key={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <Empty />
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className={Styles["add-user-field-container"]}>
+                <span className={Styles["add-user-field-label"]}>
+                  Xã, Phường:
+                </span>
+
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="ward"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập xã, phường",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder={"Xã, Phường"}
+                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    value={wardId}
+                    onChange={handleChangeSelectWard}
+                    disabled={isDisabledWards}
+                  >
+                    {wards.data ? (
+                      wards.data.data.map((ward) => {
+                        return (
+                          <Option value={ward.WardName} key={ward.WardCode}>
+                            {ward.WardName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Empty />
+                      </>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
               <div
                 className={Styles["add-user-field-container"]}
                 style={{
@@ -336,12 +529,7 @@ export default function EditUserDialog(props) {
                     },
                   ]}
                 >
-                  <TextArea
-                    showCount
-                    maxLength={100}
-                    placeholder="Địa chỉ"
-                    style={{ height: 100, resize: "none" }}
-                  />
+                  <TextArea showCount maxLength={100} placeholder="Địa chỉ" />
                 </Form.Item>
               </div>
 
@@ -349,23 +537,21 @@ export default function EditUserDialog(props) {
                 <span className={Styles["add-user-field-label"]}>
                   Giới tính:
                 </span>
-                <div className={Styles["add-user-field-gender-wrapper"]}>
-                  <Form.Item
-                    className={Styles["input-wrapper"]}
-                    name="gender"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Hãy nhập giới tính tài khoản",
-                      },
-                    ]}
-                  >
-                    <Radio.Group>
-                      <Radio value={"Nam"}>Nam</Radio>
-                      <Radio value={"Nữ"}>Nữ</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </div>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="gender"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập giới tính tài khoản",
+                    },
+                  ]}
+                >
+                  <Radio.Group>
+                    <Radio value={"Nam"}>Nam</Radio>
+                    <Radio value={"Nữ"}>Nữ</Radio>
+                  </Radio.Group>
+                </Form.Item>
               </div>
               <div className={Styles["add-user-field-container"]}>
                 <span className={Styles["add-user-field-label"]}>
@@ -385,6 +571,7 @@ export default function EditUserDialog(props) {
                     style={{ width: "100%" }}
                     placeholder="Ngày sinh"
                     format={"DD/MM/YYYY"}
+                    dropdownClassName={Styles["date-dropdown"]}
                   />
                 </Form.Item>
               </div>

@@ -62,20 +62,20 @@ export default function EditCateDialog(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        // console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...cate, image: imagePath };
-        updateCate(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
   // const handleSubmit = (e) => {

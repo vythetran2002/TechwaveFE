@@ -5,6 +5,7 @@
   flex-direction: row;
   gap: 10px;
   cursor: pointer;
+  align-items: center;
 }
 
 .item-img-container {
@@ -42,12 +43,22 @@
   gap: 10px;
 }
 .name {
+  color: black;
+  display: block;
   font-size: 14px;
   font-style: bold;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .cate {
   font-size: 13px;
   font-weight: 300;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .quantity {
   display: flex;

@@ -28,9 +28,49 @@ const roboto = Roboto({
   display: "swap",
 });
 
+const sxStyle = {
+  "& .MuiDialog-container:hover": {
+    cursor: "pointer",
+  },
+  "& .MuiPaper-root": {
+    zIndex: "1002",
+
+    cursor: "default",
+  },
+  "& .MuiTypography-root": {
+    padding: "10px 14px 10px 24px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: "24px",
+  },
+  "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
+    right: 55,
+  },
+};
+
+const options = {
+  items: 1,
+  loop: true,
+  autoplay: true,
+  autoplayTimeout: 5000,
+  nav: true,
+  dots: false,
+  navContainerClass: Styles["top-carousel-nav-container"],
+  navClass: [
+    Styles["top-carousel-prev-buton"],
+    Styles["top-carousel-next-buton"],
+  ],
+  stageClass: Styles["top-carousel-stage"],
+  stageOuterClass: Styles["top-carousel-stage-outer"],
+  navText: [
+    `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg></div>`,
+    `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg></div>`,
+  ],
+};
+
 function ItemDetail(props) {
   const item = props.item;
-  const { img, updateImg } = props;
+  const [img, setImg] = useState(null);
   // console.log(item);
   const [reload, setReload] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -47,55 +87,15 @@ function ItemDetail(props) {
 
   const optionRefs = useRef({});
 
-  const sxStyle = {
-    "& .MuiDialog-container:hover": {
-      cursor: "pointer",
-    },
-    "& .MuiPaper-root": {
-      zIndex: "1002",
-
-      cursor: "default",
-    },
-    "& .MuiTypography-root": {
-      padding: "10px 14px 10px 24px",
-    },
-    "& .MuiDialogActions-root": {
-      padding: "24px",
-    },
-    "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
-      right: 55,
-    },
-  };
-
   // const handleClick = (index, event) => {
   //   console.log(index);
   // };
 
   // top Carousel configs
 
-  const options = {
-    items: 1,
-    loop: true,
-    autoplay: true,
-    autoplayTimeout: 5000,
-    nav: true,
-    dots: false,
-    navContainerClass: Styles["top-carousel-nav-container"],
-    navClass: [
-      Styles["top-carousel-prev-buton"],
-      Styles["top-carousel-next-buton"],
-    ],
-    stageClass: Styles["top-carousel-stage"],
-    stageOuterClass: Styles["top-carousel-stage-outer"],
-    navText: [
-      `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg></div>`,
-      `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg></div>`,
-    ],
-  };
-
   const handleClick = (option, id, img) => {
     setId(id);
-    updateImg(img);
+    setImg(img);
     setReload(!reload);
   };
 
@@ -347,7 +347,10 @@ function ItemDetail(props) {
                                 justifyContent: "center",
                               }}
                             >
-                              <span style={{ width: "100%" }}>
+                              <span
+                                className={Styles["option-name-lable"]}
+                                style={{ width: "100%" }}
+                              >
                                 {option.name}
                               </span>
                             </div>

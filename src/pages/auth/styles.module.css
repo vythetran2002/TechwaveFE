@@ -14,21 +14,12 @@
   padding-bottom: 100px;
 }
 
-.input {
-  width: 100%;
-  background-color: #88a3d2;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  padding: 0 20px;
-  color: var(--white);
-  font-size: 17px;
-}
 .input::placeholder {
   color: white;
   opacity: 0.5;
 }
 .form-container {
+  gap: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -98,7 +89,6 @@
 .input {
   width: 100%;
   height: 45px;
-  margin-bottom: 25px;
   position: relative;
   width: 100%;
   height: 45px;
@@ -108,7 +98,6 @@
   outline: none;
   padding: 0px 10px;
   color: var(--white);
-  font-size: 17px;
 }
 .input::placeholder {
   color: white;
@@ -212,9 +201,7 @@
   -webkit-box-shadow: -20px -24px 16px 0px rgb(17, 24, 39);
   -moz-box-shadow: -20px -24px 16px 0px rgba(0, 0, 0, 0.75);
 }
-.alt-input {
-  margin-bottom: 25px;
-}
+
 .textarea {
   width: 100%;
   background-color: #88a3d2;
@@ -231,4 +218,47 @@
 }
 .ant-select-dropdown {
   z-index: 9999999 !important;
+}
+.input-wrapper {
+  margin: 0;
+  height: 100%;
+}
+.text-area-wrapper {
+  width: 100%;
+  margin-top: 10px;
+}
+.phone-input-selector {
+  width: 100%;
+  height: 45px;
+  position: relative;
+  width: 100%;
+  height: 45px;
+  background-color: #88a3d2 !important;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 0px 10px;
+  color: var(--white);
+  font-size: 17px;
+}
+.alt-input {
+  height: 45px;
+  margin-top: 10px;
+}
+.textarea {
+  width: 100%;
+  height: 45px;
+  position: relative;
+  width: 100%;
+  background-color: #88a3d2;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 0px 10px;
+  color: var(--white);
+}
+.login-username-pass-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

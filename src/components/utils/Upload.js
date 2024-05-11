@@ -17,7 +17,8 @@ export const uploadImage = async (file) => {
       formData,
       config
     );
-    toast.success("Uploaded");
+    // toast.success("Uploaded");
+
     return response.data;
   } catch (error) {
     toast.error("error");

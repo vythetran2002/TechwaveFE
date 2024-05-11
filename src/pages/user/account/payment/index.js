@@ -1,46 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import Styles from "./styles.module.css";
 import Layout from "@/components/layout/Layout";
-import UserLayout from "@/components/layout/UserLayout";
 import Head from "next/head";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import dynamic from "next/dynamic";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Image from "next/image";
 import images from "@/assets/images";
-import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-import PaymentItem from "@/components/ui/PaymentItem/PaymentItem";
+import { LoadingOutlined } from "@ant-design/icons";
+
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
-import { Button, Modal } from "antd";
+import { Button, Modal, Input, Form, Select, Spin } from "antd";
 import Link from "next/link";
-import OutlinedFlagRoundedIcon from "@mui/icons-material/OutlinedFlagRounded";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { SendPaymentAmount } from "@/api/user/sendPaymentAmount";
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
+import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import Empty from "antd/lib/empty";
 import { MakeShipPayment } from "@/api/user/MakeShipPayment";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
 import PaymentShop from "@/components/ui/PaymentShop/PaymentShop";
-
-const Input = dynamic(() => import("antd/es/input"), { ssr: false });
-
-const calculateTotalValue = (arr) => {
-  if (arr) {
-    return arr.reduce((total, obj) => {
-      if (obj.product.promotional_price) {
-        return total + obj.product.promotional_price * obj.quantity;
-      } else {
-        return total + obj.product.price * obj.quantity;
-      }
-    }, 0);
-  }
-};
+import { regexPhoneNumber } from "@/assets/utils/regex";
+import { GHN_API } from "@/api/GHN/GHN";
+import { calculateTotalValue } from "@/assets/utils/calculateTotalValue";
+import useFetchInitialFreeShip from "@/api/user/payment/useFetchInitialFreeShip";
+import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
+import { calculateDiscountFreeShip } from "@/assets/utils/calculateDiscountFreeShip";
+import useFetchVoucherByShopId from "@/api/user/payment/useFetchVoucherByShopId";
+import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -71,11 +61,17 @@ function refactorProducts(products) {
   }
 }
 
+const { TextArea } = Input;
+
+const LocationProvider = new GHN_API();
+
 function Index() {
+  const user = useFetchUserProfile();
   const router = useRouter();
   const token = Cookies.get("token");
 
   //states
+  const [isUserDataProcessed, setIsUserDataProcessed] = useState(false);
   const [amount, setAmount] = useState();
   const [adminVoucherValue, setAdminVoucherValue] = useState(1);
   const querry = router.query;
@@ -90,12 +86,51 @@ function Index() {
     express: null,
     carts: null,
   });
+  const [shopId, setShopId] = useState(null);
   const [option, setOption] = useState("ship");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalVendorOpen, setIsModalVendorOpen] = useState(false);
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+  const [wardId, setWardId] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
+  const [isDisabledWards, setIsDisabledWards] = useState(true);
+  const voucherFreeShip = useFetchInitialFreeShip(
+    calculateTotalValue(objectsArray)
+  );
+
+  const selectRef = useRef(null);
+
+  const handleButtonClick = () => {
+    const selectedValue = selectRef.current?.state.value;
+    console.log("Selected value:", selectedValue);
+  };
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
+  const vendorVouchers = useFetchVoucherByShopId(shopId);
+  const techwaveVouchers = useFetchVouchersUser();
+
+  console.log(vendorVouchers);
+
   const messageRef = useRef();
 
-  //console.log(refactorProducts(objectsArray));
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId("");
+    setWardId("");
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+  };
 
   const handleClickSend = () => {
     let temp = {
@@ -109,7 +144,7 @@ function Index() {
     if (checkNullProperties(temp) && option) {
       messageRef.current.style.display = "none";
       if (option == "ship") {
-        // console.log(temp);
+        // console.log (temp);
         // console.log("ship thwongf");
         try {
           const message = MakeShipPayment(temp, token);
@@ -203,20 +238,45 @@ function Index() {
     setAdminVoucherValue(e.target.value);
   };
 
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   useEffect(() => {
+    if (user.data && !isUserDataProcessed) {
+      setProvinceId(user.data.address.province_id);
+      setDistrictId(user.data.address.district_id);
+      setWardId(user.data.address.ward_id);
+      setIsUserDataProcessed(true);
+    }
+
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
     if (router.query.data) {
       try {
         const decodedData = decodeURIComponent(router.query.data);
         const parsedData = JSON.parse(decodedData);
         setObjectsArray(parsedData);
+
         //  console.log(router.query.data);
       } catch (error) {
         console.error("Error parsing data", error);
       }
     }
-  }, [router.query.data, shipFee]);
+  }, [router.query.data, shipFee, provinceId, districtId, user.data]);
 
-  if (objectsArray) {
+  if (objectsArray && user.data) {
     return (
       <>
         <Head>
@@ -224,35 +284,239 @@ function Index() {
         </Head>
         <Layout>
           <Toaster />
-          <div className={Styles["payment-container"]}>
-            <form className={Styles["user-input-container"]}>
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            className={Styles["payment-container"]}
+            initialValues={{
+              fullname: user.data.fullname,
+              phone: user.data.phone,
+              province: {
+                value: user.data.address.province,
+              },
+              district: {
+                key: user.data.address.district_id,
+                value: user.data.address.district,
+              },
+              ward: {
+                key: user.data.address.ward_id,
+                value: user.data.address.ward,
+              },
+              address: user.data.address.address,
+            }}
+          >
+            <div className={Styles["user-input-container"]}>
               <span style={{ fontSize: "20px", fontWeight: "400" }}>
                 Thông tin mua hàng
               </span>
               <div>
-                <Input
-                  placeholder="Họ và tên"
-                  onChange={onChangeName}
-                  prefix={<PersonOutlineOutlinedIcon />}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="fullname"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập họ và tên",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Họ và tên"
+                    onChange={onChangeName}
+                    prefix={<UserOutlined />}
+                    size="large"
+                  />
+                </Form.Item>
               </div>
               <div>
-                <Input
-                  placeholder="Số điện thoại"
-                  onChange={onChangePhone}
-                  prefix={<LocalPhoneOutlinedIcon />}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="phone"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập số điện thoại",
+                    },
+                    {
+                      pattern: regexPhoneNumber,
+                      message: "Số điện thoại không hợp lệ",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Số điện thoại"
+                    onChange={onChangePhone}
+                    prefix={<PhoneOutlined />}
+                    size="large"
+                  />
+                </Form.Item>
               </div>
               <div>
-                <Input
-                  placeholder="Địa chỉ"
-                  onChange={onChangeAddress}
-                  prefix={<PlaceOutlinedIcon />}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tỉnh thành",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder={"Tỉnh thành"}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    size="middle"
+                    onChange={handleChangeSelectProvince}
+                  >
+                    {provinces.isLoading && (
+                      <>
+                        <Select.Option></Select.Option>
+                      </>
+                    )}
+                    {provinces.data ? (
+                      provinces.data.data.map((province) => {
+                        return (
+                          <Select.Option
+                            key={province.ProvinceID}
+                            value={province.ProvinceName}
+                          >
+                            {province.ProvinceName}
+                          </Select.Option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Select.Option>
+                          <Empty />
+                        </Select.Option>
+                      </>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
               </div>
-            </form>
+              <div>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="district"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập quận, huyện",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder={"Quận huyện"}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectDistrict}
+                    disabled={isDisabledDistricts}
+                  >
+                    {districts.data ? (
+                      districts.data.data.map((district) => {
+                        return (
+                          <Select.Option
+                            value={district.DistrictName}
+                            key={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </Select.Option>
+                        );
+                      })
+                    ) : (
+                      <Select.Option>
+                        <Empty />
+                      </Select.Option>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="ward"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập xã, phường",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder={"Xã, Phường"}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectWard}
+                    disabled={isDisabledWards}
+                  >
+                    {wards.data ? (
+                      wards.data.data.map((ward) => {
+                        return (
+                          <Select.Option
+                            value={ward.WardName}
+                            key={ward.WardCode}
+                          >
+                            {ward.WardName}
+                          </Select.Option>
+                        );
+                      })
+                    ) : (
+                      <Select.Option>
+                        <Empty />
+                      </Select.Option>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập địa chỉ",
+                    },
+                  ]}
+                >
+                  <TextArea
+                    placeholder="Địa chỉ"
+                    autoSize={{
+                      minRows: 2,
+                      maxRows: 6,
+                    }}
+                  />
+                </Form.Item>
+              </div>
+            </div>
             <div className={Styles["ship-payment-container"]}>
-              <div className={Styles["ship-container"]}>
+              <div className={Styles["invoice-header-container"]}>
+                Đơn hàng ({objectsArray.length} sản phẩm)
+              </div>
+              {refactorProducts(objectsArray).map((shop, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <PaymentShop
+                      updateShopId={setShopId}
+                      countShipFee={LocationProvider.countShippingFee}
+                      userDistrictId={districtId}
+                      shopDistrictId={shop[0].store.district_id}
+                      shopWardId={shop[0].store.ward_id}
+                      userWardId={wardId}
+                      items={shop}
+                      handleOpen={showModalVendor}
+                    />
+                  </React.Fragment>
+                );
+              })}
+              {/* <div className={Styles["ship-container"]}>
                 <span style={{ fontSize: "20px", fontWeight: "400" }}>
                   Vận chuyển
                 </span>
@@ -277,83 +541,11 @@ function Index() {
                     </div>
                   </RadioGroup>
                 </div>
-              </div>
-              <div className={Styles["ship-container"]}>
-                <span>Thanh toán</span>
-                <div className={Styles["ship-wrapper"]}>
-                  <RadioGroup defaultValue={option} onChange={onChangeOption}>
-                    <div className={Styles["ship-item-wrapper"]}>
-                      <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={"vnpay"} />
-                        <span>Thanh toán qua VNPAY</span>
-                      </div>
-                      <div className={Styles["payment-img-wrapper"]}>
-                        <Image
-                          src={images.vnpay}
-                          alt=""
-                          className={Styles["vnpay"]}
-                        />
-                      </div>
-                    </div>
-                    {/* <div className={Styles["ship-item-wrapper"]}>
-                      <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={"nganluong"} />
-                        <span>Thanh toán qua ngân lượng</span>
-                      </div>
-                      <div className={Styles["payment-img-wrapper"]}>
-                        <Image
-                          src={images.nganluong}
-                          alt=""
-                          className={Styles["nganluong"]}
-                        />
-                      </div>
-                    </div> */}
-                    {/* <div className={Styles["ship-item-wrapper"]}>
-                      <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={"moca"} />
-                        <span>Thanh toán qua Moca</span>
-                      </div>
-                      <div className={Styles["payment-img-wrapper"]}>
-                        <Image
-                          src={images.moca}
-                          alt=""
-                          className={Styles["moca"]}
-                        />
-                      </div>
-                    </div> */}
-                    {/* <div className={Styles["ship-item-wrapper"]}>
-                      <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={"zaloPay"} />
-                        <span>Thanh toán qua Zalo Pay</span>
-                      </div>
-                      <div className={Styles["payment-img-wrapper"]}>
-                        <Image
-                          src={images.zaloPay}
-                          alt=""
-                          className={Styles["zaloPay"]}
-                        />
-                      </div>
-                    </div> */}
-                    <div className={Styles["ship-item-wrapper"]}>
-                      <div className={Styles["checkbox-name-wrapper"]}>
-                        <Radio value={"ship"} />
-                        <span>Nhận hàng trực tiếp</span>
-                      </div>
-                      <div className={Styles["payment-img-wrapper"]}>
-                        <Image
-                          src={images.ship}
-                          alt=""
-                          className={Styles["zaloPay"]}
-                        />
-                      </div>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </div>
+              </div> */}
             </div>
             <div className={Styles["invoice-container"]}>
               <div className={Styles["invoice-header-container"]}>
-                Đơn hàng ({objectsArray.length} sản phẩm)
+                Thanh toán
               </div>
               <div className={Styles["item-price-container"]}>
                 <div className={Styles["item-container"]}>
@@ -368,17 +560,81 @@ function Index() {
                   ) : (
                     <>EMPTY</>
                   )} */}
-
-                  {refactorProducts(objectsArray).map((shop, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <PaymentShop
-                          items={shop}
-                          handleOpen={showModalVendor}
+                  <div className={Styles["ship-container"]}>
+                    <div className={Styles["ship-wrapper"]}>
+                      <RadioGroup
+                        defaultValue={option}
+                        onChange={onChangeOption}
+                      >
+                        <div className={Styles["ship-item-wrapper"]}>
+                          <div className={Styles["checkbox-name-wrapper"]}>
+                            <Radio value={"vnpay"} />
+                            <span>Thanh toán qua VNPAY</span>
+                          </div>
+                          <div className={Styles["payment-img-wrapper"]}>
+                            <Image
+                              src={images.vnpay}
+                              alt=""
+                              className={Styles["vnpay"]}
+                            />
+                          </div>
+                        </div>
+                        {/* <div className={Styles["ship-item-wrapper"]}>
+                      <div className={Styles["checkbox-name-wrapper"]}>
+                        <Radio value={"nganluong"} />
+                        <span>Thanh toán qua ngân lượng</span>
+                      </div>
+                      <div className={Styles["payment-img-wrapper"]}>
+                        <Image
+                          src={images.nganluong}
+                          alt=""
+                          className={Styles["nganluong"]}
                         />
-                      </React.Fragment>
-                    );
-                  })}
+                      </div>
+                    </div> */}
+                        {/* <div className={Styles["ship-item-wrapper"]}>
+                      <div className={Styles["checkbox-name-wrapper"]}>
+                        <Radio value={"moca"} />
+                        <span>Thanh toán qua Moca</span>
+                      </div>
+                      <div className={Styles["payment-img-wrapper"]}>
+                        <Image
+                          src={images.moca}
+                          alt=""
+                          className={Styles["moca"]}
+                        />
+                      </div>
+                    </div> */}
+                        {/* <div className={Styles["ship-item-wrapper"]}>
+                      <div className={Styles["checkbox-name-wrapper"]}>
+                        <Radio value={"zaloPay"} />
+                        <span>Thanh toán qua Zalo Pay</span>
+                      </div>
+                      <div className={Styles["payment-img-wrapper"]}>
+                        <Image
+                          src={images.zaloPay}
+                          alt=""
+                          className={Styles["zaloPay"]}
+                        />
+                      </div>
+                    </div> */}
+                        <div className={Styles["ship-item-wrapper"]}>
+                          <div className={Styles["checkbox-name-wrapper"]}>
+                            <Radio value={"ship"} />
+                            <span>Nhận hàng trực tiếp</span>
+                          </div>
+                          <div className={Styles["payment-img-wrapper"]}>
+                            <Image
+                              src={images.ship}
+                              alt=""
+                              className={Styles["zaloPay"]}
+                            />
+                          </div>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  </div>
+
                   {/* <PaymentShop items={objectsArray} /> */}
                 </div>
                 <div
@@ -404,13 +660,32 @@ function Index() {
                 >
                   <div className={Styles["price-wrapper"]}>
                     <span>Tạm tính</span>
+
                     <span>
                       {FormatPrice(calculateTotalValue(objectsArray))}
                     </span>
                   </div>
                   <div className={Styles["price-wrapper"]}>
                     <span>Phí vận chuyển</span>
-                    <span>{FormatPrice(shipFee)}đ</span>
+                    {voucherFreeShip.data ? (
+                      <div className={Styles["total-ship-fee-wrapper"]}>
+                        <span style={{ textDecoration: "line-through" }}>
+                          {FormatPrice(shipFee)}
+                        </span>
+                        <span>
+                          {FormatPrice(
+                            calculateDiscountFreeShip(
+                              shipFee,
+                              voucherFreeShip.data.result
+                            )
+                          )}
+                        </span>
+                      </div>
+                    ) : (
+                      <div>
+                        <span>{FormatPrice(shipFee)}đ</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className={Styles["price-container"]}>
@@ -451,18 +726,14 @@ function Index() {
                       <span>Quay trở lại mua sắm</span>
                     </Link>
 
-                    <Button
-                      size="large"
-                      type="primary"
-                      onClick={handleClickSend}
-                    >
+                    <Button size="large" type="primary" htmlType="submit">
                       ĐẶT HÀNG
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Form>
           <Modal
             title="Techwave vouchers"
             open={isModalOpen}
@@ -472,7 +743,18 @@ function Index() {
             <RadioGroup>
               <div className={Styles["voucher-admin-container"]}>
                 <div className={Styles["voucher-admin-wrapper"]}>
-                  <VoucherCard role="admin">
+                  {techwaveVouchers.data ? (
+                    techwaveVouchers.data.data.map((voucher, index) => {
+                      return (
+                        <VoucherCard role="admin" data={voucher} key={index}>
+                          <Radio value={voucher.discount_id} name="b"></Radio>
+                        </VoucherCard>
+                      );
+                    })
+                  ) : (
+                    <>Loading ...</>
+                  )}
+                  {/* <VoucherCard role="admin">
                     <Radio value={1} name="a"></Radio>
                   </VoucherCard>
                   <VoucherCard role="admin">
@@ -480,7 +762,7 @@ function Index() {
                   </VoucherCard>
                   <VoucherCard role="admin">
                     <Radio value={3} name="c"></Radio>
-                  </VoucherCard>
+                  </VoucherCard> */}
                 </div>
               </div>
             </RadioGroup>
@@ -494,15 +776,24 @@ function Index() {
             <RadioGroup>
               <div className={Styles["voucher-admin-container"]}>
                 <div className={Styles["voucher-admin-wrapper"]}>
-                  <VoucherCard role="vendor">
-                    <Radio value={1} name="a"></Radio>
-                  </VoucherCard>
-                  <VoucherCard role="vendor">
+                  {vendorVouchers.data?.data ? (
+                    vendorVouchers.data.data.map((voucher, index) => {
+                      return (
+                        <VoucherCard role="vendor" data={voucher} key={index}>
+                          <Radio value={voucher.discount_id} name="a"></Radio>
+                        </VoucherCard>
+                      );
+                    })
+                  ) : (
+                    <React.Fragment>Loading...</React.Fragment>
+                  )}
+
+                  {/* <VoucherCard role="vendor">
                     <Radio value={2} name="b"></Radio>
                   </VoucherCard>
                   <VoucherCard role="vendor">
                     <Radio value={3} name="c"></Radio>
-                  </VoucherCard>
+                  </VoucherCard> */}
                 </div>
               </div>
             </RadioGroup>

@@ -3,30 +3,25 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-import dynamic from "next/dynamic";
-import { Button } from "antd";
-import ProductList from "@/components/ui/vendor/ProductList";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import AddProductDialog from "@/components/ui/vendor/dialog/addProduct/AddProductDialog";
-import EditProductDialog from "@/components/ui/vendor/dialog/editProduct/EditProductDialog";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import useFetchProductById from "@/api/products/useFetchProductById";
 import { useRouter } from "next/router";
 import OptionList from "@/components/ui/vendor/option/OptionList";
 import AddOptionDialog from "@/components/ui/vendor/dialog/addOption/AddOptionDialog";
-import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import EditOptionDialog from "@/components/ui/vendor/dialog/editOption/EditOptionDialog";
+import useFetchOptionByProductId from "@/api/vendor/useFetchOptionByProductId";
+
 function Index() {
   const token = Cookies.get("token");
   const router = useRouter();
   const slug = router.query.slug;
-
   const product = useFetchProductById(slug);
+  const { mutate } = useFetchOptionByProductId(slug);
 
   //   console.log(product);
   // states
@@ -141,7 +136,7 @@ function Index() {
                 <span>Thêm Phân loại</span>
               </div>
             </div>
-            <div className={Styles["markup-container"]}>
+            {/* <div className={Styles["markup-container"]}>
               <div className={Styles["markup-item"]}>
                 <span>Foundation</span>
                 <ClearOutlinedIcon className={Styles["markup-icon"]} />
@@ -150,7 +145,7 @@ function Index() {
                 <span>HaTHH</span>
                 <ClearOutlinedIcon className={Styles["markup-icon"]} />
               </div>
-            </div>
+            </div> */}
             <OptionList
               productId={slug}
               token={token}
@@ -159,12 +154,14 @@ function Index() {
               handleCloseDialog={handlingOpenEditProductDialog}
             />
             <AddOptionDialog
+              mutate={mutate}
               id={product.data.product_id}
               token={token}
               isOpen={isOpenAddProductDialog}
               handleClose={handlingCloseAddProductDialog}
             />
             <EditOptionDialog
+              mutate={mutate}
               token={token}
               productId={slug}
               option={currentOption}

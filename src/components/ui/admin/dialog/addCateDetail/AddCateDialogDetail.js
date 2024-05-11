@@ -56,35 +56,21 @@ export default function AddCateDialogDetail(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        // console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...cate, image: imagePath };
-        setCate(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (checkPropertiesNotNull(cate)) {
-      let temp = { ...cate, category_parent_id: props.id.slug };
-      console.log(temp);
-      messageRef.current.style.display = "none";
-      const message = CreateCategory(temp, props.token);
-      console.log(message);
-      // window.location.reload();
-    } else {
-      messageRef.current.style.display = "block";
-    }
-  };
   const handleCloseDialog = () => {
     props.handleClose();
     setAvatarSrc(null);

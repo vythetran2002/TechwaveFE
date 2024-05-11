@@ -5,25 +5,22 @@ import VoucherItemAdmin from "./VoucherItemAdmin";
 import { Pagination } from "@mui/material";
 import useFetchAccount from "@/api/admin/useFetchAccount";
 import { Empty } from "antd";
+import useFetchVouchersAdmin from "@/api/admin/useFetchVoucherAdmin";
 
 function VoucherListAdmin(props) {
   const { status, limit, page, token, updatePage, updateMax } = props;
-  const account = useFetchAccount(status, page, limit, token);
+  const vouchers = useFetchVouchersAdmin();
 
-  useEffect(() => {
-    if (account.data) {
-      updateMax(account.data.total);
-    }
-  }, [account.data]);
+  // useEffect(() => {
+  //   if (account.data) {
+  //     updateMax(account.data.total);
+  //   }
+  // }, [account.data]);
 
-  const handlingMutate = () => {
-    account.mutate();
-  };
-
-  if (account.isLoading) {
+  if (vouchers.isLoading) {
     return <>Loading</>;
   }
-  if (account.isError) {
+  if (vouchers.isError) {
     return <>Error</>;
   } else
     return (
@@ -60,28 +57,26 @@ function VoucherListAdmin(props) {
             </div>
           </div>
           <div>
-            {account.data.results.length != 0 ? (
-              account.data.results.map((account, index) => {
+            {vouchers.isLoading && <>Loading</>}
+            {vouchers.isError && <>Error</>}
+            {vouchers.data ? (
+              vouchers.data.data.map((voucher, index) => {
                 return (
-                  <React.Fragment key={"account" + index}>
+                  <React.Fragment key={index}>
                     <VoucherItemAdmin
-                      reload={handlingMutate}
+                      mutate={vouchers.mutate}
+                      data={voucher}
                       token={props.token}
-                      updateAccount={props.updateAccount}
-                      updateId={props.updateId}
-                      status={props.status}
-                      account={account}
+                      updateVoucher={props.updateVoucher}
                       handleOpenDialog={props.handleOpenDialog}
-                      handleCloseDialog={props.handleCloseDialog}
-                      handleOpenDetailDialog={props.handleOpenDetailDialog}
                     />
                   </React.Fragment>
                 );
               })
             ) : (
-              <div style={{ padding: "20px 0 20px 0" }}>
+              <>
                 <Empty />
-              </div>
+              </>
             )}
           </div>
         </div>

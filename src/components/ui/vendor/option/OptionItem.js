@@ -22,13 +22,14 @@ function OptionItem(props) {
     menuRef.current.style.transform = "scale(1)";
   };
 
-  const handlingDelete = () => {
-    const message = DeleteOption(
+  const handlingDelete = async () => {
+    const message = await DeleteOption(
       props.productId,
       props.option.option_id,
       props.token
     );
-    console.log(message);
+    // console.log(message);
+    await props.mutate();
     // window.location.reload();
   };
 

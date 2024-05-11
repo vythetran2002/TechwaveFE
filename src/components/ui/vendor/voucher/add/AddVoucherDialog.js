@@ -10,6 +10,8 @@ import { DollarOutlined, PercentageOutlined } from "@ant-design/icons";
 import { InputNumber, Button } from "antd";
 import toast, { Toaster } from "react-hot-toast";
 import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import { AddVoucherVendor } from "@/api/vendor/createVoucherVendor";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -35,9 +37,22 @@ const sxStyle = {
   },
 };
 
+const discountAmount = (discount, total) => {
+  return total - (total * discount) / 100;
+};
+
 export default function AddVoucherDialog(props) {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const today = dayjs();
+  const formattedDate = today.format("YYYY-MM-DD");
+
+  const onFinish = async (values) => {
+    let final = {
+      ...values,
+      expires: dayjs(values.expires).format("YYYY/MM/DD"),
+    };
+    const message = await AddVoucherVendor(final, props.token);
+    await props.mutate();
+    handlingCloseDialog();
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -58,7 +73,7 @@ export default function AddVoucherDialog(props) {
       >
         <DialogTitle className={Styles["add-User-dialog-title-container"]}>
           <span className={Styles["add-User-dialog-title-wrapper"]}>
-            Thêm Sản phẩm
+            Thêm Khuyến mãi
           </span>
           <div
             className={Styles["close-icon-wrapper"]}
@@ -77,7 +92,7 @@ export default function AddVoucherDialog(props) {
             autoComplete="off"
             className={Styles["add-user-form-container"]}
           >
-            <div className={Styles["add-user-field-container"]}>
+            {/* <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Tên</span>
               <Form.Item
                 className={Styles["input-wrapper"]}
@@ -96,7 +111,14 @@ export default function AddVoucherDialog(props) {
                   }}
                 />
               </Form.Item>
-            </div>
+            </div> */}
+            {/* {discount && (
+              <div className={Styles["discount-lable-container"]}>
+                <span>Tổng giảm: </span>
+                <span style={{ color: "red" }}>500K</span>
+              </div>
+            )} */}
+
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Số lượng</span>
               <Form.Item
@@ -125,7 +147,7 @@ export default function AddVoucherDialog(props) {
               <span className={Styles["add-user-field-label"]}>Đơn từ :</span>
               <Form.Item
                 className={Styles["input-wrapper"]}
-                name="price"
+                name="minPrice"
                 rules={[
                   {
                     required: true,
@@ -173,7 +195,7 @@ export default function AddVoucherDialog(props) {
               </span>
               <Form.Item
                 className={Styles["input-wrapper"]}
-                name="discount-max"
+                name="mdPrice"
                 rules={[
                   {
                     required: false,
@@ -181,7 +203,7 @@ export default function AddVoucherDialog(props) {
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      const priceValue = getFieldValue("price");
+                      const priceValue = getFieldValue("minPrice");
                       if (value && priceValue && value >= priceValue) {
                         return Promise.reject(
                           "Giá giảm tối đa phải nhỏ hơn giá trị đơn hàng tối thiểu"
@@ -210,7 +232,7 @@ export default function AddVoucherDialog(props) {
               </span>
               <Form.Item
                 className={Styles["input-wrapper"]}
-                name="expire-date"
+                name="expires"
                 rules={[
                   {
                     required: true,

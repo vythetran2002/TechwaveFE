@@ -113,13 +113,14 @@
   width: 100%;
 }
 .list-item-id-wrapper {
-  display: flex;
+  display: block;
   width: 15%;
   height: 30px;
   padding: 5px 10px;
-  align-items: center;
-  flex-shrink: 0;
-  justify-content: center;
+  text-align: center;
+  overflow: hidden; /* Ẩn phần dư của đoạn chữ */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .list-item-name-wrapper {
   display: flex;
@@ -210,7 +211,7 @@
 }
 
 .list-item-status-active-button-wrapper {
-  display: flex;
+  display: block;
   height: 27px;
   padding: 5px 15px;
   justify-content: center;
@@ -220,6 +221,11 @@
   color: white;
   font-weight: 400;
   cursor: pointer;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
 }
 .list-item-status-banned-button-wrapper {
   display: flex;

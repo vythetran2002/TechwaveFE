@@ -47,6 +47,13 @@
   align-items: center;
   border: none;
 }
+.option-name-lable {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 .top-carousel-next-buton {
   width: 30px;
   height: 30px;

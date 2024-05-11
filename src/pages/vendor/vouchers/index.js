@@ -3,27 +3,24 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../styles.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-import dynamic from "next/dynamic";
 import { Select } from "antd";
 import VoucherList from "@/components/ui/vendor/voucher/VoucherList";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import AddProductDialog from "@/components/ui/vendor/dialog/addProduct/AddProductDialog";
-import EditProductDialog from "@/components/ui/vendor/dialog/editProduct/EditProductDialog";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
-import Link from "next/link";
-import { useCookies } from "react-cookie";
 import { Pagination } from "@mui/material";
 import AddVoucherDialog from "@/components/ui/vendor/voucher/add/AddVoucherDialog";
 import Cookies from "js-cookie";
+import EditVoucherDialog from "@/components/ui/vendor/voucher/edit/EditVoucherDialog";
+import useFetchVouchersVendor from "@/api/vendor/useFetchVouchersVendor";
 
 function Index() {
   const token = Cookies.get("token");
-  const [product, setProduct] = useState({});
+  const [voucher, setVoucher] = useState({});
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
+  const { mutate } = useFetchVouchersVendor();
+
   // states
   const [isOpenAddProductDialog, setIsOpenAddProductDialog] = useState(false);
   const [isOpenEditProductDialog, setIsOpenEditProductDialog] = useState(false);
@@ -43,8 +40,8 @@ function Index() {
     setIsOpenEditProductDialog(false);
   };
 
-  const handlingUpdateProduct = (value) => {
-    setProduct(value);
+  const handlingUpdateVoucher = (value) => {
+    setVoucher(value);
   };
 
   const updateQuantity = (value) => {
@@ -127,18 +124,19 @@ function Index() {
             limit={quantity}
             page={page}
             token={token}
-            updateProduct={handlingUpdateProduct}
+            updateVoucher={handlingUpdateVoucher}
             handleOpenDialog={handlingOpenEditProductDialog}
             handleCloseDialog={handlingOpenEditProductDialog}
           />
           <AddVoucherDialog
+            mutate={mutate}
             token={token}
             isOpen={isOpenAddProductDialog}
             handleClose={handlingCloseAddProductDialog}
           />
-          <EditProductDialog
-            updateProduct={handlingUpdateProduct}
-            product={product}
+          <EditVoucherDialog
+            mutate={mutate}
+            voucher={voucher}
             token={token}
             isOpen={isOpenEditProductDialog}
             handleClose={handlingCloseEditProductDialog}

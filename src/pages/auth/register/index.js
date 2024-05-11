@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRef } from "react";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GoogleIcon from "@mui/icons-material/Google";
 import Image from "next/image";
 import Head from "next/head";
 import images from "@/assets/images";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,6 +13,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { Radio } from "antd";
+import { Form, Select, Input, Empty } from "antd";
+import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
+import { GHN_API } from "@/api/GHN/GHN";
+const disabledDate = (current) => {
+  // Can not select days before today and today
+  return current && current > dayjs().endOf("day");
+};
 
 const LoginScheme = Yup.object().shape({
   userName: Yup.string()
@@ -43,33 +47,65 @@ const LoginScheme = Yup.object().shape({
     .required("Vui lòng nhập thông tin"),
 });
 
-function checkAllProperties(info) {
-  // Kiểm tra xem tất cả giá trị của thuộc tính trong đối tượng có giá trị (không phải null hoặc undefined) hay không
-  return Object.values(info).every(
-    (value) => value !== null && value !== undefined
-  );
-}
+const { TextArea } = Input;
+const { Option } = Select;
+
+const LocationProvider = new GHN_API();
 
 function Index() {
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+  const [wardId, setWardId] = useState(null);
+  const [adress, setAddress] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
+  const [isDisabledWards, setIsDisabledWards] = useState(true);
+  const [isDisabledAdress, setIsDisabledAddress] = useState(true);
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
+
   const router = useRouter();
   const [username, setUsername] = useState();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
-  const [address, setAddress] = useState();
   const [date, setDate] = useState();
   const [gender, setGender] = useState("Nam");
   const [pass, setPass] = useState();
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState(3);
 
   const messRef = useRef();
+
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId("");
+    setWardId("");
+    setAddress("");
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+    setAddress("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+    setAddress("");
+  };
+
+  const handleChangeAddress = (value) => {
+    setAddress(value);
+  };
 
   const onChangeGender = ({ target: { value } }) => {
     setGender(value);
   };
 
-  const onChangeRole = ({ target: { value } }) => {
-    setRole(value);
+  const onChangeRole = (e) => {
+    setRole(e.target.value);
   };
 
   const handleResgiter = async (e) => {
@@ -123,8 +159,68 @@ function Index() {
       }
     } else {
       messRef.current.style.display = "block";
-      toast.error("Nhập đầy đủ thông tin");
+      toast.error("Cần nhập đầy đủ thông");
     }
+  };
+
+  const onFinish = async (values) => {
+    let final = {
+      ...values,
+      gender: gender,
+      id_permission: role,
+      avatar: null,
+    };
+    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
+
+    let user = {
+      ...final,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+
+    if (final.id_permission === 3) {
+      try {
+        // Gửi yêu cầu đăng nhập tới API
+        const response = await axios.post(
+          "http://localhost:3000/api/register",
+          user
+        );
+        if (response.data) {
+          toast.success("Đăng ký thành công");
+          router.push("/auth/login");
+        }
+      } catch (error) {
+        console.error("Đăng ký thất bại", error);
+        toast.error("Đăng ký thất bại");
+        // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
+      }
+    }
+    if (final.id_permission === 2) {
+      try {
+        // Gửi yêu cầu đăng nhập tới API
+        const response = await axios.post(
+          "http://localhost:3000/api/registerStaff",
+          user
+        );
+        if (response.data) {
+          console.log(response.data);
+          toast.success("Đăng ký thành công");
+          router.push("/auth/login");
+        }
+      } catch (error) {
+        console.error("Đăng ký thất bại", error);
+        toast.error("Đăng ký thất bại");
+        // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
+      }
+    }
+  };
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Cần điền đủ thông tin");
+    messRef.current.style.display = "block";
   };
 
   const {
@@ -154,6 +250,24 @@ function Index() {
   //   };
   //   console.log(info);
   // };
+
+  useEffect(() => {
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
+    if (wardId) {
+      setIsDisabledAddress(false);
+    } else {
+      setIsDisabledAddress(true);
+    }
+  }, [provinceId, districtId, wardId]);
 
   return (
     <>
@@ -213,8 +327,10 @@ function Index() {
         </header>
         <div className={Styles["login"]}>
           <div className={Styles["left"]}>
-            <form
-              onSubmit={handleResgiter}
+            <Form
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
               className={Styles["form-container"]}
             >
               <div className={Styles["top"]}>
@@ -222,24 +338,39 @@ function Index() {
                 <h4 style={{ color: "white" }}>Please fill out the form</h4>
               </div>
               <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Username"
-                  {...register("Username")}
-                  onChange={(e) => {
-                    setUsername(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="username"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập username",
+                    },
+                  ]}
+                >
+                  <Input className={Styles["input"]} placeholder="Username" />
+                </Form.Item>
               </div>
               <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Họ và tên"
-                  {...register("fullName")}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="fullname"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập họ và tên",
+                    },
+                  ]}
+                >
+                  <input
+                    className={Styles["input"]}
+                    placeholder="Họ và tên"
+                    {...register("fullName")}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                </Form.Item>
               </div>
               {/* {errors.fullName && (
                 <p className={Styles["validate-message"]}>
@@ -247,14 +378,22 @@ function Index() {
                 </p>
               )} */}
               <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Email"
-                  // {...register("email")}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập email",
+                    },
+                    {
+                      pattern: mailformat,
+                      message: "Email không hợp lệ",
+                    },
+                  ]}
+                >
+                  <input className={Styles["input"]} placeholder="Email" />
+                </Form.Item>
               </div>
               {/* {errors.fullName && (
                 <p className={Styles["validate-message"]}>
@@ -262,15 +401,28 @@ function Index() {
                 </p>
               )} */}
               <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Số điện thoại"
-                  // {...register("phoneNumber")}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="phone"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập số điện thoại",
+                    },
+                    {
+                      pattern: regexPhoneNumber,
+                      message: "Số điện thoại không hợp lệ",
+                    },
+                  ]}
+                >
+                  <input
+                    className={Styles["input"]}
+                    placeholder="Số điện thoại"
+                    // {...register("phoneNumber")}
+                  />
+                </Form.Item>
               </div>
+
               <div className={Styles["alt-input"]} style={{ color: "white" }}>
                 <Radio.Group
                   name="radiogroup"
@@ -278,10 +430,10 @@ function Index() {
                   size="lg"
                   onChange={onChangeGender}
                 >
-                  <Radio value={"Nam"} style={{ color: "white" }}>
+                  <Radio key={"Nam"} value={"Nam"} style={{ color: "white" }}>
                     Nam
                   </Radio>
-                  <Radio value={"Nữ"} style={{ color: "white" }}>
+                  <Radio key={"Nữ"} value={"Nữ"} style={{ color: "white" }}>
                     Nữ
                   </Radio>
                 </Radio.Group>{" "}
@@ -292,30 +444,183 @@ function Index() {
                 </p>
               )} */}
               <div className={Styles["alt-input"]}>
-                <textarea
-                  className={Styles.textarea}
-                  placeholder="Địa chỉ"
-                  // {...register("phoneNumber")}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="province"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tỉnh thành",
+                    },
+                  ]}
+                >
+                  <Select
+                    value={provinceId}
+                    placeholder={"Tỉnh thành"}
+                    dropdownStyle={{ width: "430px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    className={`phone-input-selector `}
+                    onChange={handleChangeSelectProvince}
+                  >
+                    {provinces.isLoading && (
+                      <>
+                        <Option>HELLO</Option>
+                      </>
+                    )}
+                    {provinces.data ? (
+                      provinces.data.data.map((province) => {
+                        return (
+                          <Option
+                            key={province.ProvinceID}
+                            value={province.ProvinceName}
+                          >
+                            {province.ProvinceName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Empty />
+                      </>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
               </div>
               <div className={Styles["alt-input"]}>
-                <DatePicker
-                  style={{
-                    backgroundColor: "#88A3D2",
-                    border: "none",
-                    color: "white !important",
-                    height: "45px",
-                    width: "100%",
-                    color: "white",
-                  }}
-                  onChange={onChange}
-                  placeholder="Ngày sinh"
-
-                  // {...register("date")}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="district"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập quận, huyện",
+                    },
+                  ]}
+                >
+                  <Select
+                    value={districtId}
+                    placeholder={"Quận huyện"}
+                    dropdownStyle={{ width: "430px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectDistrict}
+                    disabled={isDisabledDistricts}
+                    className={`phone-input-selector `}
+                  >
+                    {districts.data ? (
+                      districts.data.data.map((district) => {
+                        return (
+                          <Option
+                            value={district.DistrictName}
+                            key={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <Empty />
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className={Styles["alt-input"]}>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="ward"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập xã, phường",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder={"Xã, Phường"}
+                    dropdownStyle={{ width: "430px", zIndex: "99999999" }}
+                    placement="bottomRight"
+                    labelInValue={true}
+                    showSearch
+                    onChange={handleChangeSelectWard}
+                    disabled={isDisabledWards}
+                    className={`phone-input-selector `}
+                  >
+                    {wards.data ? (
+                      wards.data.data.map((ward) => {
+                        return (
+                          <Option value={ward.WardName} key={ward.WardCode}>
+                            {ward.WardName}
+                          </Option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Empty />
+                      </>
+                    )}
+                    {/* <Option value={1}>ABC</Option> */}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className={"text-area-wrapper"}>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập địa chỉ cụ thể",
+                    },
+                  ]}
+                >
+                  <TextArea
+                    className={Styles["textarea"]}
+                    placeholder="Địa chỉ cụ thể"
+                    autoSize={{
+                      minRows: 2,
+                      maxRows: 6,
+                    }}
+                    maxLength={100}
+                    showCount
+                    allowClear
+                    disabled={isDisabledAdress}
+                    rootClassName="text-area-adress-register"
+                    // {...register("phoneNumber")}
+                  />
+                </Form.Item>
+              </div>
+              <div className={Styles["alt-input"]}>
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="dob"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập ngày sinh",
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    style={{
+                      backgroundColor: "#88A3D2",
+                      border: "none",
+                      color: "white !important",
+                      height: "45px",
+                      width: "100%",
+                      color: "white",
+                    }}
+                    popupClassName="date-register-dropdown-select"
+                    onChange={onChange}
+                    placeholder="Ngày sinh"
+                    disabledDate={disabledDate}
+                    // {...register("date")}
+                  />
+                </Form.Item>
               </div>
               {/* {errors.date && (
                 <p className={Styles["validate-message"]}>
@@ -323,15 +628,23 @@ function Index() {
                 </p>
               )} */}
               <div>
-                <input
-                  className={Styles["input"]}
-                  type="password"
-                  placeholder="Password"
-                  // {...register("password")}
-                  onChange={(e) => {
-                    setPass(e.target.value);
-                  }}
-                />
+                <Form.Item
+                  className={Styles["input-wrapper"]}
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập mật khẩu",
+                    },
+                  ]}
+                >
+                  <input
+                    className={Styles["input"]}
+                    type="password"
+                    placeholder="Password"
+                    // {...register("password")}
+                  />
+                </Form.Item>
               </div>
               <div className={Styles["alt-input"]} style={{ color: "white" }}>
                 <Radio.Group
@@ -340,10 +653,10 @@ function Index() {
                   size="lg"
                   onChange={onChangeRole}
                 >
-                  <Radio value={"user"} style={{ color: "white" }}>
+                  <Radio key={3} value={3} style={{ color: "white" }}>
                     User
                   </Radio>
-                  <Radio value={"vendor"} style={{ color: "white" }}>
+                  <Radio key={2} value={2} style={{ color: "white" }}>
                     Vendor
                   </Radio>
                 </Radio.Group>{" "}
@@ -397,7 +710,7 @@ function Index() {
                   Google
                 </a>
               </div> */}
-            </form>
+            </Form>
           </div>
           <div className={Styles["right"]}>
             <Image src={images.loginBg} alt="" />

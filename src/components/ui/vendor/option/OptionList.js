@@ -12,7 +12,8 @@ function OptionList(props) {
   const router = useRouter();
   const slug = router.query.slug;
   const options = useFetchOptionByProductId(slug);
-  console.log(options);
+
+  // console.log(options.data.data);
 
   if (options.isError) return <>Error</>;
   if (options.isLoading) return <>Loading</>;
@@ -56,6 +57,7 @@ function OptionList(props) {
                       token={props.token}
                       setOption={props.setOption}
                       option={option}
+                      mutate={options.mutate}
                       handleOpenDialog={props.handleOpenDialog}
                     />
                   </React.Fragment>

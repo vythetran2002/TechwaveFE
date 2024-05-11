@@ -1,8 +1,9 @@
 .shop-card-container {
   display: flex;
+  flex: 1;
   flex-direction: column;
   padding: 20px;
-  max-height: 200px;
+  max-height: 100%;
   overflow: auto;
   background: #fff;
   border-radius: 3px;
@@ -31,4 +32,22 @@
   align-items: center;
   gap: 10px;
   flex-direction: row;
+}
+.discountLabel-button-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.discountLabel {
+  padding: 10px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 5px;
+}
+.shop-name-label {
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap; /* Ngăn chữ xuống dòng */
+  overflow: hidden; /* Ẩn nội dung vượt quá khung */
+  text-overflow: ellipsis; /* Thêm dấu "..." */
 }

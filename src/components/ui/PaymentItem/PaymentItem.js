@@ -77,10 +77,10 @@ function PaymentItem(props) {
             }}
           >
             {/* {item.option ? <>{item.option.name}</> : <>{item.product.name}</>} */}
-            <span>{item.product.name}</span>
+            <span className={Styles["name"]}>{item.product.name}</span>
             {item.option && (
               <>
-                <span style={{ fontSize: "13px" }}>
+                <span className={Styles.cate} style={{ fontSize: "13px" }}>
                   Phân loại: {item.option.name}
                 </span>
               </>

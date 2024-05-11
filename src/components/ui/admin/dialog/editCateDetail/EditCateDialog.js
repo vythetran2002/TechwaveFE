@@ -58,42 +58,21 @@ export default function EditCateDialogDetail(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        // console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...cate, image: imagePath };
-        updateCate(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
-
-  const handleChangeName = (e) => {
-    let temp = { ...cate, name: e.target.value };
-    updateCate(temp);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (checkNullValues(cate)) {
-      messageRef.current.style.display = "none";
-      let { name, image } = cate;
-      let temp = { name, image };
-      console.log(temp);
-      const message = UpdateCategory(cate.category_id, temp, props.token);
-      console.log(message);
-      // console.log(temp);
-      window.location.reload();
-    } else {
-      messageRef.current.style.display = "block";
-    }
-  };
 
   const handleCloseDialog = () => {
     props.handleClose();

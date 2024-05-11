@@ -31,53 +31,6 @@ import { Toaster } from "react-hot-toast";
 import { EditProduct } from "@/api/vendor/EditProduct";
 import useFetchCategories from "@/api/vendor/useFetchCategories";
 
-function transformArray(array) {
-  if (array) {
-    return array.map((item) => ({
-      value: item.category_id,
-      label: item.name,
-    }));
-  } else {
-    return null;
-  }
-}
-
-function checkValidFields(obj) {
-  if (
-    obj.hasOwnProperty("name") &&
-    obj.hasOwnProperty("quantity") &&
-    obj.hasOwnProperty("origin") &&
-    obj.hasOwnProperty("price") &&
-    obj.hasOwnProperty("category_id") &&
-    // (obj.hasOwnProperty("image") || obj.hasOwnProperty("category_child")) &&
-    obj.name !== null &&
-    obj.quantity !== null &&
-    obj.price !== null &&
-    // obj.promotional_price !== null &&
-    obj.category_id !== null &&
-    (obj.image !== null || obj.category_child !== null)
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function findLabelByValue(arr, value) {
-  if (arr) {
-    const foundItem = arr.find((item) => item.value === value);
-
-    if (foundItem) {
-      return {
-        value: foundItem.value,
-        label: foundItem.label,
-      };
-    }
-
-    return null; // hoặc có thể trả về giá trị mặc định nếu không tìm thấy
-  }
-}
-
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
   subsets: ["latin"],
@@ -168,61 +121,22 @@ export default function EditProductDialog(props) {
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
         let temp = { ...props.product, image: imagePath };
         props.updateProduct(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // let temp = {
-    //   ...props.product,
-    //   image: avatarSrc,
-    //   category_child: categoryChild,
-    // };
-    let {
-      name,
-      quantity,
-      origin,
-      price,
-      promotional_price,
-      image,
-      category_id,
-      category_child,
-    } = props.product;
-    let temp = {
-      name,
-      quantity,
-      origin,
-      price,
-      promotional_price,
-      image,
-      category_id,
-      category_child,
-    };
-    if (checkValidFields(temp)) {
-      const message = EditProduct(props.product.product_id, temp, props.token);
-      console.log(message);
-      // console.log(temp);
-      messageRef.current.style.display = "none";
-      props.handleClose();
-      // window.location.reload();
-    } else {
-      console.log(temp);
-      messageRef.current.style.display = "block";
-    }
-  };
 
   const onFinish = async (values) => {
     let final = {};
@@ -422,7 +336,7 @@ export default function EditProductDialog(props) {
                     placement="bottomRight"
                     showSearch
                     labelInValue={true}
-                    className={`phone-input-selector ${Styles["phone-input-selector"]}`}
+                    className={` ${Styles["phone-input-selector"]}`}
                   >
                     {countries.map((country) => {
                       return (

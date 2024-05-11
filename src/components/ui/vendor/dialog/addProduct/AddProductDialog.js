@@ -5,20 +5,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
-import dynamic from "next/dynamic";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Input, Radio, Form, Select } from "antd";
 import { DollarOutlined, CloudUploadOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import { InputNumber, Button } from "antd";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import { countries } from "@/assets/data/country";
 import Image from "next/image";
 import images from "@/assets/images";
@@ -42,27 +31,6 @@ function transformArray(array) {
     }));
   } else {
     return null;
-  }
-}
-
-function checkValidFields(obj) {
-  if (
-    obj.hasOwnProperty("name") &&
-    obj.hasOwnProperty("quantity") &&
-    obj.hasOwnProperty("origin") &&
-    obj.hasOwnProperty("price") &&
-    obj.hasOwnProperty("category_id") &&
-    (obj.hasOwnProperty("image") || obj.hasOwnProperty("category_child")) &&
-    obj.name !== null &&
-    obj.quantity !== null &&
-    obj.price !== null &&
-    obj.promotional_price !== null &&
-    obj.category_id !== null &&
-    (obj.image !== null || obj.category_child !== null)
-  ) {
-    return true;
-  } else {
-    return false;
   }
 }
 
@@ -145,17 +113,29 @@ export default function AddProductDialog(props) {
     //console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
         let temp = { ...product, image: imagePath };
         setProduct(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
+    // promiseResult
+    //   .then((result) => {
+    //     const imagePath = result.imagePath;
+    //     console.log("imagePath:", imagePath);
+    //     setAvatarSrc(imagePath);
+    //     let temp = { ...product, image: imagePath };
+    //     setProduct(temp);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Lỗi:", error);
+    //   });
   }
 
   const onFinish = async (values) => {
@@ -178,19 +158,19 @@ export default function AddProductDialog(props) {
     await setAvatarSrc(null);
   };
 
-  const handlingSubmit = (e) => {
-    e.preventDefault();
-    let temp = { ...product, image: avatarSrc, category_child: categoryChild };
-    if (checkValidFields(temp)) {
-      const message = AddProduct(temp, props.token);
-      console.log(message);
-      messageRef.current.style.display = "none";
-      props.handleClose();
-    } else {
-      console.log(temp);
-      messageRef.current.style.display = "block";
-    }
-  };
+  // const handlingSubmit = (e) => {
+  //   e.preventDefault();
+  //   let temp = { ...product, image: avatarSrc, category_child: categoryChild };
+  //   if (checkValidFields(temp)) {
+  //     const message = AddProduct(temp, props.token);
+  //     console.log(message);
+  //     messageRef.current.style.display = "none";
+  //     props.handleClose();
+  //   } else {
+  //     console.log(temp);
+  //     messageRef.current.style.display = "block";
+  //   }
+  // };
 
   const dateFormat = "DD/MM/YYYY";
 
@@ -341,7 +321,7 @@ export default function AddProductDialog(props) {
                   showSearch
                   // onChange={handleChangeCountry}
                   labelInValue={true}
-                  className={`phone-input-selector ${Styles["phone-input-selector"]}`}
+                  className={` ${Styles["phone-input-selector"]}`}
                   // value={selectedCountry}
                 >
                   {countries.map((country) => {

@@ -31,7 +31,7 @@
   position: sticky;
   position: -webkit-sticky;
   top: 0; /* required */
-  z-index: 2;
+  z-index: 4;
 }
 .phone-mail-container {
   height: 100%;
@@ -51,6 +51,11 @@
   display: flex;
   width: 70%;
   flex-direction: row;
+  align-items: center;
+}
+.cart-label {
+  display: flex;
+  height: 100%;
   align-items: center;
 }
 .logo-container {
@@ -125,6 +130,7 @@
   background-color: #f4f4f5;
   overflow-x: scroll;
   border: 0.5px solid #0083bf;
+  z-index: 5;
 }
 .search-suggestion-autocomplete-container::-webkit-scrollbar {
   width: 5px;

@@ -45,6 +45,7 @@ function AdminSidebar(props) {
   const storeRef = useRef();
   const perminssionRef = useRef();
   const logOutRef = useRef();
+  const voucherRef = useRef();
 
   const handlingCloseNav = () => {
     navRef.current.classList.toggle(Styles.close);
@@ -60,6 +61,7 @@ function AdminSidebar(props) {
     perminssionRef.current.classList.toggle(Styles.disappear);
     logOutRef.current.classList.toggle(Styles.disappear);
     profileRef.current.classList.toggle(Styles.disappear);
+    voucherRef.current.classList.toggle(Styles.disappear);
   };
 
   return (
@@ -251,7 +253,7 @@ function AdminSidebar(props) {
                 <div className={Styles["nav-icon"]}>
                   <DiscountOutlinedIcon />
                 </div>
-                <span ref={perminssionRef} className={Styles["nav-title"]}>
+                <span ref={voucherRef} className={Styles["nav-title"]}>
                   Quản lý khuyến mãi
                 </span>
               </Link>
@@ -260,7 +262,7 @@ function AdminSidebar(props) {
                 <div className={Styles["nav-icon"]}>
                   <DiscountOutlinedIcon />
                 </div>
-                <span ref={perminssionRef} className={Styles["nav-title"]}>
+                <span ref={voucherRef} className={Styles["nav-title"]}>
                   Quản lý khuyến mãi
                 </span>
               </Link>

@@ -6,7 +6,7 @@ import { useRef } from "react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import images from "@/assets/images";
-import { Switch } from "antd";
+import { Switch, Select, Empty } from "antd";
 import Image from "next/image";
 import { Radio, Button, Form, DatePicker, Checkbox, Input } from "antd";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
@@ -20,8 +20,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import { sendPostRequestWithToken } from "@/api/user/sendPostRequestProfile";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
-const { TextArea } = Input;
 import Cookies from "js-cookie";
+import { GHN_API } from "@/api/GHN/GHN";
+
+const { TextArea } = Input;
+
+const LocationProvider = new GHN_API();
 
 function Index() {
   const token = Cookies.get("token");
@@ -32,6 +36,31 @@ function Index() {
   const [address, setAddress] = useState("");
   const [passwdEditMode, setPasswdEditMode] = useState(false);
   const [form] = Form.useForm();
+  const [provinceId, setProvinceId] = useState(false);
+  const [districtId, setDistrictId] = useState(false);
+  const [wardId, setWardId] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
+  const [isDisabledWards, setIsDisabledWards] = useState(true);
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
+
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId("");
+    setWardId("");
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+  };
 
   const handlingChangeNewPass = (e) => {
     console.log(newPass);
@@ -39,20 +68,33 @@ function Index() {
   };
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        //console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
         let temp = { ...userProfile, avatar: imagePath };
         setUserProfile(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
+
+    // promiseResult
+    //   .then((result) => {
+    //     const imagePath = result.imagePath;
+    //     console.log("imagePath:", imagePath);
+    //     setAvatarSrc(imagePath);
+    //     let temp = { ...userProfile, avatar: imagePath };
+    //     setUserProfile(temp);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Lỗi:", error);
+    //   });
   }
 
   // console.log(user);
@@ -127,15 +169,39 @@ function Index() {
         passwdChangeLabel.current.style.opacity = 0;
       }
     }
-    await delete final.oldPassword;
-    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
-    const message = await sendPostRequestWithToken(final, token);
+
+    let user = {
+      ...final,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+    await delete user.oldPassword;
+    user.dob = dayjs(final.dob).format("YYYY/MM/DD");
+    console.log("user", user);
+    const message = await sendPostRequestWithToken(user, token);
     await switchRef.current.click();
     await user.mutate(); // mutate data
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");
   };
+
+  useEffect(() => {
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
+  }, [provinceId, districtId]);
 
   if (user.isLoading) {
     return <>Loading...</>;
@@ -178,9 +244,21 @@ function Index() {
               fullname: user.data.fullname,
               email: user.data.email,
               phone: user.data.phone,
-              address: user.data.address,
+              address: user.data.address.address,
               gender: user.data.gender,
               dob: dayjs(user.data.dob, "YYYY/MM/DD"),
+              province: {
+                key: user.data.address.province_id,
+                value: user.data.address.province,
+              },
+              district: {
+                value: user.data.address.district,
+                key: user.data.address.district_id,
+              },
+              ward: {
+                value: user.data.address.ward,
+                key: user.data.address.ward_id,
+              },
             }}
           >
             <div className={Styles["profile-form-input-container"]}>
@@ -261,6 +339,154 @@ function Index() {
                   <span>{user.data.phone}</span>
                 )}
               </div>
+              {isEditMode ? (
+                <div className={Styles["profile-col"]}>
+                  <span className={Styles["profile-row1"]}>Tỉnh</span>
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="province"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập tỉnh thành",
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder={"Tỉnh thành"}
+                        // dropdownStyle={{
+                        //   width: "430px",
+                        //   zIndex: "99999999",
+                        // }}
+                        placement="bottomRight"
+                        labelInValue={true}
+                        showSearch
+                        size="middle"
+                        onChange={handleChangeSelectProvince}
+                      >
+                        {provinces.isLoading && (
+                          <>
+                            <Option>HELLO</Option>
+                          </>
+                        )}
+                        {provinces.data ? (
+                          provinces.data.data.map((province) => {
+                            return (
+                              <Option
+                                key={province.ProvinceID}
+                                value={province.ProvinceName}
+                              >
+                                {province.ProvinceName}
+                              </Option>
+                            );
+                          })
+                        ) : (
+                          <>
+                            <Empty />
+                          </>
+                        )}
+                        {/* <Option value={1}>ABC</Option> */}
+                      </Select>
+                    </Form.Item>
+                  </span>
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {isEditMode ? (
+                <div className={Styles["profile-col"]}>
+                  <span className={Styles["profile-row1"]}>Quận, huyện</span>
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="district"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập quận, huyện",
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder={"Quận huyện"}
+                        // dropdownStyle={{
+                        //   width: "430px",
+                        //   zIndex: "99999999",
+                        // }}
+                        placement="bottomRight"
+                        labelInValue={true}
+                        showSearch
+                        onChange={handleChangeSelectDistrict}
+                        disabled={isDisabledDistricts}
+                      >
+                        {districts.data ? (
+                          districts.data.data.map((district) => {
+                            return (
+                              <Option
+                                value={district.DistrictName}
+                                key={district.DistrictID}
+                              >
+                                {district.DistrictName}
+                              </Option>
+                            );
+                          })
+                        ) : (
+                          <Empty />
+                        )}
+                        {/* <Option value={1}>ABC</Option> */}
+                      </Select>
+                    </Form.Item>
+                  </span>
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {isEditMode ? (
+                <div className={Styles["profile-col"]}>
+                  <span className={Styles["profile-row1"]}>Xã, Phường</span>
+                  <span className={Styles["profile-row2"]}>
+                    <Form.Item
+                      className={Styles["input-wrapper"]}
+                      name="ward"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Hãy nhập xã, phường",
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder={"Xã, Phường"}
+                        placement="bottomRight"
+                        labelInValue={true}
+                        showSearch
+                        onChange={handleChangeSelectWard}
+                        disabled={isDisabledWards}
+                      >
+                        {wards.data ? (
+                          wards.data.data.map((ward) => {
+                            return (
+                              <Option value={ward.WardName} key={ward.WardCode}>
+                                {ward.WardName}
+                              </Option>
+                            );
+                          })
+                        ) : (
+                          <>
+                            <Empty />
+                          </>
+                        )}
+                        {/* <Option value={1}>ABC</Option> */}
+                      </Select>
+                    </Form.Item>
+                  </span>
+                </div>
+              ) : (
+                <></>
+              )}
               <div className={Styles["profile-col"]}>
                 <span className={Styles["profile-row1"]}>Địa chỉ</span>
                 {isEditMode ? (
@@ -285,7 +511,7 @@ function Index() {
                     </Form.Item>
                   </span>
                 ) : (
-                  <span>{user.data.address}</span>
+                  <span>{user.data.address.address}</span>
                 )}
               </div>
               <div className={Styles["profile-col"]}>

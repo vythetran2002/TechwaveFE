@@ -526,3 +526,80 @@ input::placeholder {
     transform: rotate(1turn);
   }
 }
+
+/* ANTD */
+.ant-form-item-control-input-content
+  .phone-input-selector
+  .ant-select-selector {
+  background-color: #88a3d2;
+  border: none !important;
+
+  color: white;
+}
+.ant-form-item-control-input-content
+  .phone-input-selector
+  .ant-select-show-search {
+  background-color: #88a3d2;
+  border: none !important;
+  padding: 0px 10px;
+  color: var(--white);
+  font-size: 17px;
+}
+
+.ant-form-item .ant-row .ant-col .ant-form-item-control-input {
+  height: 45px;
+}
+
+.ant-form-item
+  .ant-row
+  .ant-col
+  .ant-form-item-control-input
+  .ant-form-item-control-input-content {
+  height: 45px;
+}
+
+.ant-form-item
+  .ant-row
+  .ant-col
+  .ant-form-item-control-input
+  .ant-form-item-control-input-content
+  .ant-select {
+  height: 45px;
+}
+.date-register-dropdown-select {
+  width: 430px;
+}
+.ant-input-data-count {
+  color: white !important;
+}
+.text-area-wrapper {
+  margin-top: 10px;
+  height: auto;
+}
+.text-area-wrapper
+  .ant-form-item
+  .ant-row
+  .ant-col
+  .ant-form-item-control-input {
+  height: auto;
+}
+
+.text-area-wrapper
+  .ant-form-item
+  .ant-row
+  .ant-col
+  .ant-form-item-control-input
+  .ant-form-item-control-input-content {
+  height: auto;
+}
+
+.ant-input-affix-wrapper-disabled {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+.text-area-adress-register .ant-input {
+  background-color: #88a3d2;
+  color: white !important;
+}
+#address_help .ant-form-item-explain-error {
+  margin-top: 10px;
+}

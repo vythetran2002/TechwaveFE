@@ -34,7 +34,7 @@ function Index() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
-  const { mutate } = useFetchAdminCategories(1, page, quantity, token);
+  const { mutate } = useFetchAdminCategories(page, quantity, token);
 
   const handlingOpenAddCateDialog = () => {
     setIsOpenAddCateDialog(true);

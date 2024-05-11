@@ -164,34 +164,40 @@ function Index() {
                 <h2 style={{ color: "white" }}>Welcome to Techwave</h2>
                 <h4 style={{ color: "white" }}>Please login</h4>
               </div>
-              <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Email"
-                  {...register("email")}
-                  style={{
-                    padding: "5px 20px",
-                  }}
-                />
+              <div className={Styles["login-username-pass-container"]}>
+                <div>
+                  <input
+                    className={Styles["input"]}
+                    placeholder="Email"
+                    {...register("email")}
+                    style={{
+                      padding: "5px 20px",
+                    }}
+                  />
+                </div>
+                {errors.email && (
+                  <p className={Styles["validate-message"]}>
+                    {errors.email.message}
+                  </p>
+                )}
+                <div>
+                  <input
+                    style={{
+                      padding: "5px 20px",
+                    }}
+                    type="password"
+                    className={Styles["input"]}
+                    placeholder="Password"
+                    {...register("password")}
+                  />
+                </div>
+                {errors.password && (
+                  <p className={Styles["validate-message"]}>
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
-              {errors.email && (
-                <p className={Styles["validate-message"]}>
-                  {errors.email.message}
-                </p>
-              )}
-              <div className={Styles["input"]}>
-                <input
-                  type="password"
-                  className={Styles["input"]}
-                  placeholder="Password"
-                  {...register("password")}
-                />
-              </div>
-              {errors.password && (
-                <p className={Styles["validate-message"]}>
-                  {errors.password.message}
-                </p>
-              )}
+
               <div className={Styles["forget"]} style={{ marginTop: "10px" }}>
                 <Link
                   href="/auth/forgot-password"

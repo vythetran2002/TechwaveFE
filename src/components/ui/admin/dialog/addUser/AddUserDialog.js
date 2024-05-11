@@ -6,7 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import { Input, Radio, Form, Button, DatePicker, Select } from "antd";
+import { Input, Radio, Form, Button, DatePicker, Select, Empty } from "antd";
 import dayjs from "dayjs";
 import Image from "next/image";
 import images from "@/assets/images";
@@ -20,12 +20,15 @@ import {
 } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
+import { GHN_API } from "@/api/GHN/GHN";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
   subsets: ["latin"],
   display: "swap",
 });
+
+const LocationProvider = new GHN_API();
 
 const sxStyle = {
   "& .MuiDialog-container:hover": {
@@ -68,6 +71,17 @@ export default function AddUserDialog(props) {
     avatar: null,
   });
   const [phoneNumber, setPhoneNumber] = useState();
+  const [provinceId, setProvinceId] = useState(null);
+  const [districtId, setDistrictId] = useState(null);
+  const [wardId, setWardId] = useState(null);
+  const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
+  const [isDisabledWards, setIsDisabledWards] = useState(true);
+  const [isDisabledAdress, setIsDisabledAddress] = useState(true);
+
+  //API Hooks
+  const provinces = LocationProvider.getProvinces();
+  const districts = LocationProvider.getDistricts(provinceId);
+  const wards = LocationProvider.getWards(districtId);
 
   //Refs
   const messageRef = useRef();
@@ -76,39 +90,44 @@ export default function AddUserDialog(props) {
     inputFileRef.current.click();
   };
 
+  const handleChangeSelectProvince = (value) => {
+    setProvinceId(value.key);
+    setDistrictId(null);
+    setWardId(null);
+  };
+
+  const handleChangeSelectDistrict = (value) => {
+    setDistrictId(value.key);
+    setWardId("");
+  };
+
+  const handleChangeSelectWard = (value) => {
+    setWardId(value.key);
+  };
+
   const handlingCloseDialog = () => {
     props.handleClose();
     setAvatarSrc(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (checkArrayProperties(account)) {
-      messageRef.current.style.display = "none";
-      let temp = { ...account };
-      const message = CreateAccount(temp, token);
-      console.log(message);
-    } else {
-      messageRef.current.style.display = "block";
-    }
+    setIsDisabledDistricts(true);
+    setIsDisabledWards(true);
+    setIsDisabledAddress(true);
   };
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        // console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        let temp = { ...account, avatar: imagePath };
-        setAccount(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
   const onFinish = async (values) => {
@@ -127,6 +146,24 @@ export default function AddUserDialog(props) {
   // useEffect(() => {
   //   console.log(account);
   // }, [account]);
+
+  useEffect(() => {
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
+    if (wardId) {
+      setIsDisabledAddress(false);
+    } else {
+      setIsDisabledAddress(true);
+    }
+  }, [provinceId, districtId, wardId]);
 
   return (
     <React.Fragment>
@@ -291,6 +328,140 @@ export default function AddUserDialog(props) {
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
             </div>
+            <div className={Styles["add-user-field-container"]}>
+              <span className={Styles["add-user-field-label"]}>
+                Tỉnh thành:
+              </span>
+
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="province"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập tỉnh thành",
+                  },
+                ]}
+              >
+                <Select
+                  value={provinceId}
+                  placeholder={"Tỉnh thành"}
+                  dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                  placement="bottomRight"
+                  labelInValue={true}
+                  showSearch
+                  onChange={handleChangeSelectProvince}
+                >
+                  {provinces.isLoading && (
+                    <>
+                      <Option>HELLO</Option>
+                    </>
+                  )}
+                  {provinces.data ? (
+                    provinces.data.data.map((province) => {
+                      return (
+                        <Option
+                          key={province.ProvinceID}
+                          value={province.ProvinceName}
+                        >
+                          {province.ProvinceName}
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <>
+                      <Empty />
+                    </>
+                  )}
+                  {/* <Option value={1}>ABC</Option> */}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className={Styles["add-user-field-container"]}>
+              <span className={Styles["add-user-field-label"]}>
+                Quận, huyện:
+              </span>
+
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="district"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập quận, huyện",
+                  },
+                ]}
+              >
+                <Select
+                  value={districtId}
+                  placeholder={"Quận huyện"}
+                  dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                  placement="bottomRight"
+                  labelInValue={true}
+                  showSearch
+                  onChange={handleChangeSelectDistrict}
+                  disabled={isDisabledDistricts}
+                >
+                  {districts.data ? (
+                    districts.data.data.map((district) => {
+                      return (
+                        <Option
+                          value={district.DistrictName}
+                          key={district.DistrictID}
+                        >
+                          {district.DistrictName}
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <Empty />
+                  )}
+                  {/* <Option value={1}>ABC</Option> */}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className={Styles["add-user-field-container"]}>
+              <span className={Styles["add-user-field-label"]}>
+                Xã, Phường:
+              </span>
+
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="ward"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập xã, phường",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder={"Xã, Phường"}
+                  dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                  placement="bottomRight"
+                  labelInValue={true}
+                  showSearch
+                  value={wardId}
+                  onChange={handleChangeSelectWard}
+                  disabled={isDisabledWards}
+                >
+                  {wards.data ? (
+                    wards.data.data.map((ward) => {
+                      return (
+                        <Option value={ward.WardName} key={ward.WardCode}>
+                          {ward.WardName}
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <>
+                      <Empty />
+                    </>
+                  )}
+                  {/* <Option value={1}>ABC</Option> */}
+                </Select>
+              </Form.Item>
+            </div>
             <div
               className={Styles["add-user-field-container"]}
               style={{
@@ -310,33 +481,32 @@ export default function AddUserDialog(props) {
                 ]}
               >
                 <TextArea
+                  disabled={isDisabledAdress}
                   showCount
                   maxLength={100}
                   placeholder="Địa chỉ"
-                  style={{ height: 100, resize: "none" }}
                 />
               </Form.Item>
             </div>
 
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Giới tính:</span>
-              <div className={Styles["add-user-field-gender-wrapper"]}>
-                <Form.Item
-                  className={Styles["input-wrapper"]}
-                  name="gender"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Hãy nhập giới tính tài khoản",
-                    },
-                  ]}
-                >
-                  <Radio.Group>
-                    <Radio value={"Nam"}>Nam</Radio>
-                    <Radio value={"Nữ"}>Nữ</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </div>
+
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="gender"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập giới tính tài khoản",
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value={"Nam"}>Nam</Radio>
+                  <Radio value={"Nữ"}>Nữ</Radio>
+                </Radio.Group>
+              </Form.Item>
             </div>
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Ngày sinh:</span>
@@ -371,10 +541,10 @@ export default function AddUserDialog(props) {
               >
                 <Select
                   placeholder={"Loại tài khoản"}
-                  dropdownStyle={{ width: "600px", zIndex: "99999999" }}
+                  dropdownStyle={{ width: "585px", zIndex: "99999999" }}
                   placement="bottomRight"
                   labelInValue={true}
-                  className={`phone-input-selector ${Styles["phone-input-selector"]}`}
+                  className={` ${Styles["phone-input-selector"]}`}
                 >
                   <Option value={1}>
                     <div className={Styles["select-container"]}>

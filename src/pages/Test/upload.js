@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import images from "@/assets/images";
+import Image from "next/image";
+import { uploadImage } from "@/components/utils/Upload";
+import toast, { Toaster } from "react-hot-toast";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -12,102 +15,57 @@ const getBase64 = (file) =>
   });
 
 const App = () => {
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      src: images.image8,
-    },
-    {
-      uid: "-2",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-3",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-4",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-xxx",
-      percent: 50,
-      name: "image.png",
-      status: "uploading",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-5",
-      name: "image.png",
-      status: "error",
-    },
-  ]);
-  const handleCancel = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
+  const [avatarSrc, setAvatarSrc] = useState(null);
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    console.log(file);
+    const message = uploadImage(file);
+    const promiseResult = message;
 
-  useEffect(() => {
-    console.log(fileList);
-  }, [fileList]);
-
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
+        const imagePath = result.imagePath;
+        console.log("imagePath:", imagePath);
+        setAvatarSrc(imagePath);
+        // let temp = { ...account, avatar: imagePath };
+        // setAccount(temp);
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
+  }
   return (
     <>
-      <Upload
-        listType="picture-card"
-        fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
-      >
-        {fileList.length >= 8 ? null : uploadButton}
-      </Upload>
-      <Modal
-        open={previewOpen}
-        title={previewTitle}
-        footer={null}
-        onCancel={handleCancel}
-      >
-        <img
-          alt=""
-          style={{
-            width: "100%",
-          }}
-          src={previewImage}
-        />
-      </Modal>
+      <Toaster />
+      {avatarSrc != null ? (
+        <>
+          <Image
+            src={avatarSrc}
+            width={150}
+            height={150}
+            alt=""
+            priority
+            style={{ borderRadius: "50%" }}
+          />
+        </>
+      ) : (
+        <>
+          <Image
+            src={images.nonAvatar}
+            width={150}
+            height={150}
+            alt=""
+            priority
+            style={{ borderRadius: "50%" }}
+          />
+        </>
+      )}
+      <input
+        onChange={handleFileUpload}
+        type="file"
+        accept=".jpg, .png, image/jpeg, image/png"
+      />
     </>
   );
 };

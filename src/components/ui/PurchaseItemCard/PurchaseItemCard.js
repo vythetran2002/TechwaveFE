@@ -263,16 +263,19 @@ function PurchaseItemCard(props) {
                   >
                     {oderItem.cart_id.product.name}
                   </Link>
-                  {oderItem.cart_id.option ? (
-                    <span style={{ fontSize: "14px" }}>
-                      Phân loại: {oderItem.cart_id.option.name}
-                    </span>
-                  ) : (
-                    <></>
-                  )}
-                  <span style={{ marginTop: "20px" }}>
-                    x {oderItem.cart_id.quantity}
-                  </span>
+                  <div className={Styles["cate-quantity-container"]}>
+                    {oderItem.cart_id.option ? (
+                      <span
+                        className={Styles.cate}
+                        style={{ fontSize: "14px" }}
+                      >
+                        Phân loại: {oderItem.cart_id.option.name}
+                      </span>
+                    ) : (
+                      <></>
+                    )}
+                    <span>x {oderItem.cart_id.quantity}</span>
+                  </div>
                 </div>
               )}
             </div>

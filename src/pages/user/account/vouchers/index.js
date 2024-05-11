@@ -10,17 +10,20 @@ import { Toaster } from "react-hot-toast";
 import { useCookies } from "react-cookie";
 import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
 import { useRouter } from "next/router";
+import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
 
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchCanceledOrders();
+  const vouchers = useFetchVouchersUser();
+
   const [cookie] = useCookies();
   const route = useRouter();
   // const router = useRouter();
   // const { query } = router;
 
-  const handleGoToAdmin = () => {
-    route.push("/user/account/voucher-admin");
+  const handleGoToVendor = () => {
+    route.push("/user/account/vouchers");
   };
 
   if (orders.isLoading) {
@@ -42,35 +45,30 @@ function Index() {
             <div className={Styles["voucher-title-container"]}>
               <div className={`${Styles["profile-title-container"]} `}>
                 <span style={{ fontWeight: "400", fontSize: "20px" }}>
-                  Danh sách đơn hàng
+                  Danh sách khuyến mãi
                 </span>
-                <span>Quản lý danh sách đơn hàng</span>
-              </div>
-              <div className={Styles["voucher-nav-container"]}>
-                <div
-                  className={`${Styles["shop-voucher-nav"]}  ${Styles["active-voucher-nav"]}`}
-                >
-                  Voucher của shop
-                </div>
-                <div
-                  className={Styles["admin-voucher-nav"]}
-                  onClick={handleGoToAdmin}
-                >
-                  Voucher của Techwave
-                </div>
+                <span>Xem danh sách khuyến mãi</span>
               </div>
             </div>
             <div className={Styles["vouchers-card-container"]}>
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
-              <VoucherCard role="vendor" />
+              {vouchers.isLoading && <>Loading</>}
+              {vouchers.isError && <>Error</>}
+              {vouchers.data ? (
+                vouchers.data.data.map((voucher, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <VoucherCard role="admin" data={voucher} />
+                    </React.Fragment>
+                  );
+                })
+              ) : (
+                <>
+                  <Empty />
+                </>
+              )}
+              {/* <VoucherCard role="admin" />
+              <VoucherCard role="admin" />
+              <VoucherCard role="admin" /> */}
             </div>
           </div>
         </UserLayout>

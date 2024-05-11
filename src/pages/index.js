@@ -27,7 +27,6 @@ function Index() {
   const token = Cookies.get("token");
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
-  const [img, setImg] = useState(null);
   const { mutate } = useFetchCart();
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
@@ -153,8 +152,7 @@ function Index() {
         <CustomerFeedBack />
         <Map />
         <ItemDetail
-          img={img}
-          updateImg={setImg}
+          // updateImg={setImg}
           addCartItem={handlingAddCartItem}
           item={detailItem}
           isOpenDialog={isOpenDialog}

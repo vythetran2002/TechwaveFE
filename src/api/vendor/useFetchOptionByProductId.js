@@ -20,8 +20,7 @@ const useFetchOptionByProductId = (id) => {
 
   const { data, error, mutate, isValidating } = useSWR(
     id ? `http://localhost:3000/api/vendor/product/option/${id}` : null,
-    () => fetcher(url, headers),
-    { refreshInterval: 1000 }
+    () => fetcher(url, headers)
   );
 
   return {

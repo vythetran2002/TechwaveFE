@@ -73,7 +73,6 @@ function Index() {
 
   useEffect(() => {
     if (router.query.nav) {
-      // console.log("asdhsakjdhsajdhsjkhasdhsjkdhaskjdhaskjd");
       scroller.scrollTo("danhGia", {
         smooth: true,
         duration: 500,

@@ -19,10 +19,8 @@ const useFetchUserReviews = () => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(
-    url,
-    () => fetcher(url, headers),
-    { refreshInterval: 1000 }
+  const { data, error, mutate, isValidating } = useSWR(url, () =>
+    fetcher(url, headers)
   );
 
   return {

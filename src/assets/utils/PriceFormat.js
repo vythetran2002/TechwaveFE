@@ -1,5 +1,7 @@
 export function FormatPrice(price) {
-  if (price) {
+  if (price === 0) {
+    return "0đ";
+  } else if (price) {
     if (typeof price === "number") {
       return price.toLocaleString("vi-VN", {
         style: "currency",

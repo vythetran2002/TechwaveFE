@@ -49,6 +49,7 @@
 .name-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 .price-container {
   display: flex;
@@ -62,6 +63,12 @@
 .link {
   color: white;
   transition: 100ms;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
 .link:hover {
   color: black;
@@ -71,4 +78,17 @@
   flex-direction: row-reverse;
   gap: 10px;
   margin-top: 10px;
+}
+.cate-quantity-container {
+  display: flex;
+  flex-direction: column;
+}
+.cate {
+  display: block;
+  overflow: hidden;
+  width: 200px;
+  /* word-wrap: break-word; */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
 }

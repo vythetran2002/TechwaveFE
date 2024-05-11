@@ -12,7 +12,6 @@ export const sendPostRequestWithToken = async (data, token) => {
         },
       }
     );
-
     toast.success("Updated");
     return response.data;
   } catch (error) {

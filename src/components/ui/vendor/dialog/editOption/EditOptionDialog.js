@@ -1,22 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { Modal, Upload } from "antd";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Styles from "./styles.module.css";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Roboto } from "next/font/google";
-import dynamic from "next/dynamic";
-import { Input, Radio } from "antd";
-import dayjs from "dayjs";
+import { Input, Radio, Form, Button } from "antd";
 import Image from "next/image";
 import { uploadImage } from "@/components/utils/Upload";
-import { AddOption } from "@/api/vendor/AddOption";
-import { Toaster } from "react-hot-toast";
-import { PutOption } from "@/api/vendor/PutOption";
+import toast, { Toaster } from "react-hot-toast";
+import { CloudUploadOutlined } from "@ant-design/icons";
 import images from "@/assets/images";
+import { PutOption } from "@/api/vendor/PutOption";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -24,83 +19,80 @@ const roboto = Roboto({
   display: "swap",
 });
 
-export default function EditOptionDialog(props) {
-  // console.log(props);
+const sxStyle = {
+  "& .MuiDialog-container:hover": {
+    cursor: "pointer",
+  },
+  "& .MuiPaper-root": {
+    cursor: "default",
+  },
+  "& .MuiTypography-root": {
+    padding: "10px 14px 10px 24px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: "24px",
+  },
+  "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
+    right: 55,
+  },
+};
+
+export default function AddOptionDialog(props) {
+  const [avatarSrc, setAvatarSrc] = useState();
   const [open, setOpen] = React.useState(false);
-  const [avatarSrc, setAvatarSrc] = useState(null);
-  const [name, setName] = useState(props.option.name);
+  const [option, setOption] = useState({
+    name: null,
+    image: null,
+  });
+  const [name, setName] = useState(null);
+
+  //Refs
   const messageRef = useRef();
+  const inputFileRef = useRef();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const sxStyle = {
-    "& .MuiDialog-container:hover": {
-      cursor: "pointer",
-    },
-    "& .MuiPaper-root": {
-      cursor: "default",
-    },
-    "& .MuiTypography-root": {
-      padding: "10px 14px 10px 24px",
-    },
-    "& .MuiDialogActions-root": {
-      padding: "24px",
-    },
-    "&.css-4g2jqn-MuiModal-root-MuiDialog-root": {
-      right: 55,
-    },
+    setAvatarSrc(null);
+    props.handleClose();
   };
 
   const [fileList, setFileList] = useState([]);
   const [imgList, setImgList] = useState([]);
-  // const handlePreview = async (file) => {
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await getBase64(file.originFileObj);
-  //   }
-  //   setPreviewImage(file.url || file.preview);
-  //   setPreviewOpen(true);
-  //   setPreviewTitle(
-  //     file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-  //   );
-  // };
-
-  // const handlePreview = async (file) => {
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await getBase64(file.originFileObj);
-  //   }
-  //   setPreviewImage(file.url || file.preview);
-  //   setPreviewOpen(true);
-  //   setPreviewTitle(
-  //     file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-  //   );
-  // };
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
         console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        // let temp = { ...props.option, image: imagePath };
-        // props.updateImage(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        // let temp = { ...props.product, image: imagePath };
+        // props.updateProduct(temp);
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
+    // promiseResult
+    //   .then((result) => {
+    //     const imagePath = result.imagePath;
+    //     console.log("imagePath:", imagePath);
+    //     setAvatarSrc(imagePath);
+    //     let temp = { ...props.product, image: imagePath };
+    //     props.updateProduct(temp);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Lỗi:", error);
+    //   });
   }
 
-  const handlingChangeName = (e) => {
-    // setName(e.target.value);
-    props.updateName(e.target.value);
+  const handlingClickUpload = () => {
+    inputFileRef.current.click();
   };
 
   // const handleChange = ({ fileList: newFileList }) => {
@@ -109,65 +101,52 @@ export default function EditOptionDialog(props) {
   //   handleFileUpload(newFileList);
   // };
 
-  const handlingSubmit = (event) => {
-    event.preventDefault();
-    let temp = {};
+  // const handlingSubmit = (event) => {
+  //   event.preventDefault();
+  //   let temp = { ...option, name: name };
+  //   const message = AddOption(props.id, temp, props.token);
+  //   // window.location.reload();
+  //   props.handleClose();
+  //   console.log(message);
+  // };
+
+  const onFinish = async (values) => {
+    let final = {};
+
     if (avatarSrc) {
-      temp = {
-        name: props.option.name,
-        image: avatarSrc,
-      };
+      final = { ...values, image: avatarSrc };
     } else {
-      let { image, name } = props.option;
-      temp = { image, name };
+      final = { ...values, image: props.option.image };
     }
-    console.log(temp);
-    // console.log(temp);
-    // console.log("productId " + props.productId);
-    // console.log("OptionId " + props.option.id);
-    const message = PutOption(
+    const message = await PutOption(
       props.productId,
       props.option.id,
-      temp,
+      final,
       props.token
     );
-    console.log(message);
-    props.handleClose();
-    // window.location.reload();
-    // const message = AddOption(props.id, temp, props.token);
-    // window.location.reload();
-    // console.log(message);
+    await props.mutate();
+    handleClose();
+  };
+  const onFinishFailed = (errorInfo) => {
+    toast.error("Mời nhập lại thông tin");
   };
 
-  // const uploadButton = (
-  //   <div>
-  //     <PlusOutlined />
-  //     <div
-  //       style={{
-  //         marginTop: 8,
-  //       }}
-  //     >
-  //       Upload
-  //     </div>
-  //   </div>
-  // );
-
   // useEffect(() => {
-  //   console.log(image);
-  // }, [image]);
+  //   console.log(name);
+  // }, [name]);
 
   return (
     <React.Fragment>
       <Toaster />
       <Dialog
-        onClose={props.handleClose}
+        onClose={handleClose}
         open={props.isOpen}
         sx={sxStyle}
         className={roboto.className}
       >
         <DialogTitle className={Styles["add-User-dialog-title-container"]}>
           <span className={Styles["add-User-dialog-title-wrapper"]}>
-            Chỉnh sửa Phân Loại
+            Thêm Phân Loại
           </span>
           <div
             className={Styles["close-icon-wrapper"]}
@@ -178,31 +157,47 @@ export default function EditOptionDialog(props) {
         </DialogTitle>
 
         <DialogContent dividers>
-          <form className={Styles["add-user-form-container"]}>
-            <div className={Styles["add-user-field-container"]}>
-              <span className={Styles["add-user-field-label"]}>ID:</span>
-              <Input
-                disabled
-                placeholder="Tên phân loại"
-                style={{
-                  width: "100%",
-                }}
-                defaultValue={props.option.id}
-              />
-            </div>
-
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            className={Styles["add-user-form-container"]}
+            initialValues={{
+              name: props.option.name,
+            }}
+          >
             <div className={Styles["add-user-field-container"]}>
               <span className={Styles["add-user-field-label"]}>Hình ảnh:</span>
-              <div style={{ display: "flex", gap: "20px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                  width: "100%",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <input
                   type="file"
+                  ref={inputFileRef}
+                  accept=".jpg, .png, image/jpeg, image/png"
                   onChange={handleFileUpload}
                   style={{
                     backgroundColor: "transparent",
                     textAlign: "center",
                     width: "150px",
+                    display: "none",
                   }}
                 />
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  <Button
+                    onClick={handlingClickUpload}
+                    type="primary"
+                    icon={<CloudUploadOutlined />}
+                  >
+                    Upload Image
+                  </Button>
+                </div>
+
                 {/* <Upload
                   listType="picture-card"
                   onChange={handleChange}
@@ -211,36 +206,25 @@ export default function EditOptionDialog(props) {
                   {fileList.length >= 8 ? null : uploadButton}
                 </Upload> */}
                 {avatarSrc ? (
-                  <>
-                    <Image
-                      width={100}
-                      height={100}
-                      style={{ borderRadius: "5px" }}
-                      src={avatarSrc}
-                      alt=""
-                      priority
-                    />
-                  </>
+                  <Image src={avatarSrc} alt="" width={100} height={100} />
                 ) : (
                   <>
                     {props.option.image ? (
-                      <Image
-                        width={100}
-                        height={100}
-                        style={{ borderRadius: "5px" }}
-                        src={props.option.image}
-                        alt=""
-                        priority
-                      />
+                      <>
+                        <Image
+                          src={props.option.image}
+                          alt=""
+                          width={100}
+                          height={100}
+                        />
+                      </>
                     ) : (
                       <>
                         <Image
-                          width={100}
-                          height={100}
-                          style={{ borderRadius: "5px" }}
                           src={images.nonImg}
                           alt=""
-                          priority
+                          width={100}
+                          height={100}
                         />
                       </>
                     )}
@@ -250,17 +234,39 @@ export default function EditOptionDialog(props) {
             </div>
 
             <div className={Styles["add-user-field-container"]}>
-              <span className={Styles["add-user-field-label"]}>
-                Tên phân loại:{" "}
-              </span>
+              <span className={Styles["add-user-field-label"]}>ID: </span>
+
               <Input
-                onChange={handlingChangeName}
-                placeholder="Tên phân loại"
+                placeholder="ID"
                 style={{
                   width: "100%",
                 }}
-                defaultValue={props.option.name}
+                disabled
+                defaultValue={props.option.id}
               />
+            </div>
+
+            <div className={Styles["add-user-field-container"]}>
+              <span className={Styles["add-user-field-label"]}>
+                Tên phân loại:{" "}
+              </span>
+              <Form.Item
+                className={Styles["input-wrapper"]}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập tên phân loại",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Tên phân loại"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
             </div>
 
             <div className={Styles["message-container"]} ref={messageRef}>
@@ -279,13 +285,13 @@ export default function EditOptionDialog(props) {
                 Huỷ
               </span>
               <button
-                onClick={handlingSubmit}
+                type="submit"
                 className={Styles["add-user-field-submit-btn"]}
               >
-                Cập nhật
+                THÊM
               </button>
             </div>
-          </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </React.Fragment>

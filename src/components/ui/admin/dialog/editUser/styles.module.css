@@ -159,3 +159,6 @@
   align-items: center;
   gap: 20px;
 }
+.date-dropdown {
+  width: 540px;
+}

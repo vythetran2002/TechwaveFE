@@ -5,8 +5,12 @@ import VoucherItem from "./VoucherItem";
 import { useEffect } from "react";
 import useFetchProductsByPage from "@/api/vendor/useFetchProductsByPage";
 import { Textfit } from "react-textfit";
+import useFetchVouchersVendor from "@/api/vendor/useFetchVouchersVendor";
+import { Empty } from "antd";
 
 function VoucherList(props) {
+  const vouchers = useFetchVouchersVendor();
+
   return (
     <>
       <div className={Styles["item-list-container"]}>
@@ -43,24 +47,45 @@ function VoucherList(props) {
           </div>
           <div className={Styles["gender-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Ngày tạo</Textfit>
+              <Textfit mode="single">Ngày hết hạn</Textfit>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["status-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Ngày hết hạn</Textfit>
+              <Textfit mode="single">Trạng thái</Textfit>
             </span>
             <SortOutlinedIcon />
           </div>
         </div>
-        <React.Fragment>
+        {vouchers.isLoading && <>Loading</>}
+        {vouchers.isError && <>Error</>}
+        {vouchers.data ? (
+          vouchers.data.data.map((voucher, index) => {
+            return (
+              <React.Fragment key={index}>
+                <VoucherItem
+                  mutate={vouchers.mutate}
+                  data={voucher}
+                  token={props.token}
+                  updateVoucher={props.updateVoucher}
+                  handleOpenDialog={props.handleOpenDialog}
+                />
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <>
+            <Empty />
+          </>
+        )}
+        {/* <React.Fragment>
           <VoucherItem
             token={props.token}
             updateProduct={props.updateProduct}
             handleOpenDialog={props.handleOpenDialog}
           />
-        </React.Fragment>
+        </React.Fragment> */}
       </div>
       {/* <div className={Styles["item-pagination-container"]}>
           <Pagination count={10} size="large" />

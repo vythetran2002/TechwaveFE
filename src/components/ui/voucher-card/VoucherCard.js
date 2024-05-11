@@ -4,8 +4,16 @@ import Image from "next/image";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import { Textfit } from "react-textfit";
 import images from "@/assets/images";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
+import { calculateRemainingDays } from "@/assets/utils/calculateDayRemain";
+import dayjs from "dayjs";
+import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 
-function voucherCard({ role, children }) {
+function voucherCard({ role, children, data }) {
+  const now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
+  console.log(data);
+
   if (role === "vendor") {
     return (
       <div className={Styles["card-container"]}>
@@ -18,6 +26,7 @@ function voucherCard({ role, children }) {
                 }
                 width={50}
                 height={50}
+                alt=""
                 className={Styles.img}
               ></Image>
               <span className={Styles.title}>
@@ -28,16 +37,29 @@ function voucherCard({ role, children }) {
             </div>
           </div>
           <div className={Styles["content-container"]}>
-            <span className={Styles["discount-title"]}>Giảm 8%</span>
-            <span className={Styles["minPrice-title"]}>Đơn Tối Thiểu 3tr</span>
+            <span className={Styles["discount-title"]}>{data.name}</span>
+            <span className={Styles["minPrice-title"]}>
+              Đơn Tối Thiểu {formatCurrencyVoucher(data.minPrice)}
+            </span>
             <div className={Styles["exp-container"]}>
               <span className={Styles["icon-clock"]}>
                 <QueryBuilderOutlinedIcon style={{ fontSize: "20px" }} />
               </span>
               <span>
-                <Textfit mode="single" forceSingleModeWidth={false}>
-                  Đến ngày 2-2-2022
-                </Textfit>
+                {calculateRemainingDays(now, data.expires) ===
+                "Voucher đã hết hạn" ? (
+                  <Textfit
+                    mode="single"
+                    forceSingleModeWidth={false}
+                    style={{ color: "red" }}
+                  >
+                    {calculateRemainingDays(now, data.expires)}
+                  </Textfit>
+                ) : (
+                  <Textfit mode="single" forceSingleModeWidth={false}>
+                    {calculateRemainingDays(now, data.expires)}
+                  </Textfit>
+                )}
               </span>
             </div>
           </div>
@@ -55,6 +77,7 @@ function voucherCard({ role, children }) {
                 src={images.techwave}
                 width={50}
                 height={50}
+                alt=""
                 className={Styles.img}
               ></Image>
               <span className={Styles.title}>
@@ -65,16 +88,34 @@ function voucherCard({ role, children }) {
             </div>
           </div>
           <div className={Styles["content-container"]}>
-            <span className={Styles["discount-title"]}>Giảm 8%</span>
-            <span className={Styles["minPrice-title"]}>Đơn Tối Thiểu 3tr</span>
+            <span className={Styles["discount-title"]}>
+              Giảm {data.discount}% - Giảm tối đa {FormatPrice(data.mdPrice)}
+            </span>
+            <span className={Styles["minPrice-title"]}>
+              Đơn Tối Thiểu {FormatPrice(data.minPrice)}
+            </span>
             <div className={Styles["exp-container"]}>
               <span className={Styles["icon-clock"]}>
                 <QueryBuilderOutlinedIcon style={{ fontSize: "20px" }} />
               </span>
               <span>
-                <Textfit mode="single" forceSingleModeWidth={false}>
-                  Đến ngày 2-2-2022
-                </Textfit>
+                {calculateRemainingDays(now, data.expires) ===
+                "Voucher đã hết hạn" ? (
+                  <Textfit
+                    mode="single"
+                    forceSingleModeWidth={false}
+                    style={{ color: "red" }}
+                  >
+                    {calculateRemainingDays(now, data.expires)}
+                  </Textfit>
+                ) : (
+                  <Textfit mode="single" forceSingleModeWidth={false}>
+                    {calculateRemainingDays(now, data.expires)}
+                  </Textfit>
+                )}
+                {/* <Textfit mode="single" forceSingleModeWidth={false}>
+                  {calculateRemainingDays(now, data.expires)}
+                </Textfit> */}
               </span>
             </div>
           </div>

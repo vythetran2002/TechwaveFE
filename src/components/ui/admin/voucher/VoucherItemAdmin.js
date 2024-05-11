@@ -1,24 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import Styles from "./styles.module.css";
-import FemaleOutlinedIcon from "@mui/icons-material/FemaleOutlined";
-import { memo } from "react";
-import MaleOutlinedIcon from "@mui/icons-material/MaleOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
-import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import dayjs from "dayjs";
-import { DeleteSoftAccount } from "@/api/admin/DeleteSoftAccount";
 import { DeleteAccount } from "@/api/admin/DeleteAccount";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import { ActiveAccount } from "@/api/admin/ActiveAccount";
-import { ApproveAccount } from "@/api/admin/ApproveAccount";
+import { Tooltip } from "antd";
+import { FormatPrice } from "@/assets/utils/PriceFormat";
+import { compareDates } from "@/assets/utils/validateDayRemain";
+import { calculateRemainingDays } from "@/assets/utils/calculateDayRemain";
+import { DeleteVoucherAdmin } from "@/api/admin/DeleteVoucherAdmin";
 
 function VoucherItemAdmin(props) {
-  const { account } = props;
-
+  const { data } = props;
+  const now = dayjs().format("YYYY-MM-DD HH:mm:ss");
   const menuRef = useRef(null);
 
   const handlingOpenMenu = () => {
@@ -26,37 +21,15 @@ function VoucherItemAdmin(props) {
   };
 
   const handleOpenDialog = () => {
-    props.updateId(account.account_id);
-    props.updateAccount(account);
+    // props.up(account.account_id);
+    props.updateVoucher(data);
     props.handleOpenDialog();
   };
 
-  const handleOpenDetailDialog = () => {
-    props.updateId(account.account_id);
-    props.updateAccount(account);
-    props.handleOpenDetailDialog();
-  };
-
-  const handleSoftDelete = async () => {
-    const message = await DeleteSoftAccount(account.account_id, props.token);
-    await props.reload();
-    // window.location.reload();
-  };
-
   const handleDelteAccount = async () => {
-    const message = await DeleteAccount(account.account_id, props.token);
-    await props.reload();
+    const message = await DeleteVoucherAdmin(data.discount_id, props.token);
+    await props.mutate();
     // window.location.reload();
-  };
-
-  const handlingActiveAccount = async () => {
-    const message = await ActiveAccount(account.account_id, props.token);
-    await props.reload();
-  };
-
-  const handlineApproveAccount = async () => {
-    const message = await ApproveAccount(account.account_id, props.token);
-    await props.reload();
   };
 
   useEffect(() => {
@@ -75,14 +48,48 @@ function VoucherItemAdmin(props) {
   return (
     <>
       <div className={Styles["list-item-container"]}>
-        <div className={Styles["list-item-id-wrapper"]}>XMAS SALE</div>
-        <div className={Styles["list-item-name-wrapper"]}>20</div>
-        <div className={Styles["list-item-email-wrapper"]}>50%</div>
-        <div className={Styles["list-item-dob-wrapper"]}>200.000đ</div>
-        <dt className={Styles["list-item-gender-wrapper"]}>50.000đ</dt>
-        <div className={Styles["list-item-role-wrapper"]}>25/10/2002</div>
+        <div className={Styles["list-item-id-wrapper"]}>
+          <Tooltip title={props.data.name}>{props.data.name}</Tooltip>
+        </div>
+        <div className={Styles["list-item-name-wrapper"]}>
+          {props.data.quantity}
+        </div>
+        <div className={Styles["list-item-email-wrapper"]}>
+          {props.data.discount}%
+        </div>
+        <div
+          className={Styles["list-item-email-wrapper"]}
+          style={{ color: "green" }}
+        >
+          {FormatPrice(props.data.minPrice)}
+        </div>
+        <div className={Styles["list-item-dob-wrapper"]}>
+          {FormatPrice(props.data.mdPrice)}
+        </div>
         <div className={Styles["list-item-status-wrapper"]}>
-          <span>25/10/2002</span>
+          {dayjs(props.data.expires).format("DD/MM/YYYY")}
+        </div>
+        <div className={Styles["list-item-status-wrapper"]}>
+          {compareDates(now, props.data.expires) ? (
+            <Tooltip title={calculateRemainingDays(now, props.data.expires)}>
+              <div
+                onClick={handleOpenDialog}
+                className={Styles["list-item-status-active-button-wrapper"]}
+              >
+                {calculateRemainingDays(now, props.data.expires)}
+              </div>
+            </Tooltip>
+          ) : (
+            <Tooltip title={calculateRemainingDays(now, props.data.expires)}>
+              <div
+                onClick={handleOpenDialog}
+                style={{ background: "red" }}
+                className={Styles["list-item-status-active-button-wrapper"]}
+              >
+                {calculateRemainingDays(now, props.data.expires)}
+              </div>
+            </Tooltip>
+          )}
 
           <div className={Styles["list-item-more-option-wrapper"]}>
             <div

@@ -19,21 +19,23 @@ import DetailUserDialog from "@/components/ui/admin/dialog/detailUser/DetailUser
 import { Pagination } from "@mui/material";
 import useFetchAccount from "@/api/admin/useFetchAccount";
 import AddVoucherDialogAdmin from "@/components/ui/admin/voucher/add/AddVoucherDialogAdmin";
+import EditVoucherDialogAdmin from "@/components/ui/admin/voucher/edit/EditVoucherDialogAdmin";
+import useFetchVouchersAdmin from "@/api/admin/useFetchVoucherAdmin";
 
 function Index() {
   // const [cookies] = useCookies();
   const token = Cookies.get("token");
+  const { mutate } = useFetchVouchersAdmin();
   // console.log(router.query);
   // states
   const [isOpenAddUserDialog, setIsOpenAddUserDialog] = useState(false);
   const [isOpenEditUserDialog, setIsOpenEditUserDialog] = useState(false);
   const [isOpenDetailUserDialog, setIsOpenDetailUserDialog] = useState(false);
   const [id, setId] = useState();
-  const [account, setAccount] = useState();
+  const [voucher, setVoucher] = useState({});
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
-  const { mutate } = useFetchAccount(1, page, quantity, token);
   const handlingOpenAddUserDialog = () => {
     setIsOpenAddUserDialog(true);
   };
@@ -62,9 +64,9 @@ function Index() {
     setId(value);
   };
 
-  const updateAccount = (value) => {
+  const updateVoucher = (value) => {
     let temp = { ...value };
-    setAccount(temp);
+    setVoucher(temp);
   };
 
   const updateQuantity = (value) => {
@@ -190,7 +192,7 @@ function Index() {
             limit={quantity}
             page={page}
             token={token}
-            updateAccount={updateAccount}
+            updateVoucher={updateVoucher}
             updateId={updateId}
             status={1}
             handleOpenDialog={handlingOpenEditUserDialog}
@@ -198,28 +200,28 @@ function Index() {
             handleOpenDetailDialog={handlingOpenDetailUserDialog}
           />
           <AddVoucherDialogAdmin
-            mutating={mutating}
+            mutate={mutate}
             token={token}
             isOpen={isOpenAddUserDialog}
             handleClose={handlingCloseAddUserDialog}
           />
-          <EditUserDialog
-            mutating={mutating}
+          <EditVoucherDialogAdmin
+            mutate={mutate}
             token={token}
-            data={account}
-            updateData={updateAccount}
+            voucher={voucher}
+            updateData={updateVoucher}
             id={id}
             isOpen={isOpenEditUserDialog}
             handleClose={handlingCloseEditUserDialog}
           />
-          <DetailUserDialog
+          {/* <DetailUserDialog
             token={token}
             data={account}
             updateData={updateAccount}
             id={id}
             isOpen={isOpenDetailUserDialog}
             handleClose={handlingCloseDetailUserDialog}
-          />
+          /> */}
           <div
             style={{ width: "100%", display: "flex", justifyContent: "center" }}
           >
