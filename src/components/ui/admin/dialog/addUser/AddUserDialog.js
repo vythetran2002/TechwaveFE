@@ -111,6 +111,8 @@ export default function AddUserDialog(props) {
     setIsDisabledDistricts(true);
     setIsDisabledWards(true);
     setIsDisabledAddress(true);
+    setProvinceId(null);
+    setDistrictId(null);
   };
 
   function handleFileUpload(event) {
@@ -134,10 +136,20 @@ export default function AddUserDialog(props) {
     let final = { ...values, avatar: avatarSrc };
     final.dob = dayjs(final.dob).format("YYYY/MM/DD");
     final.id_permission = final.id_permission.value;
-    const message = await CreateAccount(final, token);
+    let data = {
+      ...final,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+
+    console.log("success", data);
+    const message = await CreateAccount(data, token);
     props.mutating();
-    props.handleClose();
-    setAvatarSrc(null);
+    handlingCloseDialog();
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");

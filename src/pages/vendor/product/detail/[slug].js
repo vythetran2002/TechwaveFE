@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
-import dynamic from "next/dynamic";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
-import { Col, Divider, Row } from "antd";
+
 import { useRouter } from "next/router";
 import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
 import Image from "next/image";

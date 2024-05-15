@@ -13,13 +13,13 @@ import AddUserDialog from "@/components/ui/admin/dialog/addUser/AddUserDialog";
 import EditUserDialog from "@/components/ui/admin/dialog/editUser/EditUserDialog";
 import Link from "next/link";
 import useFetch from "@/api/useFetch";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import DetailUserDialog from "@/components/ui/admin/dialog/detailUser/DetailUserDialog";
 import { Pagination } from "@mui/material";
 import { useRouter } from "next/router";
 
 function Index() {
-  const [cookies] = useCookies(["token"]);
+  const token = Cookies.get("token");
   // states
   const [isOpenAddUserDialog, setIsOpenAddUserDialog] = useState(false);
   const [isOpenEditUserDialog, setIsOpenEditUserDialog] = useState(false);
@@ -187,7 +187,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             updateAccount={updateAccount}
             updateId={updateId}
             status={2}
@@ -196,7 +196,7 @@ function Index() {
             handleOpenDetailDialog={handlingOpenDetailUserDialog}
           />
           <AddUserDialog
-            token={cookies["token"]}
+            token={token}
             isOpen={isOpenAddUserDialog}
             handleClose={handlingCloseAddUserDialog}
           />
@@ -205,7 +205,7 @@ function Index() {
             handleClose={handlingCloseEditUserDialog}
           />
           <DetailUserDialog
-            token={cookies["token"]}
+            token={token}
             data={account}
             updateData={updateAccount}
             id={id}

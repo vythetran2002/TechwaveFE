@@ -1,17 +1,12 @@
 import React from "react";
 import Head from "next/head";
-
 import UserLayout from "@/components/layout/UserLayout";
 import Styles from "../favourites/style.module.css";
-
 import PurchaseItemCard from "@/components/ui/PurchaseItemCard/PurchaseItemCard";
-
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchShippingOrders from "@/api/user/useFetchShippingOrders";
-
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 
 function Index() {

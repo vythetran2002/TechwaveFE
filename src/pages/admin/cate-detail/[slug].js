@@ -15,7 +15,7 @@ import images from "@/assets/images";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import CateDetailDialog from "@/components/ui/admin/dialog/detailCate/CateDetailDialog";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import useFetchCategories from "@/api/vendor/useFetchCategories";
 import { Select } from "antd";
 import { Pagination } from "@mui/material";
@@ -29,7 +29,7 @@ import EditCateDialogDetail from "@/components/ui/admin/dialog/editCateDetail/Ed
 import useFetchCateGoryDetail from "@/api/admin/useFetchCategoryDetail";
 
 function Index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const router = useRouter();
   const query = router.query;
   //   console.log(query.slug);
@@ -45,12 +45,7 @@ function Index() {
   const [quantity, setQuantity] = useState(5);
   const [page, setPage] = useState(1);
   const [max, setMax] = useState();
-  const { mutate } = useFetchCateGoryDetail(
-    query.slug,
-    page,
-    quantity,
-    cookies["token"]
-  );
+  const { mutate } = useFetchCateGoryDetail(query.slug, page, quantity, token);
 
   const handlingOpenAddCateDialog = () => {
     setIsOpenAddCateDialog(true);
@@ -185,12 +180,12 @@ function Index() {
             handleCloseDialog={handlingOpenEditCateDialog}
             handleOpenDetailDialog={handlingOpenDetailCate}
             updateId={updateId}
-            token={cookies["token"]}
+            token={token}
           />
           <AddCateDialogDetail
             mutating={mutate}
             id={query}
-            token={cookies["token"]}
+            token={token}
             isOpen={isOpenAddCateDialog}
             handleClose={handlingCloseAddCateDialog}
             imgSrc={avatarSrc}

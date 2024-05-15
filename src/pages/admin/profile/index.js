@@ -137,91 +137,8 @@ function Home() {
     await form.resetFields();
     await setPasswdEditMode(false);
     passwdChangeLabel.current.style.opacity = 0;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (oldPass == newPass && oldPass == "" && newPass == "") {
-      if (checkEmptyFields(userProfile)) {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Vui lòng nhập đầy đủ thông tin";
-      } else {
-        // update profile
-        console.log("--------------------------------");
-        // console.log(userProfile);
-        messageRef.current.style.display = "none";
-        const {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        } = userProfile;
-        const temp = {
-          fullname,
-          email,
-          phone,
-          address,
-          dob,
-          gender,
-          username,
-          avatar,
-        };
-
-        let tempDOB = dayjs(temp.dob).format("YYYY/MM/DD");
-        let result = { ...temp, dob: tempDOB };
-        console.log(result);
-        const message = EditProfile(result, token);
-        console.log(message);
-        window.location.reload();
-      }
-    } else if (oldPass != "" && newPass != "") {
-      if (oldPass != newPass) {
-        if (oldPass != userProfile.password) {
-          messageRef.current.style.display = "block";
-          messageRef.current.textContent = "Mật khẩu cũ không đúng";
-        } else if (oldPass == userProfile.password) {
-          // change password
-          console.log("--------------------------------");
-          let temp = { ...userProfile, password: newPass };
-          const {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          } = temp;
-          const reqUser = {
-            fullname,
-            email,
-            phone,
-            address,
-            dob,
-            gender,
-            username,
-            avatar,
-            password,
-          };
-          let tempDOB = dayjs(reqUser.dob).format("YYYY/MM/DD");
-          let result = { ...reqUser, dob: tempDOB };
-          console.log(result);
-          messageRef.current.style.display = "none";
-          const message = EditProfile(result, token);
-          console.log(message);
-          window.location.reload();
-        }
-      } else {
-        messageRef.current.style.display = "block";
-        messageRef.current.textContent = "Mật khẩu mới trùng với mật khẩu cũ";
-      }
-    }
+    setProvinceId(null);
+    setDistrictId(null);
   };
 
   const onFinish = async (values) => {
@@ -240,13 +157,25 @@ function Home() {
         passwdChangeLabel.current.style.opacity = 0;
       }
     }
-    await delete final.oldPassword;
-    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
-    console.log(final);
-    // const message = await EditProfile(final, token);
-    // console.log(message);
-    // await switchRef.current.click();
-    // await user.mutate(); // mutate data
+
+    let data = {
+      ...final,
+      username: user.data.username,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+
+    await delete data.oldPassword;
+    data.dob = dayjs(data.dob).format("YYYY/MM/DD");
+    data.username = user.data.username;
+    const message = await EditProfile(data, token);
+    console.log(message);
+    await switchRef.current.click();
+    await user.mutate(); // mutate data
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");
@@ -325,22 +254,21 @@ function Home() {
                   fullname: user.data.fullname,
                   email: user.data.email,
                   phone: user.data.phone,
-                  address: user.data.address,
+                  address: user.data.address.address,
                   gender: user.data.gender,
                   dob: dayjs(user.data.dob, "YYYY/MM/DD"),
                   province: {
-                    value: "Đắk Lắk",
-                    key: "210",
+                    key: user.data.address.province_id,
+                    value: user.data.address.province,
                   },
                   district: {
-                    value: "Krong Buk",
-                    key: "1463",
+                    value: user.data.address.district,
+                    key: user.data.address.district_id,
                   },
                   ward: {
-                    value: "Chư KBô",
-                    key: "21805",
+                    value: user.data.address.ward,
+                    key: user.data.address.ward_id,
                   },
-                  address: "89 Thôn An Bình, Xã ChuKPo, Huỵen KrongBuk ",
                 }}
               >
                 <div className={Styles["profile-form-input-container"]}>
@@ -442,10 +370,10 @@ function Home() {
                         >
                           <Select
                             placeholder={"Tỉnh thành"}
-                            dropdownStyle={{
-                              width: "430px",
-                              zIndex: "99999999",
-                            }}
+                            // dropdownStyle={{
+                            //   width: "430px",
+                            //   zIndex: "99999999",
+                            // }}
                             placement="bottomRight"
                             labelInValue={true}
                             showSearch
@@ -500,10 +428,10 @@ function Home() {
                         >
                           <Select
                             placeholder={"Quận huyện"}
-                            dropdownStyle={{
-                              width: "430px",
-                              zIndex: "99999999",
-                            }}
+                            // dropdownStyle={{
+                            //   width: "430px",
+                            //   zIndex: "99999999",
+                            // }}
                             placement="bottomRight"
                             labelInValue={true}
                             showSearch
@@ -549,10 +477,6 @@ function Home() {
                         >
                           <Select
                             placeholder={"Xã, Phường"}
-                            dropdownStyle={{
-                              width: "430px",
-                              zIndex: "99999999",
-                            }}
                             placement="bottomRight"
                             labelInValue={true}
                             showSearch
@@ -608,7 +532,7 @@ function Home() {
                         </Form.Item>
                       </span>
                     ) : (
-                      <span>{user.data.address}</span>
+                      <span>{user.data.address.address}</span>
                     )}
                   </div>
                   <div className={Styles["profile-col"]}>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PaymentItem from "../PaymentItem/PaymentItem";
 import Styles from "./styles.module.css";
-import { Divider } from "antd";
+import { Modal } from "antd";
+import RadioGroup from "@mui/material/RadioGroup";
 import { ShopOutlined } from "@ant-design/icons";
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
 import { Button } from "antd";
@@ -9,17 +10,20 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { Spin } from "antd";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import { LoadingOutlined } from "@ant-design/icons";
-import { GHN_API } from "@/api/GHN/GHN";
 import { useFetchShippingFee } from "@/api/GHN/CountShippingFee";
 import { calculateTotalValue } from "@/assets/utils/calculateTotalValue";
 import useFetchInitialShopVoucher from "@/api/user/payment/useFetchInitialShopVoucher";
 import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
-const LocationProvider = new GHN_API();
+import useFetchVoucherByShopId from "@/api/user/payment/useFetchVoucherByShopId";
+import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
+import Radio from "@mui/material/Radio";
+import toast from "react-hot-toast";
+import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId";
 
 function PaymentShop(props) {
-  const [shopVoucher, setShopVoucher] = useState(null);
-
   const {
+    index,
+    updateTotalArray,
     updateShopId,
     items,
     handleOpen,
@@ -30,19 +34,75 @@ function PaymentShop(props) {
     shopWardId,
   } = props;
 
+  const [isVoucherProcessed, setIsVoucherProcessed] = useState(false);
+  const [shopVoucher, setShopVoucher] = useState(null);
+  const [visible, setVisible] = React.useState(false);
+  const [chosenVoucherId, setChosenVoucherId] = useState(null);
+
+  // API HOOKS
   const shippingFee = useFetchShippingFee(
     shopDistrictId,
     shopWardId,
     userDistrictId,
     userWardId
   );
-
-  const vou = useFetchInitialShopVoucher(
+  const vendorVouchers = useFetchVoucherByShopId(items[0].store.account_id);
+  const initialVoucher = useFetchInitialShopVoucher(
     items[0].store.account_id,
     calculateTotalValue(items)
   );
 
-  console.log(calculateTotalValue(items));
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = () => {
+    if (chosenVoucherId) {
+      const price = calculateTotalValue(items);
+      const voucher = getVoucherByVoucherId(chosenVoucherId, price);
+      toast.promise(voucher, {
+        loading: "Đang xử lí",
+        success: (result) => {
+          setShopVoucher(result);
+          handleUpdateTotalArray();
+          handleCancel();
+          return "Đã áp mã";
+        },
+        error: "Error",
+      });
+    } else {
+      handleCancel();
+    }
+
+    // await setShopVoucher(voucher);
+    // console.log("success", voucher);
+    // setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+    setChosenVoucherId(null);
+  };
+
+  const handleChangeRadio = (e) => {
+    setChosenVoucherId(e.target.value);
+  };
+
+  const handleUpdateTotalArray = async () => {
+    if (shopVoucher?.result) {
+      await updateTotalArray(
+        index,
+        calculateTotalValue(items) +
+          shippingFee.data?.data.total -
+          shopVoucher.result
+      );
+    } else {
+      await updateTotalArray(
+        index,
+        calculateTotalValue(items) + shippingFee.data?.data.total
+      );
+    }
+  };
 
   // const shippingFee = LocationProvider.countShippingFee(
   //   shopDistrictId,
@@ -61,6 +121,26 @@ function PaymentShop(props) {
   // );
 
   // console.log(shippingFee.data);
+
+  useEffect(() => {
+    if (initialVoucher.data && !isVoucherProcessed) {
+      setShopVoucher(initialVoucher.data);
+      setIsVoucherProcessed(true);
+    }
+    if (shopVoucher?.result) {
+      updateTotalArray(
+        index,
+        calculateTotalValue(items) +
+          shippingFee.data?.data.total -
+          shopVoucher.result
+      );
+    } else {
+      updateTotalArray(
+        index,
+        calculateTotalValue(items) + shippingFee.data?.data.total
+      );
+    }
+  }, [shopVoucher, initialVoucher]);
 
   if (items)
     return (
@@ -89,10 +169,10 @@ function PaymentShop(props) {
             <span>Shop Voucher </span>
           </div>
           <div className={Styles["discountLabel-button-wrapper"]}>
-            {vou.data ? (
+            {shopVoucher ? (
               <>
                 <div className={Styles["discountLabel"]}>
-                  {"- " + formatCurrencyVoucher(vou.data.result)}
+                  {"- " + formatCurrencyVoucher(shopVoucher.result)}
                 </div>
               </>
             ) : (
@@ -102,7 +182,7 @@ function PaymentShop(props) {
               size="large"
               type="primary"
               onClick={() => {
-                handleOpen();
+                showModal();
                 updateShopId(items[0].store.account_id);
               }}
             >
@@ -159,13 +239,54 @@ function PaymentShop(props) {
             <span>Tổng đơn</span>
           </div>
           <div className={Styles["discountLabel-button-wrapper"]}>
-            <span>
-              {FormatPrice(
-                calculateTotalValue(items) + shippingFee.data?.data.total
-              )}
-            </span>
+            {shopVoucher?.result ? (
+              <span>
+                {FormatPrice(
+                  calculateTotalValue(items) +
+                    shippingFee.data?.data.total -
+                    shopVoucher.result
+                )}
+              </span>
+            ) : (
+              <span>
+                {FormatPrice(
+                  calculateTotalValue(items) + shippingFee.data?.data.total
+                )}
+              </span>
+            )}
           </div>
         </div>
+        <Modal
+          title="Vouchers"
+          open={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <RadioGroup onChange={handleChangeRadio} value={chosenVoucherId}>
+            <div className={Styles["voucher-admin-container"]}>
+              <div className={Styles["voucher-admin-wrapper"]}>
+                {vendorVouchers.data?.data ? (
+                  vendorVouchers.data.data.map((voucher, index) => {
+                    return (
+                      <VoucherCard role="vendor" data={voucher} key={index}>
+                        <Radio value={voucher.discount_id} name="a"></Radio>
+                      </VoucherCard>
+                    );
+                  })
+                ) : (
+                  <React.Fragment>Loading...</React.Fragment>
+                )}
+
+                {/* <VoucherCard role="vendor">
+                    <Radio value={2} name="b"></Radio>
+                  </VoucherCard>
+                  <VoucherCard role="vendor">
+                    <Radio value={3} name="c"></Radio>
+                  </VoucherCard> */}
+              </div>
+            </div>
+          </RadioGroup>
+        </Modal>
       </div>
     );
 }

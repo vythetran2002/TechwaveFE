@@ -56,7 +56,7 @@ const LocationProvider = new GHN_API();
 
 export default function EditUserDialog(props) {
   const { id, data, updateData, token, mutating } = props;
-  const account = useFetchAccountById(id);
+
   const messageRef = useRef();
 
   const [avatarSrc, setAvatarSrc] = useState(null);
@@ -79,11 +79,6 @@ export default function EditUserDialog(props) {
     inputFileRef.current.click();
   };
 
-  // useEffect(() => {
-  //   console.log("---");
-  //   console.log(data);
-  // }, [data]);
-
   const handleChangeSelectProvince = (value) => {
     setProvinceId(value.key);
     setDistrictId(null);
@@ -98,24 +93,6 @@ export default function EditUserDialog(props) {
   const handleChangeSelectWard = (value) => {
     setWardId(value.key);
   };
-
-  // useEffect(() => {
-  //   if (provinceId) {
-  //     setIsDisabledDistricts(false);
-  //   } else {
-  //     setIsDisabledDistricts(true);
-  //   }
-  //   if (districtId) {
-  //     setIsDisabledWards(false);
-  //   } else {
-  //     setIsDisabledWards(true);
-  //   }
-  //   if (wardId) {
-  //     setIsDisabledAddress(false);
-  //   } else {
-  //     setIsDisabledAddress(true);
-  //   }
-  // }, [provinceId, districtId, wardId]);
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -145,28 +122,53 @@ export default function EditUserDialog(props) {
     if (final.id_permission?.value) {
       final.id_permission = final.id_permission.value;
     }
-    const message = await EditAccountById(data.account_id, final, token);
+
+    let user = {
+      ...final,
+      username: data.username,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+    const message = await EditAccountById(data.account_id, user, token);
     await mutating();
-    console.log(message);
     handlingCloseDialog();
-    setAvatarSrc(null);
   };
 
   const handlingCloseDialog = () => {
     props.handleClose();
     setAvatarSrc(null);
+    setProvinceId(null);
+    setDistrictId(null);
   };
 
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");
   };
 
-  if (account.isLoading) {
-    return <></>;
-  }
-  if (account.isError) {
-    return <>Error</>;
-  } else
+  useEffect(() => {
+    if (provinceId) {
+      setIsDisabledDistricts(false);
+    } else {
+      setIsDisabledDistricts(true);
+    }
+    if (districtId) {
+      setIsDisabledWards(false);
+    } else {
+      setIsDisabledWards(true);
+    }
+  }, [provinceId, districtId]);
+
+  // if (account.isLoading) {
+  //   return <></>;
+  // }
+  // if (account.isError) {
+  //   return <>Error</>;
+  // } else
+  if (data)
     return (
       <React.Fragment>
         <Dialog
@@ -196,7 +198,7 @@ export default function EditUserDialog(props) {
               autoComplete="off"
               className={Styles["add-user-form-container"]}
               initialValues={{
-                address: data.address,
+                address: data.address.address,
                 dob: dayjs(data.dob, "YYYY/MM/DD"),
                 email: data.email,
                 fullname: data.fullname,
@@ -206,18 +208,17 @@ export default function EditUserDialog(props) {
                 phone: data.phone,
                 username: data.username,
                 province: {
-                  value: "Đắk Lắk",
-                  key: "210",
+                  key: data.address.province_id,
+                  value: data.address.province,
                 },
                 district: {
-                  value: "Krong Buk",
-                  key: "1463",
+                  value: data.address.district,
+                  key: data.address.district_id,
                 },
                 ward: {
-                  value: "Chư KBô",
-                  key: "21805",
+                  value: data.address.ward,
+                  key: data.address.ward_id,
                 },
-                address: "89 Thôn An Bình, Xã ChuKPo, Huỵen KrongBuk ",
               }}
             >
               <div className={Styles["add-user-field-container"]}>
@@ -393,9 +394,8 @@ export default function EditUserDialog(props) {
                   ]}
                 >
                   <Select
-                    value={provinceId}
                     placeholder={"Tỉnh thành"}
-                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    dropdownStyle={{ zIndex: "99999999" }}
                     placement="bottomRight"
                     labelInValue={true}
                     showSearch
@@ -442,9 +442,8 @@ export default function EditUserDialog(props) {
                   ]}
                 >
                   <Select
-                    value={districtId}
                     placeholder={"Quận huyện"}
-                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    dropdownStyle={{ zIndex: "99999999" }}
                     placement="bottomRight"
                     labelInValue={true}
                     showSearch
@@ -486,11 +485,10 @@ export default function EditUserDialog(props) {
                 >
                   <Select
                     placeholder={"Xã, Phường"}
-                    dropdownStyle={{ width: "585px", zIndex: "99999999" }}
+                    dropdownStyle={{ zIndex: "99999999" }}
                     placement="bottomRight"
                     labelInValue={true}
                     showSearch
-                    value={wardId}
                     onChange={handleChangeSelectWard}
                     disabled={isDisabledWards}
                   >

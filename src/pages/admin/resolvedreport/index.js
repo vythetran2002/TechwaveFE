@@ -20,7 +20,6 @@ import DialogContent from "@mui/material/DialogContent";
 import ReportDetailDialog from "@/components/ui/admin/dialog/reportDialog/ReportDetailDialog";
 import { Pagination } from "@mui/material";
 import { Select } from "antd";
-// import { useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 
 function Index() {

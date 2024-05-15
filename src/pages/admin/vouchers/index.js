@@ -13,7 +13,6 @@ import AddUserDialog from "@/components/ui/admin/dialog/addUser/AddUserDialog";
 import EditUserDialog from "@/components/ui/admin/dialog/editUser/EditUserDialog";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
-// import { useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 import DetailUserDialog from "@/components/ui/admin/dialog/detailUser/DetailUserDialog";
 import { Pagination } from "@mui/material";

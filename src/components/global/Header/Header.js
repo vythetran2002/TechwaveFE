@@ -17,8 +17,7 @@ import CartItem from "@/components/ui/CartItem/CartItem";
 import Checkbox from "@mui/material/Checkbox";
 import { DeleteOutline } from "@mui/icons-material";
 import { memo } from "react";
-import { useCookies } from "react-cookie";
-import dynamic from "next/dynamic";
+
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
 import { FormatPrice } from "@/assets/utils/PriceFormat";

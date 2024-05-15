@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useState } from "react";
 import Cookies from "js-cookie";
 
 const fetcher = (url, headers) => axios.get(url).then((res) => res.data);

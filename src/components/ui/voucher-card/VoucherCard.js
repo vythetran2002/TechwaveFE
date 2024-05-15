@@ -12,8 +12,6 @@ import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 function voucherCard({ role, children, data }) {
   const now = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-  console.log(data);
-
   if (role === "vendor") {
     return (
       <div className={Styles["card-container"]}>

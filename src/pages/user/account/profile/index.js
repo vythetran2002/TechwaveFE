@@ -17,7 +17,6 @@ import {
 } from "@ant-design/icons";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import { sendPostRequestWithToken } from "@/api/user/sendPostRequestProfile";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
 import Cookies from "js-cookie";
@@ -30,6 +29,9 @@ const LocationProvider = new GHN_API();
 function Index() {
   const token = Cookies.get("token");
   const user = useFetchUserProfile();
+
+  console.log(user);
+
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -101,11 +103,6 @@ function Index() {
 
   //Refs
   const passwdRef = useRef();
-  const iconRef = useRef();
-  const pendingItem = useRef();
-  const cancledItem = useRef();
-  const orderingItem = useRef();
-  const orderedItem = useRef();
 
   const itemRef = useRef();
   // InputRefs
@@ -151,6 +148,8 @@ function Index() {
     await form.resetFields();
     await setPasswdEditMode(false);
     passwdChangeLabel.current.style.opacity = 0;
+    setProvinceId(null);
+    setDistrictId(null);
   };
 
   const onFinish = async (values) => {
@@ -170,8 +169,9 @@ function Index() {
       }
     }
 
-    let user = {
+    let data = {
       ...final,
+      username: user.data.username,
       province: final.province.value,
       province_id: final.province.key,
       district: final.district.value,
@@ -179,10 +179,10 @@ function Index() {
       ward: final.ward.value,
       ward_id: final.ward.key,
     };
-    await delete user.oldPassword;
-    user.dob = dayjs(final.dob).format("YYYY/MM/DD");
-    console.log("user", user);
-    const message = await sendPostRequestWithToken(user, token);
+    await delete data.oldPassword;
+    data.dob = dayjs(final.dob).format("YYYY/MM/DD");
+
+    const message = await sendPostRequestWithToken(data, token);
     await switchRef.current.click();
     await user.mutate(); // mutate data
   };
@@ -355,10 +355,6 @@ function Index() {
                     >
                       <Select
                         placeholder={"Tỉnh thành"}
-                        // dropdownStyle={{
-                        //   width: "430px",
-                        //   zIndex: "99999999",
-                        // }}
                         placement="bottomRight"
                         labelInValue={true}
                         showSearch
@@ -607,7 +603,6 @@ function Index() {
                         >
                           <Input.Password
                             placeholder="Nhập mật khẩu cũ"
-                            onChange={hadnlingChangeOldPass}
                             iconRender={(visible) =>
                               visible ? (
                                 <EyeOutlined />
@@ -635,7 +630,6 @@ function Index() {
                           ]}
                         >
                           <Input.Password
-                            onChange={handlingChangeNewPass}
                             placeholder="Nhập mật khẩu mới"
                             iconRender={(visible) =>
                               visible ? (

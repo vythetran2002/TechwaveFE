@@ -10,7 +10,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useFetchAdminProfile from "@/api/admin/useFetchAdminProfile";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import { useRouter } from "next/router";
 
@@ -18,11 +18,11 @@ function AdminHeader() {
   const profile = useFetchAdminProfile();
   // console.log(profile);
   const route = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const token = Cookies.get("token");
 
   const handlingLogout = async () => {
-    const message = LogOutAccount(cookies["token"]);
-    await removeCookie("token");
+    const message = LogOutAccount(token);
+    await Cookies.remove("token");
     console.log(message);
     route.push("/auth/login");
     // toast.success("logged out");

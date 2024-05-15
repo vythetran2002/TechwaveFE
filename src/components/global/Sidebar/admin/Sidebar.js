@@ -14,7 +14,7 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { useRouter } from "next/router";
-// import { useCookies } from "react-cookie";
+
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";

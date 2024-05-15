@@ -13,7 +13,6 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import Cookies from "js-cookie";

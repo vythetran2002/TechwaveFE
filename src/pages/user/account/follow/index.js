@@ -5,7 +5,6 @@ import Styles from "../favourites/style.module.css";
 import FollowShopCard from "@/components/ui/FollowShopCard/FollowShopCard";
 import useFetchUserFollowVendor from "@/api/user/useFetchFollowVendor";
 import { RemoveFollowVendor } from "@/api/user/removeFollowVendor";
-import { useCookies } from "react-cookie";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import toast, { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";

@@ -11,7 +11,6 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import Cookies from "js-cookie";
 

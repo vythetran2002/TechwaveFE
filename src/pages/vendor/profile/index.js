@@ -8,7 +8,6 @@ import { Radio, DatePicker, Checkbox, Input } from "antd";
 import { Switch, Form, Button, Select, Empty } from "antd";
 import images from "@/assets/images";
 import dayjs from "dayjs";
-import { useCookies } from "react-cookie";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
@@ -139,6 +138,8 @@ function Home() {
     await form.resetFields();
     await setPasswdEditMode(false);
     passwdChangeLabel.current.style.opacity = 0;
+    setProvinceId(null);
+    setDistrictId(null);
   };
 
   const onFinish = async (values) => {
@@ -157,23 +158,27 @@ function Home() {
         passwdChangeLabel.current.style.opacity = 0;
       }
     }
-    await delete final.oldPassword;
-    final.dob = dayjs(final.dob).format("YYYY/MM/DD");
-    const message = await PutVendorProfile(final, token);
-    console.log(message);
+
+    let data = {
+      ...final,
+      username: user.data.username,
+      province: final.province.value,
+      province_id: final.province.key,
+      district: final.district.value,
+      district_id: final.district.key,
+      ward: final.ward.value,
+      ward_id: final.ward.key,
+    };
+
+    await delete data.oldPassword;
+    data.dob = dayjs(final.dob).format("YYYY/MM/DD");
+    const message = await PutVendorProfile(data, token);
     await switchRef.current.click();
     await user.mutate(); // mutate data
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");
   };
-
-  if (user.isLoading) {
-    return <>Loading...</>;
-  }
-  if (user.isError) {
-    return <>Error...</>;
-  }
 
   useEffect(() => {
     if (provinceId) {
@@ -187,6 +192,13 @@ function Home() {
       setIsDisabledWards(true);
     }
   }, [provinceId, districtId]);
+
+  if (user.isLoading) {
+    return <>Loading...</>;
+  }
+  if (user.isError) {
+    return <>Error...</>;
+  }
 
   return (
     <>
@@ -241,22 +253,21 @@ function Home() {
                   fullname: user.data.fullname,
                   email: user.data.email,
                   phone: user.data.phone,
-                  address: user.data.address,
+                  address: user.data.address.address,
                   gender: user.data.gender,
                   dob: dayjs(user.data.dob, "YYYY/MM/DD"),
                   province: {
-                    value: "Đắk Lắk",
-                    key: "210",
+                    key: user.data.address.province_id,
+                    value: user.data.address.province,
                   },
                   district: {
-                    value: "Krong Buk",
-                    key: "1463",
+                    value: user.data.address.district,
+                    key: user.data.address.district_id,
                   },
                   ward: {
-                    value: "Chư KBô",
-                    key: "21805",
+                    value: user.data.address.ward,
+                    key: user.data.address.ward_id,
                   },
-                  address: "89 Thôn An Bình, Xã ChuKPo, Huỵen KrongBuk ",
                 }}
               >
                 <div className={Styles["profile-form-input-container"]}>
@@ -522,7 +533,7 @@ function Home() {
                         </Form.Item>
                       </span>
                     ) : (
-                      <span>{user.data.address}</span>
+                      <span>{user.data.address.address}</span>
                     )}
                   </div>
                   <div className={Styles["profile-col"]}>

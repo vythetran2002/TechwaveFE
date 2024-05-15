@@ -10,7 +10,7 @@ import CustomLoader from "@/components/ui/CustomLoader/CustomLoader";
 import { Empty } from "antd";
 import Item from "@/components/ui/ItemList/Item/Item";
 import ItemDetail from "@/components/ui/ItemList/Item/ItemDetail/ItemDetail";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import { addCartItem } from "@/api/user/addCartItem";
 import toast, { Toaster } from "react-hot-toast";
@@ -18,7 +18,7 @@ import useFetch from "@/api/useFetch";
 import Link from "next/link";
 
 function index() {
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const [detailItem, setDeTailItem] = useState(null);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [img, setImg] = useState(null);
@@ -39,7 +39,7 @@ function index() {
 
   const handlingAddFavouriteProduct = (id) => {
     console.log("----");
-    const message = addFavouriteProduct(id, cookies["token"]);
+    const message = addFavouriteProduct(id, token);
     console.log(message);
   };
 
@@ -50,7 +50,7 @@ function index() {
   const handlingAddCartItem = async (data) => {
     console.log("----");
     try {
-      const message = await addCartItem(data, cookies["token"]);
+      const message = await addCartItem(data, token);
       console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");

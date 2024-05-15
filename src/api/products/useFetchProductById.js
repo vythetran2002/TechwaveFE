@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useState } from "react";
 
 const useFetchProductById = (id, myToken) => {
   // const url = "http://localhost:3000/api/product/" + id;

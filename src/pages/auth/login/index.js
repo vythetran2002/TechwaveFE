@@ -12,7 +12,6 @@ import * as Yup from "yup";
 import Styles from "../styles.module.css";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 
@@ -28,7 +27,6 @@ const LoginScheme = Yup.object().shape({
 const maxAge = 7200;
 
 function Index() {
-  const [cookies, setCookie, removeCookie] = useCookies();
   const router = useRouter();
   // console.log(cookies);
 

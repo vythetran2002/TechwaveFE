@@ -9,7 +9,6 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import AddProductDialog from "@/components/ui/vendor/dialog/addProduct/AddProductDialog";
 import EditProductDialog from "@/components/ui/vendor/dialog/editProduct/EditProductDialog";
-import { useCookies } from "react-cookie";
 import { Pagination } from "@mui/material";
 import Cookies from "js-cookie";
 import useFetchProductsByPage from "@/api/vendor/useFetchProductsByPage";

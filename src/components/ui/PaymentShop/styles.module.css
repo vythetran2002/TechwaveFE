@@ -51,3 +51,16 @@
   overflow: hidden; /* Ẩn nội dung vượt quá khung */
   text-overflow: ellipsis; /* Thêm dấu "..." */
 }
+.voucher-admin-container {
+  display: flex;
+  padding: 20px 0 20px 0;
+}
+.voucher-admin-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-height: 500px;
+  overflow: auto;
+  padding: 20px 10px 20px 10px;
+}

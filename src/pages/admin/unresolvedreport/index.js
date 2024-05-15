@@ -10,7 +10,6 @@ import ReportList from "@/components/ui/vendor/report/ReportList";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import ReportDetailDialog from "@/components/ui/admin/dialog/reportDialog/ReportDetailDialog";
-import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import { Pagination } from "@mui/material";
 import { Select } from "antd";

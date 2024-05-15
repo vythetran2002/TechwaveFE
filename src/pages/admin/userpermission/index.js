@@ -15,12 +15,12 @@ import PermissionList from "@/components/ui/admin/PermissionList/PermissionList"
 // import images from "@/assets/images";
 import useFetchPermission from "@/api/admin/useFetchPermission";
 import { EditPermission } from "@/api/admin/EditPermission";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
 
 function Index() {
   const [isEdtiMode, setIsEditMode] = useState(false);
-  const [cookie] = useCookies();
+  const token = Cookies.get("token");
   const [admin, setAdmin] = useState();
   const [vendor, setVendor] = useState();
   const [user, setUser] = useState();
@@ -54,7 +54,7 @@ function Index() {
   const handleSubmit = () => {
     let temp = [admin, vendor, user];
     // console.log(temp);
-    const message = EditPermission(temp, cookie["token"]);
+    const message = EditPermission(temp, token);
     console.log(message);
     window.location.reload();
   };

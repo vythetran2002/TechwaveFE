@@ -3,19 +3,17 @@ import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
 import dynamic from "next/dynamic";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
-import { Col, Divider, Row } from "antd";
+
 import { useRouter } from "next/router";
 import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
-import Image from "next/image";
-import images from "@/assets/images";
+
 import "react-quill/dist/quill.snow.css";
 import Link from "next/link";
 import "react-quill/dist/quill.snow.css";
 import { PutProductDesc } from "@/api/vendor/PutProductDesc";
 import toast, { Toaster } from "react-hot-toast";
 import useFetchProductDesc from "@/api/vendor/useFetchProductDesc";
-import { useCookies } from "react-cookie";
+
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Cookies from "js-cookie";
 

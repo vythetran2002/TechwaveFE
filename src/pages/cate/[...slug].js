@@ -15,13 +15,13 @@ import index from "../admin/home";
 import Empty from "antd/lib/empty";
 import { addCartItem } from "@/api/user/addCartItem";
 import toast, { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import useFetchCateListByPage from "@/api/user/useFetchCateListByPage";
 
 function CateIndex() {
   const router = useRouter();
-  const [cookies] = useCookies();
+  const token = Cookies.get("token");
   const [img, setImg] = useState(null);
   const [reload, setReload] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
@@ -39,7 +39,7 @@ function CateIndex() {
   }
 
   // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
-  const listItem = useFetchCateListByPage(id0, id1, page, 10, cookies["token"]);
+  const listItem = useFetchCateListByPage(id0, id1, page, 10, token);
   const cateList = useFetch("http://localhost:3000/api/category");
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
@@ -47,7 +47,7 @@ function CateIndex() {
 
   const handlingAddFavouriteProduct = (id) => {
     console.log("----");
-    const message = addFavouriteProduct(id, cookies["token"]);
+    const message = addFavouriteProduct(id, token);
     console.log(message);
   };
 
@@ -58,7 +58,7 @@ function CateIndex() {
   const handlingAddCartItem = async (data) => {
     console.log("----");
     try {
-      const message = await addCartItem(data, cookies["token"]);
+      const message = await addCartItem(data, token);
       console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");

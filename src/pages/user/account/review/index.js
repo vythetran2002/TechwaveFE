@@ -4,7 +4,6 @@ import UserLayout from "@/components/layout/UserLayout";
 import Styles from "./style.module.css";
 import { useRef } from "react";
 import { RemoveFollowVendor } from "@/api/user/removeFollowVendor";
-import { useCookies } from "react-cookie";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import toast, { Toaster } from "react-hot-toast";
 import UserReviewCard from "@/components/ui/UserReviewCard/UserReviewCard";

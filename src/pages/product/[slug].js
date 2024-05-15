@@ -14,7 +14,6 @@ import ShopDetailCard from "@/components/ui/ShopDetailCard/ShopDetailCard";
 import useFetchProductById from "@/api/products/useFetchProductById";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
-// import { useCookies } from "react-cookie";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import UserProfile from "@/components/ui/UserProfile/UserProfile";

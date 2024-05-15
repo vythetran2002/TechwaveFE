@@ -2,18 +2,8 @@ import React, { useState } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
-import dynamic from "next/dynamic";
-import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
-import { Col, Divider, Row } from "antd";
 import { useRouter } from "next/router";
-import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
-import Image from "next/image";
-import images from "@/assets/images";
 import "react-quill/dist/quill.snow.css";
-import StyleOutlinedIcon from "@mui/icons-material/StyleOutlined";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import { Rating } from "@mui/material";
-import Link from "next/link";
 
 function HtmlContent({ htmlString }) {
   return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;

@@ -7,7 +7,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Image from "next/image";
 import images from "@/assets/images";
 import { LoadingOutlined } from "@ant-design/icons";
-
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
 import { Button, Modal, Input, Form, Select, Spin } from "antd";
 import Link from "next/link";
@@ -27,10 +26,10 @@ import { regexPhoneNumber } from "@/assets/utils/regex";
 import { GHN_API } from "@/api/GHN/GHN";
 import { calculateTotalValue } from "@/assets/utils/calculateTotalValue";
 import useFetchInitialFreeShip from "@/api/user/payment/useFetchInitialFreeShip";
-import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 import { calculateDiscountFreeShip } from "@/assets/utils/calculateDiscountFreeShip";
-import useFetchVoucherByShopId from "@/api/user/payment/useFetchVoucherByShopId";
 import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
+import { AddToTotalArray } from "@/assets/utils/payment/AddToTotalArray";
+import { calculateArraySum } from "@/assets/utils/payment/calculateArraySum";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -95,25 +94,25 @@ function Index() {
   const [wardId, setWardId] = useState(null);
   const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
   const [isDisabledWards, setIsDisabledWards] = useState(true);
-  const voucherFreeShip = useFetchInitialFreeShip(
-    calculateTotalValue(objectsArray)
-  );
+  const [arrayTotal, setArrayTotal] = useState([]);
+  const [count, setCount] = useState(0);
 
   const selectRef = useRef(null);
 
   const handleButtonClick = () => {
     const selectedValue = selectRef.current?.state.value;
-    console.log("Selected value:", selectedValue);
+    // console.log("Selected value:", selectedValue);
   };
 
   //API Hooks
   const provinces = LocationProvider.getProvinces();
   const districts = LocationProvider.getDistricts(provinceId);
   const wards = LocationProvider.getWards(districtId);
-  const vendorVouchers = useFetchVoucherByShopId(shopId);
   const techwaveVouchers = useFetchVouchersUser();
 
-  console.log(vendorVouchers);
+  const voucherFreeShip = useFetchInitialFreeShip(
+    calculateTotalValue(objectsArray)
+  );
 
   const messageRef = useRef();
 
@@ -131,6 +130,14 @@ function Index() {
   const handleChangeSelectWard = (value) => {
     setWardId(value.key);
   };
+
+  const updateTotalArray = (position, value) => {
+    let temp = AddToTotalArray(arrayTotal, position, value);
+    setArrayTotal(temp);
+    setCount(count + 1);
+  };
+
+  const updateArrayTotal = () => {};
 
   const handleClickSend = () => {
     let temp = {
@@ -274,7 +281,15 @@ function Index() {
         console.error("Error parsing data", error);
       }
     }
-  }, [router.query.data, shipFee, provinceId, districtId, user.data]);
+    console.log("total:", arrayTotal);
+  }, [
+    router.query.data,
+    shipFee,
+    provinceId,
+    districtId,
+    user.data,
+    arrayTotal,
+  ]);
 
   if (objectsArray && user.data) {
     return (
@@ -504,6 +519,8 @@ function Index() {
                 return (
                   <React.Fragment key={index}>
                     <PaymentShop
+                      index={index}
+                      updateTotalArray={updateTotalArray}
                       updateShopId={setShopId}
                       countShipFee={LocationProvider.countShippingFee}
                       userDistrictId={districtId}
@@ -692,10 +709,7 @@ function Index() {
                   <div className={Styles["price-total-wrapper"]}>
                     <span>Tổng cộng</span>
                     <span id={Styles["total"]}>
-                      {FormatPrice(
-                        parseInt(calculateTotalValue(objectsArray)) +
-                          parseInt(shipFee)
-                      )}
+                      {FormatPrice(calculateArraySum(arrayTotal))}
                     </span>
                   </div>
                 </div>
@@ -740,7 +754,7 @@ function Index() {
             onOk={handleOk}
             onCancel={handleCancel}
           >
-            <RadioGroup>
+            <RadioGroup defaultValue={null}>
               <div className={Styles["voucher-admin-container"]}>
                 <div className={Styles["voucher-admin-wrapper"]}>
                   {techwaveVouchers.data ? (
@@ -761,37 +775,6 @@ function Index() {
                     <Radio value={2} name="b"></Radio>
                   </VoucherCard>
                   <VoucherCard role="admin">
-                    <Radio value={3} name="c"></Radio>
-                  </VoucherCard> */}
-                </div>
-              </div>
-            </RadioGroup>
-          </Modal>
-          <Modal
-            title="Vouchers"
-            open={isModalVendorOpen}
-            onOk={handleOkVendor}
-            onCancel={handleCancelVendor}
-          >
-            <RadioGroup>
-              <div className={Styles["voucher-admin-container"]}>
-                <div className={Styles["voucher-admin-wrapper"]}>
-                  {vendorVouchers.data?.data ? (
-                    vendorVouchers.data.data.map((voucher, index) => {
-                      return (
-                        <VoucherCard role="vendor" data={voucher} key={index}>
-                          <Radio value={voucher.discount_id} name="a"></Radio>
-                        </VoucherCard>
-                      );
-                    })
-                  ) : (
-                    <React.Fragment>Loading...</React.Fragment>
-                  )}
-
-                  {/* <VoucherCard role="vendor">
-                    <Radio value={2} name="b"></Radio>
-                  </VoucherCard>
-                  <VoucherCard role="vendor">
                     <Radio value={3} name="c"></Radio>
                   </VoucherCard> */}
                 </div>

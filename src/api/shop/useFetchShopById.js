@@ -1,7 +1,6 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
+
 import Cookies from "js-cookie";
 
 const fetcher = (url, headers) =>

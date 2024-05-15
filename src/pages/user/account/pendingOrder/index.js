@@ -9,7 +9,6 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchUserPendingProducts from "@/api/user/useFetchPendingOrder";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import Cookies from "js-cookie";
 
 function Index() {

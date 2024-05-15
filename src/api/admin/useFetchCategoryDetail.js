@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import axios from "axios";
-import { useState } from "react";
 
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);

@@ -7,7 +7,6 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchCanceledOrders from "@/api/user/useFetchCanceledOrders";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
 import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
 import { useRouter } from "next/router";
 import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
@@ -17,7 +16,6 @@ function Index() {
   const orders = useFetchCanceledOrders();
   const vouchers = useFetchVouchersUser();
 
-  const [cookie] = useCookies();
   const route = useRouter();
   // const router = useRouter();
   // const { query } = router;

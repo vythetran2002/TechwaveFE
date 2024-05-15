@@ -10,7 +10,6 @@ import CommentList from "@/components/ui/vendor/comment/CommentList";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Link from "next/link";
-import { useCookies } from "react-cookie";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import CommentPopUp from "@/components/ui/vendor/comment/popUp/CommentPopUp";

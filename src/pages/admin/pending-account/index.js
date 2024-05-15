@@ -12,14 +12,14 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import AddUserDialog from "@/components/ui/admin/dialog/addUser/AddUserDialog";
 import EditUserDialog from "@/components/ui/admin/dialog/editUser/EditUserDialog";
 import Link from "next/link";
-import { useCookies } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import DetailUserDialog from "@/components/ui/admin/dialog/detailUser/DetailUserDialog";
 import { Pagination } from "@mui/material";
+import Cookies from "js-cookie";
 
 function Index() {
   // states
-  const [cookies] = useCookies(["token"]);
+  const token = Cookies.get("token");
   const [isOpenAddUserDialog, setIsOpenAddUserDialog] = useState(false);
   const [isOpenEditUserDialog, setIsOpenEditUserDialog] = useState(false);
   const [isOpenDetailUserDialog, setIsOpenDetailUserDialog] = useState(false);
@@ -184,7 +184,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            token={cookies["token"]}
+            token={token}
             updateAccount={updateAccount}
             updateId={updateId}
             status={0}
@@ -201,7 +201,7 @@ function Index() {
             handleClose={handlingCloseEditUserDialog}
           />
           <DetailUserDialog
-            token={cookies["token"]}
+            token={token}
             data={account}
             updateData={updateAccount}
             id={id}

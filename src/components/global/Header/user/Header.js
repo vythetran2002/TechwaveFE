@@ -6,7 +6,6 @@ import Image from "next/image";
 import images from "@/assets/images";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";

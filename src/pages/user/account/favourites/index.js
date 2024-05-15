@@ -7,7 +7,6 @@ import FavouriteItemCard from "@/components/ui/FavouriteItemCard/FavouriteItemCa
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchUserFavProduct from "@/api/user/useFetchFavProduct";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
-import { useCookies } from "react-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { Delete } from "@mui/icons-material";
 import { Empty } from "antd";

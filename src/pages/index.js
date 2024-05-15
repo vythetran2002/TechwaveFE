@@ -14,7 +14,6 @@ import Map from "@/components/ui/Map/Map";
 import { FloatButton } from "antd";
 import CategoryList from "@/components/ui/CategoryList/CategoryList";
 import ItemDetail from "@/components/ui/ItemList/Item/ItemDetail/ItemDetail";
-import { useCookies } from "react-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import { addCartItem } from "@/api/user/addCartItem";
@@ -40,7 +39,6 @@ function Index() {
 
   const handlingCloseDialog = () => {
     setIsOpenDialog(false);
-    setImg(null);
   };
 
   const mutateCateList01 = () => {
