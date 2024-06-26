@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
-
+import { Row, Col, Divider } from "antd";
 import { useRouter } from "next/router";
 import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
 import Image from "next/image";
@@ -62,7 +62,10 @@ function Index() {
           <title>Techwave - Vendor</title>
         </Head>
         <VendorLayout path="/product">
-          <div className={Styles["user-managemnent-container"]}>
+          <div
+            className={Styles["user-managemnent-container"]}
+            style={{ contain: "size" }}
+          >
             <Row gutter={12}>
               <Col className="gutter-row" span={12}>
                 <Row className="gutter-row">

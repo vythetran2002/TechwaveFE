@@ -2,7 +2,11 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const DeleteVoucherVendor = async (voucherId, token) => {
-  const url = "http://localhost:3000/api/vendor/discount/delete/" + voucherId;
+  const url =
+    process.env.NEXT_PUBLIC_API_URL +
+    "/api/vendor/discount/delete/" +
+    voucherId;
+  // "http://localhost:3000/api/vendor/discount/delete/" + voucherId;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

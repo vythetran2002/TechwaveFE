@@ -155,7 +155,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            status={2}
+            status={3}
             updateOrder={handlingUpdateOrder}
             handleOpen={handleOpen}
           />

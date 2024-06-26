@@ -202,3 +202,13 @@
   display: flex;
   gap: 20px;
 }
+.discountLabel {
+  padding: 10px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 5px;
+}
+.discount-label-btn-container {
+  display: flex;
+  gap: 10px;
+}

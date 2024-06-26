@@ -83,7 +83,7 @@ function Item(props) {
                       width={1000}
                       height={1000}
                       src={props.item.image}
-                      priority
+                      priority={true}
                       alt=""
                       className={Styles["img"]}
                     />

@@ -9,7 +9,7 @@ const fetcher = (url, headers) =>
 const useFetchShopById = (id, page, limit) => {
   const acToken = Cookies.get("token");
   // console.log(cookies);
-  const url = "http://localhost:3000/api/store/" + id;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/store/" + id;
 
   const token = "Bearer " + acToken;
 

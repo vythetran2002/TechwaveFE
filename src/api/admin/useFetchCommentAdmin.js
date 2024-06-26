@@ -7,7 +7,9 @@ const fetcher = (url, headers) =>
 
 const useFetchCommentAdmin = (id) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/admin/review/";
+  // const url = "http://localhost:3000/api/admin/review/";
+
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/review/";
 
   const token = "Bearer " + acToken;
 

@@ -30,7 +30,7 @@ function Index() {
   const token = Cookies.get("token");
   const user = useFetchUserProfile();
 
-  console.log(user);
+  // console.log(user);
 
   const [userProfile, setUserProfile] = useState({});
   const [oldPass, setOldPass] = useState("");
@@ -688,7 +688,7 @@ function Index() {
                       onClick={handlingClickUpload}
                       // onClick={handlingOpenDialog}
                     >
-                      <Image
+                      <img
                         width={150}
                         height={150}
                         src={avatarSrc}
@@ -701,7 +701,7 @@ function Index() {
                       className={Styles["profile-avt-preview-wrapper"]}
                       // onClick={handlingOpenDialog}
                     >
-                      <Image
+                      <img
                         width={150}
                         height={150}
                         src={images.nonAvatar}

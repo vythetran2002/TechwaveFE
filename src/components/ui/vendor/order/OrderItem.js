@@ -9,8 +9,6 @@ import { Tooltip } from "antd";
 function OrderItem(props) {
   const { order, mutate } = props;
 
-  // console.log(order);
-
   //   const menuRef = useRef(null);
 
   const handlingOpenMenu = () => {
@@ -27,7 +25,7 @@ function OrderItem(props) {
   };
 
   const handlingReject = async () => {
-    const message = RejectOrder(order.bill_id, props.token);
+    const message = await RejectOrder(order.bill_id, props.token);
     await mutate();
   };
 
@@ -53,35 +51,23 @@ function OrderItem(props) {
     <>
       <div className={Styles["list-item-container"]}>
         <div className={Styles["list-item-id-wrapper"]}>
-          <Tooltip title={order.fullname}>{order.fullname}</Tooltip>
+          <Tooltip title={order.user.fullname}>{order.user.fullname}</Tooltip>
         </div>
-        <div className={Styles["list-item-name-wrapper"]}>{order.phone}</div>
-
-        <div
-          className={Styles["list-item-gender-wrapper"]}
-          style={{ justifyContent: "center" }}
-        >
-          <Tooltip title={order.address}> {order.address}</Tooltip>
+        <div className={Styles["list-item-name-wrapper"]}>
+          {order.user.phone}
         </div>
+        <Tooltip title={order.user.address}>
+          <div
+            className={Styles["list-item-gender-wrapper"]}
+            style={{ justifyContent: "center" }}
+          >
+            {order.user.address}
+          </div>
+        </Tooltip>
         <div className={Styles["list-item-shop-wrapper"]}>
-          {order.cart_id.option ? (
-            <>
-              <div className={Styles["list-product-name-container"]}>
-                <Tooltip title={order.cart_id.option.name}>
-                  {" "}
-                  {order.cart_id.option.name}
-                </Tooltip>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className={Styles["list-product-name-container"]}>
-                <Tooltip title={order.cart_id.product.name}>
-                  {order.cart_id.product.name}
-                </Tooltip>
-              </div>
-            </>
-          )}
+          <div className={Styles["list-product-name-container"]}>
+            {order.payment}
+          </div>
         </div>
         <div
           className={Styles["list-item-date-wrapper"]}
@@ -140,7 +126,7 @@ function OrderItem(props) {
           </div>
         )}
 
-        {props.mode == 2 && (
+        {props.mode == 3 && (
           <div
             className={Styles["list-item-date-wrapper"]}
             style={{

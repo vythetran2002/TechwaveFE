@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AdminLayout from "@/components/layout/AdminLayout";
 import Head from "next/head";
 import Styles from "../styles.module.css";
@@ -8,13 +8,63 @@ import Circle from "react-circle";
 import Image from "next/image";
 import images from "@/assets/images";
 import TestDialog from "@/pages/Test/dialog";
-import OrdersChart from "@/components/ui/admin/chart/admin/OrdersChart";
+import RegisterChart from "@/components/ui/admin/chart/admin/RegisterChart";
 import { Toaster } from "react-hot-toast";
+import { Select } from "antd";
 import useFetchAdminProfile from "@/api/admin/useFetchAdminProfile";
+import useFetchAdminStatitics from "@/api/admin/useFetchAdminStatitics";
+
+import {
+  MoneyCollectOutlined,
+  UsergroupAddOutlined,
+  TableOutlined,
+  UserOutlined,
+  ShopOutlined,
+  GoldOutlined,
+  CommentOutlined,
+  FlagOutlined,
+  TagOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+
+// const mockedData = {
+//   data: {
+//     totalUsers: 200, // tong tk users
+//     totalVendors: 15, // tong tk vendors
+//     totalCates: 12, // So luong SP
+//     totalComments: 100, // So luong danh gia
+//     totalReports: 21, // So luong bao cao
+//     totalDiscounts: 5, // So luong voucher giam gia
+//     registerStatitics: {
+//       year: {
+//         user: [1, 2, 3, 4, 5, 1, 7, 8, 2, 8, 11, 12], // total luot dang ki user tu thang 1 - 12
+//         vendor: [1, 1, 3, 4, 5, 6, 2, 8, 9, 0, 11, 12], // total luot dang ki vendor tu thang 1 - 12
+//       },
+//       month: {
+//         user: [
+//           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+//           22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+//         ], // total luot dang ki user cac ngay trong thang hien tai (28-31 ngay)
+//         vendor: [
+//           1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+//           22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+//         ], // total luot dang ki vendor cac ngay trong thang hien tai (28-31 ngay)
+//       },
+//     }, // Thong ke Luong nguoi dang ky
+//   },
+//   isError: null,
+//   isLoading: null,
+// };
 
 function Index() {
+  const [option, setOption] = useState(1);
   const admin = useFetchAdminProfile();
+  const statitics = useFetchAdminStatitics();
   // console.log(admin);
+
+  const onChangeOption = (value) => {
+    setOption(value);
+  };
 
   if (admin.isLoading) {
     return <>Loading</>;
@@ -38,21 +88,22 @@ function Index() {
                     <div className={Styles["left-body-item-card-wrapper"]}>
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
-                          <h3>Doanh thu</h3>
-                          <h1>$12,05</h1>
+                          <h3>Tổng số Users</h3>
+                          {statitics.data ? (
+                            <h1>{statitics.data.totalUsers}</h1>
+                          ) : (
+                            <LoadingOutlined style={{ fontSize: "40px" }} />
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
-                          <Circle
-                            progress={67}
-                            animate={true}
-                            animationDuration="2s"
-                            size="100"
-                            responsive={false}
-                            progressColor="rgb(28,157,133)"
-                            roundedStroke={true}
-                            showPercentage={true}
-                            showPercentageSymbol={true}
-                          />
+                          <div className={Styles["icon-container"]}>
+                            <UserOutlined
+                              style={{
+                                fontSize: "65px",
+                                color: "#0284c7",
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -61,21 +112,22 @@ function Index() {
                     <div className={Styles["left-body-item-card-wrapper"]}>
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
-                          <h3>Truy cập</h3>
-                          <h1>12,989</h1>
+                          <h3>Tổng số Vendors</h3>
+                          {statitics.data ? (
+                            <h1>{statitics.data.totalVendors}</h1>
+                          ) : (
+                            <LoadingOutlined style={{ fontSize: "40px" }} />
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
-                          <Circle
-                            progress={35}
-                            animate={true}
-                            animationDuration="2s"
-                            size="100"
-                            responsive={false}
-                            progressColor="rgb(254,43,97)"
-                            roundedStroke={true}
-                            showPercentage={true}
-                            showPercentageSymbol={true}
-                          />
+                          <div className={Styles["icon-container"]}>
+                            <ShopOutlined
+                              style={{
+                                fontSize: "65px",
+                                color: "#dc2626",
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -84,21 +136,20 @@ function Index() {
                     <div className={Styles["left-body-item-card-wrapper"]}>
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
-                          <h3>Tìm kiếm</h3>
-                          <h1>1,986</h1>
+                          <h3>Tổng số danh mục</h3>
+                          {statitics.data ? (
+                            <h1>{statitics.data.totalCates}</h1>
+                          ) : (
+                            <LoadingOutlined style={{ fontSize: "40px" }} />
+                          )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
-                          <div className={Styles["left-body-item-card-circle"]}>
-                            <Circle
-                              progress={78}
-                              animate={true}
-                              animationDuration="2s"
-                              size="100"
-                              responsive={false}
-                              progressColor="rgb(107,155,208)"
-                              roundedStroke={true}
-                              showPercentage={true}
-                              showPercentageSymbol={true}
+                          <div className={Styles["icon-container"]}>
+                            <GoldOutlined
+                              style={{
+                                fontSize: "65px",
+                                color: "#16a34a",
+                              }}
                             />
                           </div>
                         </div>
@@ -108,9 +159,36 @@ function Index() {
                 </div>
               </div>
               <div className={Styles["left-body-item-container"]}>
-                <span className={Styles["left-body-item-title"]}>ĐƠN HÀNG</span>
+                <span className={Styles["left-body-item-title"]}>
+                  <span>THỐNG KÊ LƯỢT ĐĂNG KÍ THEO</span>
+                  <Select
+                    onChange={onChangeOption}
+                    style={{
+                      width: 120,
+                    }}
+                    size="large"
+                    defaultValue={option}
+                    options={[
+                      {
+                        value: 0,
+                        label: "Tháng",
+                      },
+                      {
+                        value: 1,
+                        label: "Năm",
+                      },
+                    ]}
+                  ></Select>
+                </span>
                 <div className={Styles["left-body-chart-item"]}>
-                  <OrdersChart />
+                  {statitics.data && (
+                    <>
+                      <RegisterChart
+                        option={option}
+                        stats={statitics.data.registerStatitics}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -147,72 +225,90 @@ function Index() {
                   </div>
                 </div>
               </div>
+
               <div className={Styles["right-new-accounts-container"]}>
-                <span className={Styles["right-new-account-title"]}>
-                  VENDORS MỚI
-                </span>
-                <div className={Styles["right-new-account-list-container"]}>
-                  <div className={Styles["right-new-account-item"]}>
-                    <Image
-                      width={200}
-                      height={200}
-                      src={images.monster}
-                      className={Styles["account-avatar"]}
-                      alt=""
-                      priority
-                    />
-                    <div className={Styles["right-new-account-info"]}>
-                      <span className={Styles["info-name"]}>AST Shop</span>
-                      <span className={Styles["info-time"]}>32 min ago</span>
-                    </div>
-                  </div>
-                  <div className={Styles["right-new-account-item"]}>
-                    <Image
-                      width={200}
-                      height={200}
-                      src={images.monster}
-                      className={Styles["account-avatar"]}
-                      alt=""
-                      priority
-                    />
-                    <div className={Styles["right-new-account-info"]}>
-                      <span className={Styles["info-name"]}>AST Shop</span>
-                      <span className={Styles["info-time"]}>32 min ago</span>
+                <div
+                  className={Styles["left-body-item-card-container"]}
+                  style={{ width: "100%" }}
+                >
+                  <div className={Styles["left-body-item-card-wrapper"]}>
+                    <div className={Styles["left-body-item-card-status"]}>
+                      <div className={Styles["left-body-item-card-info"]}>
+                        <h3>Tổng lượt đánh giá</h3>
+                        {statitics.data ? (
+                          <h1>{statitics.data.totalComments}</h1>
+                        ) : (
+                          <LoadingOutlined style={{ fontSize: "40px" }} />
+                        )}
+                      </div>
+                      <div className={Styles["left-body-item-card-circle"]}>
+                        <div className={Styles["icon-container"]}>
+                          <CommentOutlined
+                            style={{
+                              fontSize: "65px",
+                              color: "#0284c7",
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div className={Styles["right-new-accounts-container"]}>
-                <span className={Styles["right-new-account-title"]}>
-                  USERS MỚI
-                </span>
-                <div className={Styles["right-new-account-list-container"]}>
-                  <div className={Styles["right-new-account-item"]}>
-                    <Image
-                      width={200}
-                      height={200}
-                      src={images.monster}
-                      className={Styles["account-avatar"]}
-                      alt=""
-                      priority
-                    />
-                    <div className={Styles["right-new-account-info"]}>
-                      <span className={Styles["info-name"]}>John Doe</span>
-                      <span className={Styles["info-time"]}>32 min ago</span>
+                <div
+                  className={Styles["left-body-item-card-container"]}
+                  style={{ width: "100%" }}
+                >
+                  <div className={Styles["left-body-item-card-wrapper"]}>
+                    <div className={Styles["left-body-item-card-status"]}>
+                      <div className={Styles["left-body-item-card-info"]}>
+                        <h3>Tổng lượt báo cáo</h3>
+                        {statitics.data ? (
+                          <h1>{statitics.data.totalReports}</h1>
+                        ) : (
+                          <LoadingOutlined style={{ fontSize: "40px" }} />
+                        )}
+                      </div>
+                      <div className={Styles["left-body-item-card-circle"]}>
+                        <div className={Styles["icon-container"]}>
+                          <FlagOutlined
+                            style={{
+                              fontSize: "65px",
+                              color: "#dc2626",
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className={Styles["right-new-account-item"]}>
-                    <Image
-                      width={200}
-                      height={200}
-                      src={images.monster}
-                      className={Styles["account-avatar"]}
-                      alt=""
-                      priority
-                    />
-                    <div className={Styles["right-new-account-info"]}>
-                      <span className={Styles["info-name"]}>John Doe</span>
-                      <span className={Styles["info-time"]}>32 min ago</span>
+                </div>
+              </div>
+              <div className={Styles["right-new-accounts-container"]}>
+                <div
+                  className={Styles["left-body-item-card-container"]}
+                  style={{ width: "100%" }}
+                >
+                  <div className={Styles["left-body-item-card-wrapper"]}>
+                    <div className={Styles["left-body-item-card-status"]}>
+                      <div className={Styles["left-body-item-card-info"]}>
+                        <h3>Tổng Voucher khuyến mãi</h3>
+                        {statitics.data ? (
+                          <h1>{statitics.data.totalDiscounts}</h1>
+                        ) : (
+                          <LoadingOutlined style={{ fontSize: "40px" }} />
+                        )}
+                      </div>
+                      <div className={Styles["left-body-item-card-circle"]}>
+                        <div className={Styles["icon-container"]}>
+                          <TagOutlined
+                            style={{
+                              fontSize: "65px",
+                              color: "#0d9488",
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

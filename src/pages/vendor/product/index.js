@@ -62,7 +62,10 @@ function Index() {
         <title>Techwave - Vendor</title>
       </Head>
       <VendorLayout path="/product">
-        <div className={Styles["user-managemnent-container"]}>
+        <div
+          className={Styles["user-managemnent-container"]}
+          style={{ contain: "size" }}
+        >
           <span style={{ fontWeight: "800", fontSize: "22px" }}>
             QUẢN LÝ SẢN PHẨM
           </span>

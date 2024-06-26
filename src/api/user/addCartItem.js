@@ -11,7 +11,7 @@ export const addCartItem = (data, token) => {
 
   try {
     const response = axios.post(
-      "http://localhost:3000/api/user/cart/create",
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/cart/create",
       data,
       {
         headers: {

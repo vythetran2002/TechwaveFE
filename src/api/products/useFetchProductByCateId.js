@@ -6,7 +6,7 @@ const fetcher = (url, headers) => axios.get(url).then((res) => res.data);
 
 const useFetchProductByCateId = (id) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/category/" + id;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/category/" + id;
 
   const token = "Bearer " + acToken;
 

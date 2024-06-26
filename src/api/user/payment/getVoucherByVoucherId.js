@@ -3,7 +3,8 @@ import Cookies from "js-cookie";
 
 export const getVoucherByVoucherId = async (voucherId, price) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/user/discount/select";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/discount/select";
+  // "http://localhost:3000/api/user/discount/select";
   const token = "Bearer " + acToken;
 
   const headers = {

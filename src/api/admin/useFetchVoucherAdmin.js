@@ -7,7 +7,9 @@ const fetcher = (url, headers) =>
 
 const useFetchVouchersAdmin = () => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/admin/discount";
+  // const url = "http://localhost:3000/api/admin/discount";
+
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/discount";
 
   const token = "Bearer " + acToken;
 

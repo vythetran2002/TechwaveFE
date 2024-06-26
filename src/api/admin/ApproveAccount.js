@@ -2,9 +2,11 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const ApproveAccount = async (id, token) => {
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/active/" + id;
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/admin/account/approve/" + id,
+      url,
       {},
       {
         headers: {

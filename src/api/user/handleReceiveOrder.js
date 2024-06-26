@@ -2,7 +2,7 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const HandleReceiveOrder = async (id, token) => {
-  const url = "http://localhost:3000/api/user/bill/received/" + id;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/bill/received/" + id; //' "http://localhost:3000/api/user/bill/received/" + id;
   try {
     const response = await axios.put(
       url,

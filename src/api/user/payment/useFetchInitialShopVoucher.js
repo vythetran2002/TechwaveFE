@@ -13,7 +13,9 @@ const useFetchInitialShopVoucher = (shop_id, price) => {
 
       try {
         const acToken = Cookies.get("token");
-        const url = "http://localhost:3000/api/user/discount/voucher";
+        const url =
+          process.env.NEXT_PUBLIC_API_URL + "/api/user/discount/voucher";
+        // "http://localhost:3000/api/user/discount/voucher";
         const token = "Bearer " + acToken;
 
         const headers = {

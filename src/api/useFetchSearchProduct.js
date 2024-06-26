@@ -5,7 +5,7 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 const useFetchSearchProduct = (value) => {
   //   const [cookies] = useCookies();
-  const url = "http://localhost:3000/api/search?name=" + value;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/search?name=" + value;
   //   const token = "Bearer " + cookies["token"];
 
   //   const headers = {
@@ -14,10 +14,8 @@ const useFetchSearchProduct = (value) => {
   //     Authorization: `${token}`,
   //   };
 
-  const { data, error, mutate, isValidating } = useSWR(
-    value ? url : null,
-    () => fetcher(url),
-    { refreshInterval: 1000 }
+  const { data, error, mutate, isValidating } = useSWR(value ? url : null, () =>
+    fetcher(url)
   );
 
   return {

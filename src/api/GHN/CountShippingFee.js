@@ -8,11 +8,14 @@ export const useFetchShippingFee = (
   to_ward
 ) => {
   const url =
-    "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+    "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+
+  const api_token = "84cae003-14de-11ef-8653-aaa2dde45bcb";
+
   const params = {
     from_district_id: Number(from_district),
     from_ward_code: String(from_ward),
-    service_id: 53320,
+    service_type_id: 2,
     to_district_id: Number(to_district),
     to_ward_code: String(to_ward),
     height: 10,
@@ -24,7 +27,7 @@ export const useFetchShippingFee = (
     coupon: null,
   };
 
-  const headers = { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" };
+  const headers = { token: api_token };
 
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

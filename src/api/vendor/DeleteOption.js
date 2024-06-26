@@ -3,10 +3,16 @@ import toast from "react-hot-toast";
 
 export const DeleteOption = async (productId, optionId, token) => {
   const url =
-    "http://localhost:3000/api/vendor/product/option/" +
+    process.env.NEXT_PUBLIC_API_URL +
+    "/api/vendor/product/option/" +
     productId +
     "/remove/" +
     optionId;
+
+  // "http://localhost:3000/api/vendor/product/option/" +
+  //   productId +
+  //   "/remove/" +
+  //   optionId;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

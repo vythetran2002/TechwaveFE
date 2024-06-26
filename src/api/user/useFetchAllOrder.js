@@ -7,7 +7,8 @@ const fetcher = (url, headers) =>
 
 const useFetchAllOrders = () => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/user/bill";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/bill";
+  // ' "http://localhost:3000/api/user/bill";
   const token = "Bearer " + acToken;
 
   const headers = {

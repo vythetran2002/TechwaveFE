@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import useFetchProductByCateId from "@/api/products/useFetchProductByCateId";
 import useFetchCart from "@/api/user/useFetchCart";
 import Cookies from "js-cookie";
+import ChatBotWidget from "@/components/ui/ChatBotWidget/ChatBotWidget";
 
 function Index() {
   const token = Cookies.get("token");
@@ -157,7 +158,8 @@ function Index() {
           handlingOpenDialog={handlingOpenDialog}
           handlingCloseDialog={handlingCloseDialog}
         />
-        <FloatButton.BackTop />
+        <ChatBotWidget />
+        {/* <FloatButton.BackTop /> */}
       </Layout>
     </>
   );

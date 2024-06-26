@@ -31,7 +31,7 @@ function Index() {
     try {
       // Gửi yêu cầu đăng nhập tới API
       const response = await axios.post(
-        "http://localhost:3000/api/forgotPassword",
+        process.env.NEXT_PUBLIC_API_URL + "/api/forgotPassword",
         {
           email,
         }
@@ -154,56 +154,31 @@ function Index() {
                 <h2 style={{ color: "white" }}>Forgot password</h2>
                 <h4 style={{ color: "white" }}>Please fill out the form</h4>
               </div>
-              <div>
-                <input
-                  className={Styles["input"]}
-                  placeholder="Email"
-                  {...register("email")}
-                />
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                }}
+              >
+                <div>
+                  <input
+                    className={Styles["input"]}
+                    placeholder="Email"
+                    {...register("email")}
+                  />
+                </div>
+                <div className={Styles["btn"]}>
+                  <button type="submit">Submit</button>
+                </div>
               </div>
+
               {errors.email && (
                 <p className={Styles["validate-message"]}>
                   {errors.email.message}
                 </p>
               )}
-
-              {/* <div className="forget" style={{ marginTop: "10px" }}>
-                <a href="#" style={{ textDecoration: "none" }}>
-                  Forget password?
-                </a>
-              </div> */}
-              <div className={Styles["btn"]}>
-                <button type="submit">Submit</button>
-              </div>
-              {/* <div className="or">
-                <p style={{ color: "white" }}>Or Login with</p>
-              </div> */}
-              {/* <div className="icon">
-                <a
-                  href="#"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <FacebookIcon />
-                  Facebook
-                </a>
-                <a
-                  href="#"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <GoogleIcon />
-                  Google
-                </a>
-              </div> */}
             </form>
           </div>
           <div className={Styles["right"]}>

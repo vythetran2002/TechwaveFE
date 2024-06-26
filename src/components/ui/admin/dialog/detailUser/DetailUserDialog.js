@@ -217,12 +217,6 @@ export default function DetailUserDialog(props) {
     },
   };
 
-  const options = [
-    { value: 1, label: "Admin" },
-    { value: 2, label: "Vendor" },
-    { value: 3, label: "Customer" },
-  ];
-
   if (account.isLoading) {
     return <></>;
   }
@@ -357,6 +351,52 @@ export default function DetailUserDialog(props) {
                   {account.data.phone}
                 </span>
               </div>
+
+              <div
+                className={Styles["add-user-field-container"]}
+                style={{
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                }}
+              >
+                <span className={Styles["add-user-field-label"]}>
+                  Tỉnh, Thành phố:
+                </span>
+                <span className={Styles["info-label-wrapper"]}>
+                  {account.data.address?.province}
+                </span>
+              </div>
+
+              <div
+                className={Styles["add-user-field-container"]}
+                style={{
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                }}
+              >
+                <span className={Styles["add-user-field-label"]}>
+                  Quận, huyện:
+                </span>
+                <span className={Styles["info-label-wrapper"]}>
+                  {account.data.address?.district}
+                </span>
+              </div>
+
+              <div
+                className={Styles["add-user-field-container"]}
+                style={{
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                }}
+              >
+                <span className={Styles["add-user-field-label"]}>
+                  Xã, Phường:
+                </span>
+                <span className={Styles["info-label-wrapper"]}>
+                  {account.data.address?.ward}
+                </span>
+              </div>
+
               <div
                 className={Styles["add-user-field-container"]}
                 style={{
@@ -366,7 +406,7 @@ export default function DetailUserDialog(props) {
               >
                 <span className={Styles["add-user-field-label"]}>Địa chỉ:</span>
                 <span className={Styles["info-label-wrapper"]}>
-                  {account.data.address}
+                  {account.data.address?.address}
                 </span>
               </div>
 

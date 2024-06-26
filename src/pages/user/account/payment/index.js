@@ -30,6 +30,11 @@ import { calculateDiscountFreeShip } from "@/assets/utils/calculateDiscountFreeS
 import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
 import { AddToTotalArray } from "@/assets/utils/payment/AddToTotalArray";
 import { calculateArraySum } from "@/assets/utils/payment/calculateArraySum";
+import { isFutureDate } from "@/assets/utils/payment/IsFutureDate";
+import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId";
+import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
+import { UpdateArrayAtPosition } from "@/assets/utils/payment/UpdateArrayAtPosition";
+import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -64,18 +69,24 @@ const { TextArea } = Input;
 
 const LocationProvider = new GHN_API();
 
+const totalArray = [];
+const shipArray = [];
+const discountArray = [];
+
 function Index() {
   const user = useFetchUserProfile();
   const router = useRouter();
   const token = Cookies.get("token");
 
   //states
+  const [isVoucherProcessed, setIsVoucherProcessed] = useState(false);
   const [isUserDataProcessed, setIsUserDataProcessed] = useState(false);
+  const [isObjectDataProcessed, setIsObjectDataProcessed] = useState(false);
   const [amount, setAmount] = useState();
   const [adminVoucherValue, setAdminVoucherValue] = useState(1);
   const querry = router.query;
   const [objectsArray, setObjectsArray] = useState(null);
-  const [shipFee, setShipFee] = useState(40000);
+  const [shipFee, setShipFee] = useState(null);
   // const [shipType, setShipType] = useState("");
   const [bill, setBill] = useState({
     fullname: null,
@@ -94,8 +105,11 @@ function Index() {
   const [wardId, setWardId] = useState(null);
   const [isDisabledDistricts, setIsDisabledDistricts] = useState(true);
   const [isDisabledWards, setIsDisabledWards] = useState(true);
-  const [arrayTotal, setArrayTotal] = useState([]);
-  const [count, setCount] = useState(0);
+  const [total, setTotal] = useState(null);
+  const [shopCards, setShopCards] = useState([]);
+  const [discount, setDiscount] = useState(null);
+  const [chosenVoucherId, setChosenVoucherId] = useState(null);
+  const [techwaveVoucher, setTechwaveVoucher] = useState(null);
 
   const selectRef = useRef(null);
 
@@ -109,12 +123,15 @@ function Index() {
   const districts = LocationProvider.getDistricts(provinceId);
   const wards = LocationProvider.getWards(districtId);
   const techwaveVouchers = useFetchVouchersUser();
-
   const voucherFreeShip = useFetchInitialFreeShip(
     calculateTotalValue(objectsArray)
   );
 
   const messageRef = useRef();
+
+  const handleChangeRadio = (e) => {
+    setChosenVoucherId(e.target.value);
+  };
 
   const handleChangeSelectProvince = (value) => {
     setProvinceId(value.key);
@@ -131,13 +148,26 @@ function Index() {
     setWardId(value.key);
   };
 
-  const updateTotalArray = (position, value) => {
-    let temp = AddToTotalArray(arrayTotal, position, value);
-    setArrayTotal(temp);
-    setCount(count + 1);
+  const updateShopCards = (position, value) => {
+    let temp = UpdateArrayAtPosition(shopCards, position, value);
+    setShopCards(temp);
+    // console.log("shopCards", shopCards);
   };
 
-  const updateArrayTotal = () => {};
+  const updateTotalArray = (position, value) => {
+    let temp = AddToTotalArray(totalArray, position, value);
+    setTotal(calculateArraySum(temp));
+  };
+
+  const updateShipFeeArray = (position, value) => {
+    let temp = AddToTotalArray(shipArray, position, value);
+    setShipFee(calculateArraySum(temp));
+  };
+
+  const updateDiscountArray = (position, value) => {
+    let temp = AddToTotalArray(discountArray, position, value);
+    setDiscount(FormatPrice(calculateArraySum(temp)));
+  };
 
   const handleClickSend = () => {
     let temp = {
@@ -192,13 +222,6 @@ function Index() {
     }
   };
 
-  const onChangeRadio = (e) => {
-    // console.log(shipFee);
-    setShipFee(e.target.value);
-    let temp = { ...bill, express: e.target.name };
-    setBill(temp);
-  };
-
   const onChangeOption = (e) => {
     setOption(e.target.value);
   };
@@ -222,8 +245,15 @@ function Index() {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    if (chosenVoucherId) {
+      const voucher = await getVoucherByVoucherId(chosenVoucherId, total);
+      await setTechwaveVoucher(voucher);
+      handleCancel();
+      toast.success("added");
+    } else {
+      handleCancel();
+    }
   };
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -233,31 +263,79 @@ function Index() {
     setIsModalVendorOpen(true);
   };
 
-  const handleOkVendor = () => {
-    setIsModalVendorOpen(false);
-  };
-  const handleCancelVendor = () => {
-    setIsModalVendorOpen(false);
-  };
-
-  const onChangeAdminVoucher = (e) => {
-    console.log("radio checked", e.target.value);
-    setAdminVoucherValue(e.target.value);
-  };
-
   const onFinish = (values) => {
-    console.log("Success:", values);
+    let info = {
+      ...values,
+      totalBill: total - techwaveVoucher?.result,
+      payment: option,
+      shop: shopCards,
+      voucher_id: techwaveVoucher.discount_id,
+    };
+    info.province = info.province.value;
+    info.district = info.district.value;
+    info.ward = info.ward.value;
+
+    console.log("Sucessssss", info);
+    // if (checkNullProperties(info) && option) {
+    //   messageRef.current.style.display = "none";
+    //   if (option == "ship") {
+    //     // console.log (temp);
+    //     // console.log("ship thwongf");
+    //     try {
+    //       const message = MakeShipPayment(info, token);
+    //       //console.log(message);
+    //       // toast.success("Thanh toán thành công");
+    //       router.push("/user/account/pendingOrder");
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+    //   if (option == "vnpay") {
+    //     let amount = temp.totalBill;
+    //     let temp2 = {
+    //       ...temp,
+    //       amount: amount,
+    //       bankCode: null,
+    //       language: "vn",
+    //       returnUrl: "http://localhost:3001/user/account/transaction",
+    //       carts: extractCartIds(objectsArray),
+    //     };
+    //     //  console.log(temp2);
+    //     const message = SendPaymentAmount(temp2, token);
+    //     // console.log(message);
+    //   }
+    //   // const message = SendPaymentAmount(
+    //   //   {
+    //   //     amount:
+    //   //       parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
+    //   //     bankCode: null,
+    //   //     language: "vn",
+    //   //     returnUrl: "http://localhost:3001/user/account/transaction",
+    //   //   },
+    //   //   cookie["token"]
+    //   // );
+    //   // console.log(message);
+    // } else {
+    //   messageRef.current.style.display = "block";
+    // }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
+  console.log(total);
+
   useEffect(() => {
-    if (user.data && !isUserDataProcessed) {
+    if (user.data?.address && !isUserDataProcessed) {
       setProvinceId(user.data.address.province_id);
       setDistrictId(user.data.address.district_id);
       setWardId(user.data.address.ward_id);
       setIsUserDataProcessed(true);
+    }
+    if (voucherFreeShip.data && !isVoucherProcessed) {
+      setTechwaveVoucher(voucherFreeShip.data);
+      setIsVoucherProcessed(true);
+      setChosenVoucherId(voucherFreeShip.discount_id);
     }
 
     if (provinceId) {
@@ -270,25 +348,26 @@ function Index() {
     } else {
       setIsDisabledWards(true);
     }
-    if (router.query.data) {
+    if (router.query.data && !isObjectDataProcessed) {
       try {
         const decodedData = decodeURIComponent(router.query.data);
         const parsedData = JSON.parse(decodedData);
         setObjectsArray(parsedData);
-
-        //  console.log(router.query.data);
+        setIsObjectDataProcessed(true);
       } catch (error) {
         console.error("Error parsing data", error);
       }
     }
-    console.log("total:", arrayTotal);
   }, [
     router.query.data,
     shipFee,
     provinceId,
     districtId,
     user.data,
-    arrayTotal,
+    total,
+    voucherFreeShip,
+    techwaveVoucher,
+    objectsArray,
   ]);
 
   if (objectsArray && user.data) {
@@ -385,13 +464,8 @@ function Index() {
                     size="middle"
                     onChange={handleChangeSelectProvince}
                   >
-                    {provinces.isLoading && (
-                      <>
-                        <Select.Option></Select.Option>
-                      </>
-                    )}
                     {provinces.data ? (
-                      provinces.data.data.map((province) => {
+                      provinces.data?.data.map((province) => {
                         return (
                           <Select.Option
                             key={province.ProvinceID}
@@ -403,9 +477,7 @@ function Index() {
                       })
                     ) : (
                       <>
-                        <Select.Option>
-                          <Empty />
-                        </Select.Option>
+                        <Empty />
                       </>
                     )}
                     {/* <Option value={1}>ABC</Option> */}
@@ -471,7 +543,7 @@ function Index() {
                     disabled={isDisabledWards}
                   >
                     {wards.data ? (
-                      wards.data.data.map((ward) => {
+                      wards.data.data?.map((ward) => {
                         return (
                           <Select.Option
                             value={ward.WardName}
@@ -521,6 +593,9 @@ function Index() {
                     <PaymentShop
                       index={index}
                       updateTotalArray={updateTotalArray}
+                      updateShipFeeArray={updateShipFeeArray}
+                      updateDiscountArray={updateDiscountArray}
+                      updateShopCards={updateShopCards}
                       updateShopId={setShopId}
                       countShipFee={LocationProvider.countShippingFee}
                       userDistrictId={districtId}
@@ -667,9 +742,20 @@ function Index() {
                     <LocalActivityOutlinedIcon />
                     <span>Techwave Voucher: </span>
                   </div>
-                  <Button size="large" type="primary" onClick={showModal}>
-                    Áp dụng
-                  </Button>
+                  <div className={Styles["discount-label-btn-container"]}>
+                    {techwaveVoucher ? (
+                      <>
+                        <div className={Styles["discountLabel"]}>
+                          {"- " + formatCurrencyVoucher(techwaveVoucher.result)}
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <Button size="large" type="primary" onClick={showModal}>
+                      Áp dụng
+                    </Button>
+                  </div>
                 </div>
                 <div
                   className={Styles["price-container"]}
@@ -684,7 +770,7 @@ function Index() {
                   </div>
                   <div className={Styles["price-wrapper"]}>
                     <span>Phí vận chuyển</span>
-                    {voucherFreeShip.data ? (
+                    {techwaveVoucher?.result ? (
                       <div className={Styles["total-ship-fee-wrapper"]}>
                         <span style={{ textDecoration: "line-through" }}>
                           {FormatPrice(shipFee)}
@@ -693,23 +779,34 @@ function Index() {
                           {FormatPrice(
                             calculateDiscountFreeShip(
                               shipFee,
-                              voucherFreeShip.data.result
+                              techwaveVoucher?.result
                             )
                           )}
                         </span>
                       </div>
                     ) : (
                       <div>
-                        <span>{FormatPrice(shipFee)}đ</span>
+                        <span>{FormatPrice(shipFee)}</span>
                       </div>
                     )}
+                  </div>
+                  <div className={Styles["price-wrapper"]}>
+                    <span>Tổng voucher giảm giá:</span>
+                    <span>- {discount}</span>
                   </div>
                 </div>
                 <div className={Styles["price-container"]}>
                   <div className={Styles["price-total-wrapper"]}>
                     <span>Tổng cộng</span>
                     <span id={Styles["total"]}>
-                      {FormatPrice(calculateArraySum(arrayTotal))}
+                      {/* {FormatPrice(calculateArraySum(arrayTotal))} */}
+                      {FormatPrice(
+                        CalculateTotalValue(
+                          total,
+                          shipFee,
+                          techwaveVoucher?.result
+                        )
+                      )}
                     </span>
                   </div>
                 </div>
@@ -754,7 +851,11 @@ function Index() {
             onOk={handleOk}
             onCancel={handleCancel}
           >
-            <RadioGroup defaultValue={null}>
+            <RadioGroup
+              defaultValue={null}
+              value={chosenVoucherId}
+              onChange={handleChangeRadio}
+            >
               <div className={Styles["voucher-admin-container"]}>
                 <div className={Styles["voucher-admin-wrapper"]}>
                   {techwaveVouchers.data ? (

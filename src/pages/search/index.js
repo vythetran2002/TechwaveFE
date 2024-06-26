@@ -76,7 +76,9 @@ function index() {
   } else
     return (
       <>
-        <Head></Head>
+        <Head>
+          <title>Kết quả từ khoá: {name}</title>
+        </Head>
         <Layout>
           <Toaster />
           <div className={Styles["search-container"]}>

@@ -198,7 +198,7 @@ export default function EditUserDialog(props) {
               autoComplete="off"
               className={Styles["add-user-form-container"]}
               initialValues={{
-                address: data.address.address,
+                address: data.address?.address,
                 dob: dayjs(data.dob, "YYYY/MM/DD"),
                 email: data.email,
                 fullname: data.fullname,
@@ -208,16 +208,16 @@ export default function EditUserDialog(props) {
                 phone: data.phone,
                 username: data.username,
                 province: {
-                  key: data.address.province_id,
-                  value: data.address.province,
+                  key: data.address?.province_id,
+                  value: data.address?.province,
                 },
                 district: {
-                  value: data.address.district,
-                  key: data.address.district_id,
+                  value: data.address?.district,
+                  key: data.address?.district_id,
                 },
                 ward: {
-                  value: data.address.ward,
-                  key: data.address.ward_id,
+                  value: data.address?.ward,
+                  key: data.address?.ward_id,
                 },
               }}
             >

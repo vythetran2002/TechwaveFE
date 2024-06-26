@@ -8,7 +8,10 @@ const fetcher = (url, headers) =>
 const useFetchAccountById = (id) => {
   // const [cookies] = useCookies();
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/admin/account/detail/" + id;
+  // const url = "http://localhost:3000/api/admin/account/detail/" + id;
+
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/detail/" + id;
 
   // const token = "Bearer " + cookies["token"];
   const token = "Bearer " + acToken;
@@ -19,9 +22,8 @@ const useFetchAccountById = (id) => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/admin/account/detail/${id}` : null,
-    () => fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
+    fetcher(url, headers)
   );
 
   return {

@@ -58,7 +58,7 @@ export default function UserLayout({
                   <div className={Styles["profile-avatar-container"]}>
                     {user.data.avatar ? (
                       <div className={Styles["profile-avatar-wrapper"]}>
-                        <Image
+                        <img
                           width={150}
                           height={150}
                           src={user.data.avatar}

@@ -119,6 +119,7 @@ function Index() {
           />
         </div>
         <Dialog
+          className="__className_020227"
           fullWidth={true}
           maxWidth="md"
           open={open}

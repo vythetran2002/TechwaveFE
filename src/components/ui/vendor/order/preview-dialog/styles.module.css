@@ -36,3 +36,62 @@
   display: flex;
   gap: 30px;
 }
+.user-profile-container {
+  display: flex;
+  gap: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 8px;
+}
+.user-avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+.img {
+  border-radius: 50%;
+}
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  gap: 10px;
+}
+.user-info-row {
+  display: flex;
+  gap: 20px;
+}
+.user-col {
+  font-weight: 300;
+}
+.order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 8px;
+  padding: 30px;
+}
+.list-product-container {
+  padding: 10px;
+  max-height: 300px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.date-total-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.total-container {
+  display: flex;
+}
+.total-container {
+  display: flex;
+  gap: 7px;
+}
+.order-status-container {
+  padding: 0 20px 0 20px;
+  display: flex;
+  justify-content: space-between;
+}

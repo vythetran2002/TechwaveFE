@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 
 // Tạo một instance của axios để tái sử dụng
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/uploadFile",
+  baseURL: process.env.NEXT_PUBLIC_API_URL + "/api/uploadFile",
+  // "http://localhost:3000/api/uploadFile",
 });
 
 const fetcher = async (url, file) => {

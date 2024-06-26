@@ -5,6 +5,8 @@ import Image from "next/image";
 import images from "@/assets/images";
 import dayjs from "dayjs";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
+import ChildItem from "@/components/ui/PurchaseItemCard/ChildItem/ChildItem";
+import { Empty } from "antd";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -25,12 +27,14 @@ const handleStatus = (value) => {
 };
 
 function OrderPreview(props) {
-  const { order } = props;
+  const { order, status } = props;
 
-  return (
-    <>
-      <div className={roboto.className}>
-        <div
+  console.log(order);
+  if (order)
+    return (
+      <>
+        <div className={roboto.className}>
+          {/* <div
           className={Styles["order-preview-container"]}
           style={{ fontWeight: "400" }}
         >
@@ -150,10 +154,121 @@ function OrderPreview(props) {
               <span style={{ width: "70%" }}>{handleStatus(order.status)}</span>
             </div>
           </div>
+        </div> */}
+          <div className={Styles["order-preview-container"]}>
+            <div className={Styles["user-profile-container"]}>
+              <div className={Styles["user-avatar-container"]}>
+                {order.user.avatar ? (
+                  <>
+                    <Image
+                      width={100}
+                      height={100}
+                      alt=""
+                      priority
+                      src={order.user.avatar}
+                      className={Styles["img"]}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      width={80}
+                      height={80}
+                      alt=""
+                      priority
+                      src={images.nonImg}
+                      className={Styles["img"]}
+                    />
+                  </>
+                )}
+              </div>
+              <div className={Styles["user-info-container"]}>
+                <div className={Styles["user-info-row"]}>
+                  <span>Tên: </span>
+                  <span>{order.user.fullname}</span>
+                </div>
+                <div className={Styles["user-info-row"]}>
+                  <span>Tỉnh, Thành phố: </span>
+                  <span>{order.user.province}</span>
+                </div>
+                <div className={Styles["user-info-row"]}>
+                  <span>Huyện, Thị trấn:</span>
+                  <span>{order.user.district}</span>
+                </div>
+                <div className={Styles["user-info-row"]}>
+                  <span>Xã:</span>
+                  <span>{order.user.ward}</span>
+                </div>
+                <div className={Styles["user-info-row"]}>
+                  <span>Địa chỉ:</span>
+                  <span>{order.user.address}</span>
+                </div>
+              </div>
+            </div>
+            <div className={Styles["order-container"]}>
+              <div className={Styles["list-product-container"]}>
+                {order?.shop_bill_id.length != 0 ? (
+                  order?.shop_bill_id.map((cart, index) => {
+                    return (
+                      <React.Fragment key={cart.cart.cart_id}>
+                        <ChildItem data={cart} />
+                      </React.Fragment>
+                    );
+                  })
+                ) : (
+                  <>
+                    <Empty />
+                  </>
+                )}
+              </div>
+              <div className={Styles["date-total-container"]}>
+                <div className={Styles["total-container"]}>
+                  <span>Ngày đặt:</span>
+                  <span style={{ fontWeight: "300" }}>
+                    {dayjs(order.createAt).format("DD/MM/YYYY")}
+                  </span>
+                </div>
+                <div className={Styles["total-container"]}>
+                  <span>Tổng đơn:</span>
+                  <span style={{ color: "#dc2626" }}>
+                    {FormatPrice(order.totalBill)}
+                  </span>
+                </div>
+              </div>
+              <div className={Styles["order-status-container"]}>
+                <div className={Styles["total-container"]}>
+                  <span>Hình thức thanh toán:</span>
+                  <span style={{ fontWeight: "300" }}>{order.payment}</span>
+                </div>
+
+                <div className={Styles["total-container"]}>
+                  <span>Trạng thái:</span>
+                  {handleStatus(status)}
+                </div>
+              </div>
+              <div className={Styles["order-status-container"]}>
+                <div></div>
+                <div className={Styles["total-container"]}>
+                  <span>Thanh toán:</span>
+                  {order.paid ? (
+                    <span style={{ color: "#059669" }}>Đã thanh toán</span>
+                  ) : (
+                    <span style={{ color: "#dc2626" }}>Chưa thanh toán</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  else {
+    return (
+      <>
+        <Empty />
+      </>
+    );
+  }
 }
 
 export default OrderPreview;

@@ -5,7 +5,8 @@ const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchComment = (status, page, limit, myToken) => {
-  const url = "http://localhost:3000/api/vendor/review";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/review";
+  // "http://localhost:3000/api/vendor/review";
 
   const token = "Bearer " + myToken;
 

@@ -5,7 +5,9 @@ const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchAdminReport = (status, page, limit, myToken) => {
-  const url = "http://localhost:3000/api/admin/report/";
+  // const url = "http://localhost:3000/api/admin/report/";
+
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/report/";
 
   const token = "Bearer " + myToken;
 

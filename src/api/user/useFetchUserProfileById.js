@@ -7,7 +7,9 @@ const fetcher = (url, headers) =>
 
 const useFetchUserProfileById = (id) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/user/account/detail/" + id;
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/user/account/detail/" + id;
+  // "http://localhost:3000/api/user/account/detail/" + id;
 
   const token = "Bearer " + acToken;
 

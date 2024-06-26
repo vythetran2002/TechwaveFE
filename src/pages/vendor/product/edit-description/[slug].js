@@ -106,7 +106,10 @@ function Index() {
         </Head>
         <VendorLayout path="/product">
           <Toaster />
-          <div className={Styles["user-managemnent-container"]}>
+          <div
+            className={Styles["user-managemnent-container"]}
+            style={{ contain: "size" }}
+          >
             <div>
               <Link
                 ref={linkRef}

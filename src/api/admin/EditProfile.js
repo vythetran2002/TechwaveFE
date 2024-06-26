@@ -2,7 +2,8 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const EditProfile = async (data, token) => {
-  const url = "http://localhost:3000/api/admin/account/edit";
+  // const url = "http://localhost:3000/api/admin/account/edit";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/edit";
 
   try {
     const response = await axios.put(url, data, {

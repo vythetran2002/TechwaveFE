@@ -12,6 +12,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import Link from "next/link";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material";
 import CommentPopUp from "@/components/ui/vendor/comment/popUp/CommentPopUp";
 import { Toaster } from "react-hot-toast";
 import { Pagination } from "@mui/material";
@@ -61,7 +62,10 @@ function Index() {
       </Head>
       <VendorLayout path="/comment">
         <Toaster />
-        <div className={Styles["user-managemnent-container"]}>
+        <div
+          className={Styles["user-managemnent-container"]}
+          style={{ contain: "size" }}
+        >
           <span style={{ fontWeight: "800", fontSize: "22px" }}>
             QUẢN LÝ ĐÁNH GIÁ
           </span>

@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 export const sendPostRequestWithToken = async (data, token) => {
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/user/account/edit",
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/account/edit",
+      // "http://localhost:3000/api/user/account/edit",
       data,
       {
         headers: {

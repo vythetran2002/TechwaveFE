@@ -2,9 +2,11 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const DeleteSoftAccount = async (id, token) => {
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/delete-soft/" + id;
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/admin/account/delete-soft/" + id,
+      url,
       {},
       {
         headers: {

@@ -56,8 +56,10 @@ function VendorHeader() {
 
             <div className={Styles["avatar-dropdown-container"]}>
               <div className={Styles["info"]}>
-                <span className={Styles["info-name"]}>HCMUTE</span>
-                <span className={Styles["info-email"]}>hcmute@hotmail.com</span>
+                <span className={Styles["info-name"]}>
+                  {user.data.username}
+                </span>
+                <span className={Styles["info-email"]}>{user.data.email}</span>
               </div>
               <div className={Styles["nav-avt-list"]}>
                 <Link

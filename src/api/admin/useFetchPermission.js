@@ -7,7 +7,9 @@ const fetcher = (url, headers) =>
 
 const useFetchPermission = (id) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/admin/permission/";
+  // const url = "http://localhost:3000/api/admin/permission/";
+
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/permission/";
 
   const token = "Bearer " + acToken;
 

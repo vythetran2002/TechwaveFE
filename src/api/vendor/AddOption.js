@@ -4,7 +4,11 @@ import toast from "react-hot-toast";
 export const AddOption = async (id, data, token) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/vendor/product/option/" + id + "/create",
+      process.env.NEXT_PUBLIC_API_URL +
+        "/api/vendor/product/option/" +
+        id +
+        "/create",
+      // "http://localhost:3000/api/vendor/product/option/" + id + "/create",
       data,
       {
         headers: {

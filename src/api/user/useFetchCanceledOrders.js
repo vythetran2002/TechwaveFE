@@ -7,7 +7,8 @@ const fetcher = (url, headers) =>
 
 const useFetchCanceledOrders = () => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/user/bill?status=4";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/bill?status=4";
+  // "http://localhost:3000/api/user/bill?status=4";
   const token = "Bearer " + acToken;
 
   const headers = {

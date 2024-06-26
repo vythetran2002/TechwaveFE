@@ -28,7 +28,6 @@ const maxAge = 7200;
 
 function Index() {
   const router = useRouter();
-  // console.log(cookies);
 
   const handleLogin = async (data, e) => {
     e.preventDefault();
@@ -37,12 +36,14 @@ function Index() {
 
     try {
       // Gửi yêu cầu đăng nhập tới API
-      const response = await axios.post("http://localhost:3000/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "/api/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      // Kiểm tra xem response có đúng định dạng không và có chứa access_token hay không
       if (
         response.data &&
         response.data.data &&

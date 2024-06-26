@@ -2,7 +2,9 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const EditProduct = async (productId, data, token) => {
-  const url = "http://localhost:3000/api/vendor/product/edit/" + productId;
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product/edit/" + productId;
+  // "http://localhost:3000/api/vendor/product/edit/" + productId;
   try {
     const response = await axios.put(url, data, {
       headers: {

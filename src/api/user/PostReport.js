@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 export const PostReport = async (data, token) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/user/report/create",
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/report/create",
+      // "http://localhost:3000/api/user/report/create",
       data,
       {
         headers: {

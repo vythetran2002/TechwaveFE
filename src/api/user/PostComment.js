@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 export const PostComment = async (data, token) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/user/review/create",
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/review/create",
+      // "http://localhost:3000/api/user/review/create",
       data,
       {
         headers: {

@@ -19,11 +19,15 @@ import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
 import Radio from "@mui/material/Radio";
 import toast from "react-hot-toast";
 import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId";
+import { isFutureDate } from "@/assets/utils/payment/IsFutureDate";
 
 function PaymentShop(props) {
   const {
     index,
     updateTotalArray,
+    updateShipFeeArray,
+    updateDiscountArray,
+    updateShopCards,
     updateShopId,
     items,
     handleOpen,
@@ -56,20 +60,14 @@ function PaymentShop(props) {
     setVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     if (chosenVoucherId) {
       const price = calculateTotalValue(items);
-      const voucher = getVoucherByVoucherId(chosenVoucherId, price);
-      toast.promise(voucher, {
-        loading: "Đang xử lí",
-        success: (result) => {
-          setShopVoucher(result);
-          handleUpdateTotalArray();
-          handleCancel();
-          return "Đã áp mã";
-        },
-        error: "Error",
-      });
+      const voucher = await getVoucherByVoucherId(chosenVoucherId, price);
+      await setShopVoucher(voucher);
+      // await handleUpdateTotalArray();
+      handleCancel();
+      toast.success("added");
     } else {
       handleCancel();
     }
@@ -81,28 +79,27 @@ function PaymentShop(props) {
 
   const handleCancel = () => {
     setVisible(false);
-    setChosenVoucherId(null);
   };
 
   const handleChangeRadio = (e) => {
     setChosenVoucherId(e.target.value);
   };
 
-  const handleUpdateTotalArray = async () => {
-    if (shopVoucher?.result) {
-      await updateTotalArray(
-        index,
-        calculateTotalValue(items) +
-          shippingFee.data?.data.total -
-          shopVoucher.result
-      );
-    } else {
-      await updateTotalArray(
-        index,
-        calculateTotalValue(items) + shippingFee.data?.data.total
-      );
-    }
-  };
+  // const handleUpdateTotalArray = async () => {
+  //   if (shopVoucher?.result) {
+  //     await updateTotalArray(
+  //       index,
+  //       calculateTotalValue(items) +
+  //         shippingFee.data?.data.total -
+  //         shopVoucher.result
+  //     );
+  //   } else {
+  //     await updateTotalArray(
+  //       index,
+  //       calculateTotalValue(items) + shippingFee.data?.data.total
+  //     );
+  //   }
+  // };
 
   // const shippingFee = LocationProvider.countShippingFee(
   //   shopDistrictId,
@@ -120,13 +117,15 @@ function PaymentShop(props) {
   //   userWardId
   // );
 
-  // console.log(shippingFee.data);
+  // console.log(shippingFee.data);Di
 
   useEffect(() => {
     if (initialVoucher.data && !isVoucherProcessed) {
       setShopVoucher(initialVoucher.data);
       setIsVoucherProcessed(true);
+      setChosenVoucherId(initialVoucher.discount_id);
     }
+    // Co Voucher
     if (shopVoucher?.result) {
       updateTotalArray(
         index,
@@ -134,11 +133,32 @@ function PaymentShop(props) {
           shippingFee.data?.data.total -
           shopVoucher.result
       );
-    } else {
+      updateShipFeeArray(index, shippingFee.data?.data.total);
+      updateDiscountArray(index, shopVoucher.result);
+      updateShopCards(index, {
+        shopId: items[0].store.account_id,
+        cart: items,
+        totalBill:
+          calculateTotalValue(items) +
+          shippingFee.data?.data.total -
+          shopVoucher.result,
+        voucher_id: shopVoucher.discount_id,
+      });
+    }
+    // Khong co voucher
+    else {
       updateTotalArray(
         index,
         calculateTotalValue(items) + shippingFee.data?.data.total
       );
+      updateShipFeeArray(index, shippingFee.data?.data.total);
+      updateDiscountArray(index, 0);
+      updateShopCards(index, {
+        shopId: items[0].store.account_id,
+        cart_id: items,
+        totalBill: calculateTotalValue(items) + shippingFee.data?.data.total,
+        voucher_id: null,
+      });
     }
   }, [shopVoucher, initialVoucher]);
 
@@ -267,11 +287,13 @@ function PaymentShop(props) {
               <div className={Styles["voucher-admin-wrapper"]}>
                 {vendorVouchers.data?.data ? (
                   vendorVouchers.data.data.map((voucher, index) => {
-                    return (
-                      <VoucherCard role="vendor" data={voucher} key={index}>
-                        <Radio value={voucher.discount_id} name="a"></Radio>
-                      </VoucherCard>
-                    );
+                    if (isFutureDate(voucher.expires)) {
+                      return (
+                        <VoucherCard role="vendor" data={voucher} key={index}>
+                          <Radio value={voucher.discount_id} name="a"></Radio>
+                        </VoucherCard>
+                      );
+                    }
                   })
                 ) : (
                   <React.Fragment>Loading...</React.Fragment>

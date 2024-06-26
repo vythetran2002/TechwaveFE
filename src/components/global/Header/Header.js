@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Styles from "./styles.module.css";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -150,6 +150,7 @@ function Header(props) {
   const handlingDeleteCartItem = async (id) => {
     try {
       const message = await DeleteCartItem(id, token);
+      await toast.success("Xoá đơn hàng thành công");
       await cart.mutate();
     } catch (error) {
       console.log(error);
@@ -170,7 +171,6 @@ function Header(props) {
 
   const handlingClickDelete = () => {
     let temp = select;
-    console.log(temp);
     if (temp) {
       temp.map((item) => {
         console.log(item.cart_id);
@@ -182,7 +182,9 @@ function Header(props) {
   };
 
   const onClickPay = () => {
-    if (select.length == 0) {
+    if (!user.data) {
+      toast.error("Cần đăng nhập");
+    } else if (select.length == 0) {
       toast.error("Chọn hàng để thanh toán");
     } else {
       const stringifiedData = JSON.stringify(select);
@@ -190,6 +192,10 @@ function Header(props) {
       router.push(`/user/account/payment?data=${encodedData}`);
     }
   };
+
+  const onChangeSearchValue = useCallback((e) => {
+    setSearch(e.target.value), 2000;
+  }, []);
 
   // useEffect(() => {
   //   console.log(cookies);
@@ -247,7 +253,7 @@ function Header(props) {
                     {user.data ? (
                       user.data.avatar ? (
                         <div className={Styles["avatar-container"]}>
-                          <Image
+                          <img
                             width={50}
                             height={50}
                             src={user.data.avatar}
@@ -404,9 +410,7 @@ function Header(props) {
                     type="text"
                     className={Styles["input-search"]}
                     placeholder="Tìm kiếm ..."
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                    }}
+                    onChange={onChangeSearchValue}
                   ></input>
                   <div
                     className={Styles["button-search"]}

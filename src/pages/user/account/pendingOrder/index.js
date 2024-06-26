@@ -15,6 +15,7 @@ function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchUserPendingProducts();
   const token = Cookies.get("token");
+
   // const router = useRouter();
   // const { query } = router;
 
@@ -66,16 +67,18 @@ function Index() {
               <div>
                 {orders.data ? (
                   orders.data.length != 0 ? (
-                    orders.data.map((oderItem, index) => {
-                      return (
-                        <React.Fragment key={"oderItem" + index}>
-                          <PurchaseItemCard
-                            token={token}
-                            oderItem={oderItem}
-                            handleMutateCancleOrder={handleMutateCancleOrder}
-                          />
-                        </React.Fragment>
-                      );
+                    orders.data.map((item, index) => {
+                      if (item.shop_bill_id.length != 0)
+                        return (
+                          <React.Fragment key={"item" + index}>
+                            <PurchaseItemCard
+                              token={token}
+                              card={item}
+                              status={0}
+                              handleMutateCancleOrder={handleMutateCancleOrder}
+                            />
+                          </React.Fragment>
+                        );
                     })
                   ) : (
                     <div

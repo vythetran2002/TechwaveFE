@@ -8,7 +8,7 @@ export const addFollowVendor = (id, token) => {
 
   try {
     const response = axios.post(
-      "http://localhost:3000/api/user/folow/add",
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/folow/add",
       data,
       {
         headers: {

@@ -7,12 +7,13 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import useFetchCanceledOrders from "@/api/user/useFetchCanceledOrders";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
-
 import Cookies from "js-cookie";
-
+import useFetchRejectedOrders from "@/api/user/useFetchRejectedOrders";
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchCanceledOrders();
+  const rejectedOrders = useFetchRejectedOrders();
+
   const token = Cookies.get("token");
   // const router = useRouter();
   // const { query } = router;
@@ -46,24 +47,42 @@ function Index() {
               <div>
                 {orders.data ? (
                   orders.data.length != 0 ? (
-                    orders.data.map((oderItem, index) => {
-                      return (
-                        <React.Fragment key={"oderItem" + index}>
-                          <PurchaseItemCard token={token} oderItem={oderItem} />
-                        </React.Fragment>
-                      );
+                    orders.data.map((item, index) => {
+                      if (item.shop_bill_id.length != 0)
+                        return (
+                          <React.Fragment key={"item" + index}>
+                            <PurchaseItemCard
+                              token={token}
+                              card={item}
+                              status={3}
+                            />
+                          </React.Fragment>
+                        );
                     })
                   ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        padding: "20px 0 20px 0",
-                      }}
-                    >
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                    </div>
+                    <></>
+                  )
+                ) : (
+                  <>Loading</>
+                )}
+              </div>
+              <div>
+                {rejectedOrders.data ? (
+                  rejectedOrders.data.length != 0 ? (
+                    rejectedOrders.data.map((item, index) => {
+                      if (item.shop_bill_id.length != 0)
+                        return (
+                          <React.Fragment key={"item" + index}>
+                            <PurchaseItemCard
+                              token={token}
+                              card={item}
+                              status={3}
+                            />
+                          </React.Fragment>
+                        );
+                    })
+                  ) : (
+                    <></>
                   )
                 ) : (
                   <>Loading</>

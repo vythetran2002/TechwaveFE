@@ -14,8 +14,7 @@ export const DeleteCartItem = async (id, token) => {
       config
     );
 
-    toast.success("Item deleted successfully!");
-
+    // toast.success("Item deleted successfully!");
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

@@ -55,7 +55,7 @@
 .profile-edit-card-wrapper {
   display: flex;
   width: 80%;
-  height: fit-content;
+  min-height: 820px;
   border-radius: 10px;
   box-shadow: 0 0 10px 2px #ddd;
   background: #fff;

@@ -186,7 +186,7 @@ function Index() {
       try {
         // Gửi yêu cầu đăng nhập tới API
         const response = await axios.post(
-          "http://localhost:3000/api/register",
+          process.env.NEXT_PUBLIC_API_URL + "/api/register",
           user
         );
         if (response.data) {
@@ -203,7 +203,8 @@ function Index() {
       try {
         // Gửi yêu cầu đăng nhập tới API
         const response = await axios.post(
-          "http://localhost:3000/api/registerStaff",
+          process.env.NEXT_PUBLIC_API_URL + "/api/registerStaff",
+
           user
         );
         if (response.data) {

@@ -16,12 +16,16 @@ import Link from "next/link";
 import { animateScroll as scroll } from "react-scroll";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import dayjs from "dayjs";
+import { Card, Col, Row, Divider } from "antd";
+import { ShopOutlined } from "@ant-design/icons";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import ChildItem from "./ChildItem/ChildItem";
 
 function PurchaseItemCard(props) {
   const router = useRouter();
-  const { oderItem } = props;
+  const { card, status } = props;
 
-  // console.log(oderItem);
+  console.log("card", card);
 
   const handleClickPay = (value) => {
     router.push(value);
@@ -29,7 +33,7 @@ function PurchaseItemCard(props) {
 
   const handleGoToComment = () => {
     router.push({
-      pathname: "/product/" + oderItem.cart_id.product.product_id,
+      pathname: "/product/" + card.cart.product.product_id,
       query: {
         nav: "danhGia",
       },
@@ -37,26 +41,27 @@ function PurchaseItemCard(props) {
   };
 
   const handleReceive = () => {
-    const message = HandleReceiveOrder(oderItem.bill_id, props.token);
+    const message = HandleReceiveOrder(card.bill_id, props.token);
     console.log(message);
     router.push("/user/account/received");
   };
 
   const handleCancle = async () => {
-    const message = await HandleCancleOrder(oderItem.bill_id, props.token);
+    console.log("askldjlsakjdlksa");
+    const message = await HandleCancleOrder(card.bill_id, props.token);
     await props.handleMutateCancleOrder();
   };
 
-  if (oderItem.payment_id) {
+  if (card?.payment_id) {
     return (
       <>
-        <div className={Styles["purchase-item-container"]}>
+        {/* <div className={Styles["purchase-item-container"]}>
           {oderItem.status === 0 && (
             <div className={Styles["item-status-container"]}>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "20px" }}
               >
-                <Image
+                <img
                   src={images.vnpay}
                   width={30}
                   height={20}
@@ -104,7 +109,7 @@ function PurchaseItemCard(props) {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "20px" }}
               >
-                <Image
+                <img
                   src={images.vnpay}
                   width={30}
                   height={20}
@@ -143,7 +148,7 @@ function PurchaseItemCard(props) {
                     <FileDownloadDoneOutlinedIcon />
                   </span>
                   <span style={{ marginLeft: "10px" }}>Đơn hàng đã giao</span>
-                  <Image
+                  <img
                     style={{ marginLeft: "20px" }}
                     src={images.vnpay}
                     width={25}
@@ -163,7 +168,7 @@ function PurchaseItemCard(props) {
           {oderItem.status === 3 && (
             <div className={Styles["item-status-container"]}>
               <div>
-                <Image
+                <img
                   src={images.vnpay}
                   width={25}
                   height={20}
@@ -188,7 +193,7 @@ function PurchaseItemCard(props) {
           {oderItem.status === 4 && (
             <div className={Styles["item-status-container"]}>
               <div>
-                <Image
+                <img
                   src={images.vnpay}
                   width={25}
                   height={20}
@@ -220,7 +225,7 @@ function PurchaseItemCard(props) {
                 {oderItem.cart_id &&
                   (oderItem.cart_id.option ? (
                     <>
-                      <Image
+                      <img
                         width={80}
                         height={80}
                         src={oderItem.cart_id.option.image}
@@ -233,7 +238,7 @@ function PurchaseItemCard(props) {
                     <>
                       {oderItem.cart_id.product.image ? (
                         <>
-                          <Image
+                          <img
                             width={80}
                             height={80}
                             src={oderItem.cart_id.product.image}
@@ -244,7 +249,7 @@ function PurchaseItemCard(props) {
                         </>
                       ) : (
                         <>
-                          <Image
+                          <img
                             src={images.nonImg}
                             alt=""
                             priority={true}
@@ -283,13 +288,13 @@ function PurchaseItemCard(props) {
               <span>{FormatPrice(oderItem.totalBill)}</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </>
     );
-  } else
+  } else if (card)
     return (
       <>
-        <div className={Styles["purchase-item-container"]}>
+        {/* <div className={Styles["purchase-item-container"]}>
           {oderItem.status === 0 && (
             <div className={Styles["item-status-container"]}>
               <Button type="primary" danger onClick={handleCancle}>
@@ -353,7 +358,7 @@ function PurchaseItemCard(props) {
           )}
           {oderItem.status === 4 && (
             <div className={Styles["item-status-container"]}>
-              <div></div>
+              
               <div
                 className={Styles["item-status-wrapper"]}
                 style={{ color: "black" }}
@@ -378,7 +383,7 @@ function PurchaseItemCard(props) {
                   oderItem.cart_id.option ? (
                     oderItem.cart_id.option.image ? (
                       <>
-                        <Image
+                        <img
                           width={80}
                           height={80}
                           src={oderItem.cart_id.option.image}
@@ -389,7 +394,7 @@ function PurchaseItemCard(props) {
                       </>
                     ) : (
                       <>
-                        <Image
+                        <img
                           src={images.nonImg}
                           alt=""
                           priority={true}
@@ -401,7 +406,7 @@ function PurchaseItemCard(props) {
                     <>
                       {oderItem.cart_id.product.image ? (
                         <>
-                          <Image
+                          <img
                             width={80}
                             height={80}
                             src={oderItem.cart_id.product.image}
@@ -412,7 +417,7 @@ function PurchaseItemCard(props) {
                         </>
                       ) : (
                         <>
-                          <Image
+                          <img
                             src={images.nonImg}
                             alt=""
                             priority={true}
@@ -424,7 +429,7 @@ function PurchaseItemCard(props) {
                   )
                 ) : (
                   <>
-                    <Image
+                    <img
                       src={images.nonImg}
                       alt=""
                       priority={true}
@@ -454,7 +459,164 @@ function PurchaseItemCard(props) {
               <span>{FormatPrice(oderItem.totalBill)}</span>
             </div>
           </div>
-        </div>
+        </div> */}
+        <Row className={Styles["card-container"]}>
+          <Col span={24}>
+            <div className={Styles["card-header"]}>
+              <div className={Styles["shop-header-container"]}>
+                <div className={Styles["header-left-container"]}>
+                  <div className={Styles["icon-shop-name-container"]}>
+                    <ShopOutlined />
+                    <span>{card.shopname}</span>
+                  </div>
+                  <div className={Styles["chat-btn-container"]}>
+                    <ChatBubbleOutlineOutlinedIcon
+                      style={{ fontSize: "20px" }}
+                    />
+                    <span>Chat</span>
+                  </div>
+                  <div className={Styles["shop-watch-btn"]}>
+                    <span>Xem shop</span>
+                  </div>
+                </div>
+                <div className={Styles["header-right-container"]}>
+                  {status === 0 && (
+                    <div className={Styles["item-status-wrapper"]}>
+                      <span className={Styles["item-status-wrapper"]}>
+                        <MoreHorizOutlinedIcon />
+                      </span>
+                      <span style={{ marginLeft: "10px" }}>
+                        Đơn hàng đang chờ xác nhận
+                      </span>
+                    </div>
+                  )}
+
+                  {status === 1 && (
+                    <div className={Styles["item-status-wrapper"]}>
+                      <span className={Styles["item-status-wrapper"]}>
+                        <LocalShippingIcon />
+                      </span>
+                      <span style={{ marginLeft: "10px" }}>
+                        Đơn hàng đang được vận chuyển
+                      </span>
+                    </div>
+                  )}
+
+                  {status === 2 && (
+                    <div className={Styles["item-status-container"]}>
+                      <div className={Styles["item-status-wrapper"]}>
+                        <span className={Styles["item-status-wrapper"]}>
+                          <FileDownloadDoneOutlinedIcon />
+                        </span>
+                        <span style={{ marginLeft: "10px" }}>
+                          Đơn hàng đã giao
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {status === 3 && (
+                    <div className={Styles["item-status-wrapper"]}>
+                      <span className={Styles["item-status-wrapper"]}>
+                        <CloseOutlinedIcon />
+                      </span>
+                      <span style={{ marginLeft: "10px" }}>
+                        Đơn hàng đã bị Shop {card.shopname} huỷ
+                      </span>
+                    </div>
+                  )}
+
+                  {status === 4 && (
+                    <div className={Styles["item-status-container"]}>
+                      <div
+                        className={Styles["item-status-wrapper"]}
+                        style={{ color: "black" }}
+                      >
+                        <span className={Styles["item-status-wrapper"]}>
+                          <CloseOutlinedIcon />
+                        </span>
+                        <span
+                          style={{ marginLeft: "10px" }}
+                          onClick={handleCancle}
+                        >
+                          Đã huỷ đơn hàng
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className={Styles["card-body"]}>
+              {card?.shop_bill_id.length != 0 ? (
+                card?.shop_bill_id.map((cart, index) => {
+                  return (
+                    <React.Fragment key={cart.cart.cart_id}>
+                      <ChildItem data={cart} />
+                    </React.Fragment>
+                  );
+                })
+              ) : (
+                <>
+                  <Empty />
+                </>
+              )}
+              {/* <ChildItem />
+              <ChildItem /> */}
+            </div>
+            <div className={Styles["card-footer"]}>
+              <div className={Styles["total-container"]}>
+                <div className={Styles["date-total-container"]}>
+                  <div className={Styles["date-wrapper"]}>
+                    <span>Ngày mua:</span>
+                    <span>{dayjs(card.createAt).format("DD/MM/YYYY")}</span>
+                  </div>
+                  <div className={Styles["total-wrapper"]}>
+                    <span>Thành tiền:</span>
+                    <span style={{ color: "#dc2626" }}>
+                      {FormatPrice(card.totalBill)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className={Styles["total-container"]}>
+                {status === 0 && (
+                  <>
+                    <Button
+                      type="primary"
+                      danger
+                      size={"large"}
+                      onClick={handleCancle}
+                    >
+                      Huỷ đơn hàng
+                    </Button>
+                  </>
+                )}
+                {status === 1 && (
+                  <>
+                    <Button
+                      type="primary"
+                      size={"large"}
+                      onClick={handleReceive}
+                    >
+                      Đã nhận được hàng
+                    </Button>
+                  </>
+                )}
+
+                {status === 2 && (
+                  <Button
+                    type="primary"
+                    size={"large"}
+                    onClick={handleGoToComment}
+                  >
+                    Đánh giá đơn hàng
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Col>
+        </Row>
       </>
     );
 }

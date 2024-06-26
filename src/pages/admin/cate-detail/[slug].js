@@ -195,7 +195,7 @@ function Index() {
           <EditCateDialogDetail
             mutating={mutate}
             cateHeading={cateHeading}
-            token={cookies["token"]}
+            token={token}
             cate={cate}
             updateCate={updateCate}
             isOpen={isOpenEditCateDialog}

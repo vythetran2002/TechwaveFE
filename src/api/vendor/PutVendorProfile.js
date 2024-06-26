@@ -4,7 +4,9 @@ import toast from "react-hot-toast";
 export const PutVendorProfile = async (data, token) => {
   try {
     const response = await axios.put(
-      "http://localhost:3000/api/vendor/account/edit",
+      process.env.NEXT_PUBLIC_API_URL + "/api/vendor/account/edit",
+
+      // "http://localhost:3000/api/vendor/account/edit",
       data,
       {
         headers: {

@@ -11,7 +11,7 @@ export const DeleteUserReview = async (id, token) => {
 
   try {
     const response = await axios.delete(
-      `http://localhost:3000/api/user/review/delete/${id}`,
+      process.env.NEXT_PUBLIC_API_URL + "/api/user/review/delete/" + id,
       config
     );
     toast.success("Xoá đánh giá thành công");

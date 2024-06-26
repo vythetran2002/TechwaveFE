@@ -1,30 +1,18 @@
 import axios from "axios";
 import useSWR from "swr";
+
+const API_TOKEN = "84cae003-14de-11ef-8653-aaa2dde45bcb";
+const GET_PROVINCES_URL =
+  "https://online-gateway.ghn.vn/shiip/public-api/master-data/province";
+const GET_DISTRICT_BY_PROVINCE_URL =
+  "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=";
+const GET_WARD_BY_DISTRICT_URL =
+  "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=";
+const GET_SHIPPING_FEE_URL =
+  "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+
 const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
-
-const feeFetching = (from_district, from_ward, to_district, to_ward) => {
-  axios.get(
-    "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
-    {
-      params: {
-        from_district_id: Number(from_district),
-        from_ward_code: String(from_ward),
-        service_id: 53320,
-        to_district_id: Number(to_district),
-        to_ward_code: String(to_ward),
-        height: 10,
-        length: 10,
-        weight: 200,
-        width: 10,
-        insurance_value: 10000,
-        cod_failed_amount: 2000,
-        coupon: null,
-      },
-      headers: { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" },
-    }
-  );
-};
 
 const feeFetching2 = async (url, params, headers) => {
   try {
@@ -36,20 +24,14 @@ const feeFetching2 = async (url, params, headers) => {
   }
 };
 
-const token = "914368f7-8f98-11ee-b1d4-92b443b7a897";
-
 export class GHN_API {
   getProvinces = () => {
     const headers = {
-      token: `${token}`,
+      token: API_TOKEN,
     };
     const { data, error, mutate, isValidating } = useSWR(
-      "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
-      () =>
-        fetcher(
-          "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
-          headers
-        )
+      GET_PROVINCES_URL,
+      () => fetcher(GET_PROVINCES_URL, headers)
     );
 
     return {
@@ -68,12 +50,10 @@ export class GHN_API {
   };
   getDistricts = (provinceId) => {
     const headers = {
-      token: `${token}`,
+      token: API_TOKEN,
     };
 
-    const url =
-      "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" +
-      provinceId;
+    const url = GET_DISTRICT_BY_PROVINCE_URL + provinceId;
 
     const { data, error, mutate, isValidating } = useSWR(
       provinceId ? url : null,
@@ -87,28 +67,13 @@ export class GHN_API {
       mutate,
       isValidating,
     };
-    // return axios.get(
-    //   "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
-    //   {
-    //     headers: { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" },
-    //   }
-    // );
-    // return axios.get(
-    //   "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district",
-    //   {
-    //     params: { province_id: provinceId },
-    //     headers: { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" },
-    //   }
-    // );
   };
   getWards = (districtId) => {
     const headers = {
-      token: `${token}`,
+      token: API_TOKEN,
     };
 
-    const url =
-      "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" +
-      districtId;
+    const url = GET_WARD_BY_DISTRICT_URL + districtId;
 
     const { data, error, mutate, isValidating } = useSWR(
       districtId ? url : null,
@@ -122,18 +87,9 @@ export class GHN_API {
       mutate,
       isValidating,
     };
-
-    // return axios.get(
-    //   "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward",
-    //   {
-    //     params: { district_id: districtId },
-    //     headers: { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" },
-    //   }
-    // );
   };
   countShippingFee = (from_district, from_ward, to_district, to_ward) => {
-    const url =
-      "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+    const url = GET_SHIPPING_FEE_URL;
     const params = {
       from_district_id: Number(from_district),
       from_ward_code: String(from_ward),
@@ -151,7 +107,7 @@ export class GHN_API {
 
     // console.log(params);
 
-    const headers = { token: "914368f7-8f98-11ee-b1d4-92b443b7a897" };
+    const headers = { token: API_TOKEN };
     var { data, error, mutate, isValidating } = useSWR(
       from_district && from_ward && to_district && to_ward ? url : null,
       () => feeFetching2(url, params, headers)

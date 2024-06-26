@@ -190,7 +190,7 @@
 .profile-avt-input-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
   border-left: 0.0625rem solid #efefef;
   width: 100%;

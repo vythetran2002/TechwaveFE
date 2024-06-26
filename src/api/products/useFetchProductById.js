@@ -3,6 +3,8 @@ import axios from "axios";
 
 const useFetchProductById = (id, myToken) => {
   // const url = "http://localhost:3000/api/product/" + id;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
+
   const token = "Bearer " + myToken;
 
   const headers = {
@@ -18,10 +20,8 @@ const useFetchProductById = (id, myToken) => {
   const fetcher = (url, headers) =>
     axios.get(url, { headers, credentials: "include" }).then((res) => res.data);
 
-  const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/product/${id}` : null,
-    () =>
-      fetcher(id ? `http://localhost:3000/api/product/${id}` : null, headers)
+  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
+    fetcher(id ? url : null, headers)
   );
 
   return {

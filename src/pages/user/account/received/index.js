@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchReceivedProducts();
+  const token = Cookies.get("token");
   // console.log(orders);
   //Refs
   const iconRef = useRef();
@@ -48,20 +49,25 @@ function Index() {
             <div>
               {orders.data ? (
                 orders.data.length != 0 ? (
-                  orders.data.map((oderItem, index) => {
-                    return (
-                      <React.Fragment key={"oderItem" + index}>
-                        <PurchaseItemCard oderItem={oderItem} />
-                      </React.Fragment>
-                    );
+                  orders.data.map((item, index) => {
+                    if (item.shop_bill_id.length != 0)
+                      return (
+                        <React.Fragment key={"item" + index}>
+                          <PurchaseItemCard
+                            token={token}
+                            card={item}
+                            status={2}
+                          />
+                        </React.Fragment>
+                      );
                   })
                 ) : (
                   <div
                     style={{
                       width: "100%",
                       display: "flex",
-                      padding: "20px",
                       justifyContent: "center",
+                      padding: "20px 0 20px 0",
                     }}
                   >
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

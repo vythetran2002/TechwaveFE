@@ -10,7 +10,7 @@ export const addFavouriteProduct = async (id, token) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/product/favor/" + id,
+      process.env.NEXT_PUBLIC_API_URL + "/api/product/favor/" + id,
       data,
       {
         headers: {

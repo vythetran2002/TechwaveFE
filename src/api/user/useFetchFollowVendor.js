@@ -7,7 +7,8 @@ const fetcher = (url, headers) =>
 
 const useFetchUserFollowVendor = () => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/user/folow";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/folow";
+  // "http://localhost:3000/api/user/folow";
 
   const token = "Bearer " + acToken;
 

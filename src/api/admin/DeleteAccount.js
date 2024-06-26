@@ -2,7 +2,9 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const DeleteAccount = async (id, token) => {
-  const url = "http://localhost:3000/api/admin/account/remove/" + id;
+  // const url = "http://localhost:3000/api/admin/account/remove/" + id;
+  const url =
+    process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/remove/" + id;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -5,7 +5,8 @@ const fetcher = (url, headers) =>
   axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchProductsByPage = (page, limit, myToken) => {
-  const url = "http://localhost:3000/api/vendor/product/";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product";
+  //"http://localhost:3000/api/vendor/product/";
 
   const token = "Bearer " + myToken;
 

@@ -15,7 +15,7 @@ export const DeleteFavouriteItem = async (id, token) => {
 
   try {
     const response = await axios.delete(
-      `http://localhost:3000/api/product/deletefavor/${id}`,
+      process.env.NEXT_PUBLIC_API_URL + "/api/product/favor/" + id,
       config
     );
     toast.success("Huỷ sản phẩm yêu thích thành công");

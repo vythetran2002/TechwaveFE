@@ -4,7 +4,8 @@ import Cookies from "js-cookie";
 
 const useFetchDetailReviewAdmin = (myID) => {
   const acToken = Cookies.get("token");
-  const url = "http://localhost:3000/api/admin/review/" + myID;
+  // const url = "http://localhost:3000/api/admin/review/" + myID;
+  const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/review/" + myID;
   const token = "Bearer " + acToken;
 
   const headers = {

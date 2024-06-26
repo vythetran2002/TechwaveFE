@@ -13,7 +13,9 @@ const useFetchInitialFreeShip = (price) => {
 
       try {
         const acToken = Cookies.get("token");
-        const url = "http://localhost:3000/api/user/discount/freeShip";
+        const url =
+          process.env.NEXT_PUBLIC_API_URL + "/api/user/discount/freeShip";
+        // "http://localhost:3000/api/user/discount/freeShip";
         const token = "Bearer " + acToken;
 
         const headers = {

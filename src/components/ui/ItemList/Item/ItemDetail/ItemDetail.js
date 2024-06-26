@@ -70,6 +70,7 @@ const options = {
 
 function ItemDetail(props) {
   const item = props.item;
+
   const [img, setImg] = useState(null);
   // console.log(item);
   const [reload, setReload] = useState(false);
@@ -121,9 +122,24 @@ function ItemDetail(props) {
       };
       props.addCartItem(temp);
       props.handlingCloseDialog();
+    } else if (item.option.length === 0) {
+      let temp = {
+        option_id: id,
+        quantity: quantity,
+        price: parseInt(quantity) * parseInt(item.price),
+        product_id: item.product_id,
+      };
+      props.addCartItem(temp);
+      props.handlingCloseDialog();
     } else {
       toast.error("Hãy chọn loại sản phẩm");
     }
+  };
+
+  const handleCloseDialog = () => {
+    props.handlingCloseDialog();
+    setImg(null);
+    setId(null);
   };
 
   // useEffect(() => {
@@ -146,6 +162,10 @@ function ItemDetail(props) {
   //   setIsActive((prevState) => !prevState);
   // }
 
+  useEffect(() => {
+    console.log(img);
+  }, [img]);
+
   if (item)
     return (
       <>
@@ -154,7 +174,7 @@ function ItemDetail(props) {
           fullWidth={true}
           maxWidth="md"
           sx={sxStyle}
-          onClose={props.handlingCloseDialog}
+          onClose={handleCloseDialog}
           className={roboto.className}
         >
           <DialogContent
@@ -165,48 +185,48 @@ function ItemDetail(props) {
             <div className={Styles["dialog-container"]}>
               <div className={Styles["slider-container"]}>
                 <div className={Styles["top-slider-wrapper"]}>
-                  <ReactOwl className="owl-theme" {...options}>
-                    <div className={Styles["img-wrapper"]}>
-                      {img ? (
-                        <>
-                          <Image
-                            src={img}
-                            width={1000}
-                            height={1000}
-                            alt=""
-                            className={Styles["img"]}
-                            priority={true}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          {item.image ? (
-                            <>
-                              <Image
-                                src={item.image}
-                                width={1000}
-                                height={1000}
-                                alt=""
-                                className={Styles["img"]}
-                                priority={true}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <Image
-                                src={images.image8}
-                                width={1000}
-                                height={1000}
-                                alt=""
-                                className={Styles["img"]}
-                                priority={true}
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
-                    {/* <div className={Styles["img-wrapper"]}>
+                  {/* <ReactOwl className="owl-theme" {...options}> */}
+                  <div className={Styles["img-wrapper"]}>
+                    {img ? (
+                      <>
+                        <img
+                          src={img}
+                          width={1000}
+                          height={1000}
+                          alt=""
+                          className={Styles["img"]}
+                          priority={true}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {item.image ? (
+                          <>
+                            <img
+                              src={item.image}
+                              width={1000}
+                              height={1000}
+                              alt=""
+                              className={Styles["img"]}
+                              priority={true}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src={images.image8}
+                              width={1000}
+                              height={1000}
+                              alt=""
+                              className={Styles["img"]}
+                              priority={true}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  {/* <div className={Styles["img-wrapper"]}>
                     <Image
                       src={images.image8}
                       alt=""
@@ -230,7 +250,7 @@ function ItemDetail(props) {
                       priority={true}
                     />
                   </div> */}
-                  </ReactOwl>
+                  {/* </ReactOwl> */}
                 </div>
               </div>
               <div className={Styles["item-detail-container"]}>
@@ -379,7 +399,7 @@ function ItemDetail(props) {
                     ) : (
                       <>
                         <div className={Styles["empty-div-container"]}>
-                          <span>ABC</span>
+                          <span></span>
                         </div>
                       </>
                     )}
@@ -391,6 +411,7 @@ function ItemDetail(props) {
                     <InputNumber
                       onChange={handleChangeQuantity}
                       max={item.quantity}
+                      min={1}
                       defaultValue={1}
                     />
                   </div>

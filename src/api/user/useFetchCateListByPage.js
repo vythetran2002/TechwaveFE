@@ -7,9 +7,11 @@ const fetcher = (url, headers) =>
 const useFetchCateListByPage = (id0, id1, page, limit, myToken) => {
   let url = null;
   if (id1) {
-    url = "http://localhost:3000/api/category/" + id1;
+    url = process.env.NEXT_PUBLIC_API_URL + "/api/category/" + id1;
+    // "http://localhost:3000/api/category/" + id1;
   } else {
-    url = "http://localhost:3000/api/category/" + id0;
+    process.env.NEXT_PUBLIC_API_URL + "/api/category/" + id0;
+    // url = "http://localhost:3000/api/category/" + id0;
   }
 
   // const url = "http://localhost:3000/api/category/" + id;
