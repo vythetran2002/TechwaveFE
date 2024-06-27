@@ -19,22 +19,29 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Features
 **Common**
+
 - SignUp, Login, Forgot Password
 - Update Profile
+  
 **User**
+
 - Sharing products 
 - Add products to cart
 - Add favourite products
 - Checkout cart
 - Review products
 - Asisstant Chat bot (in progress)
+  
 **Vendor**
+
 - Products management
 - Reviews management
 - View Revenue Statistics
 - Orders management
 - Coupons management
+  
 **Admin**
+
 - Accounts management
 - Categories management
 - Coupons management
