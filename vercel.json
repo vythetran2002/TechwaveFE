@@ -1,4 +1,7 @@
 {
+  "rewrites":  [
+       {"source": "/(.*)", "destination": "/"}
+    ],
   "builds": [
     {
       "src": "package.json",
