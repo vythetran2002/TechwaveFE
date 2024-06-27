@@ -13,7 +13,7 @@ export const uploadImage = async (file) => {
     };
 
     const response = await axios.post(
-      "http://localhost:3000/api/uploadFile",
+      process.env.NEXT_PUBLIC_API_URL + "/api/uploadFile",
       formData,
       config
     );

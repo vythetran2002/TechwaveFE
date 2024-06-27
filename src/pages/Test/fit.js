@@ -23,17 +23,15 @@ function fetchData(url) {
 function reactTextFit() {
   const data = useFetch("https://techwave-yfsp.onrender.com/api/category/");
   const handleClick = () => {
-    fetchData("https://techwave-yfsp.onrender.com/api/category/").then(
-      (result) => {
-        console.log(result);
-      }
-    );
+    fetchData("https://jsonplaceholder.typicode.com/todos").then((result) => {
+      console.log(result);
+    });
   };
 
   return (
     <>
       <button onClick={handleClick}>CLICK ME</button>;
-      {data.isLoading ? <p>Loading...</p> : <p>{data.data}</p>}
+      {data.isLoading ? <p>Loading...</p> : <p>{data.data[0].image}</p>}
     </>
   );
 }

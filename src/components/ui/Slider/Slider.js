@@ -12,7 +12,7 @@ import SlickSlider from "react-slick";
 import useFetch from "@/api/useFetch";
 
 function Slider() {
-  const data = useFetch("http://localhost:3000/api/category");
+  const data = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
   const cateList = data.data;
   const isLoading = data.isLoading;
   const isError = data.isError;

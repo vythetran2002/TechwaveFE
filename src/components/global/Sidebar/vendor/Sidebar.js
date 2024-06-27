@@ -16,16 +16,26 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import { useRouter } from "next/router";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import Cookies from "js-cookie";
-
+import toast from "react-hot-toast";
 import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
 function VendorSidebar(props) {
   const route = useRouter();
   const token = Cookies.get("token");
   const handlingLogout = async () => {
-    const message = await LogOutAccount(token);
-    await Cookies.remove("token");
-    route.push("/auth/login");
-    // toast.success("logged out");
+    // const message = await LogOutAccount(token);
+    // await Cookies.remove("token");
+    // route.push("/auth/login");
+    const message = LogOutAccount(token);
+    const promiseResult = message;
+    toast.promise(promiseResult, {
+      loading: "Loading...",
+      success: (result) => {
+        Cookies.remove("token");
+        route.push("/auth/login");
+        return "Đăng xuất thành công";
+      },
+      error: "Something's wrong",
+    });
   };
 
   const navRef = useRef();

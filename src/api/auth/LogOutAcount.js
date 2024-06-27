@@ -11,7 +11,7 @@ export const LogOutAccount = async (token) => {
         },
       }
     );
-    toast.success("Logout Successfully");
+
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

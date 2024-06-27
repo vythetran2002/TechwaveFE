@@ -3,7 +3,8 @@ import Styles from "./styles.module.css";
 import CategoryItem from "./CategoryItem/CategoryItem";
 import useSWR from "swr";
 import useFetch from "@/api/useFetch";
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+import UserLoadingUI from "../UserLoadingUI/UserLoadingUI";
+import UserErrorUI from "../UserErrorUI/UserErrorUI";
 
 const CategoryList = () => {
   // const cateList = UseFetchCate("http://localhost:3000/api/category/");
@@ -12,10 +13,15 @@ const CategoryList = () => {
   //   fetcher
   // );
 
-  const data = useFetch("http://localhost:3000/api/category");
+  const data = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
-  if (data.isError) return <div>Lỗi khi tải dữ liệu</div>;
-  if (data.isLoading) return <div>Đang tải...</div>;
+  if (data.isError) return <UserErrorUI />;
+  if (data.isLoading)
+    return (
+      <div>
+        <UserLoadingUI />
+      </div>
+    );
 
   return (
     <>

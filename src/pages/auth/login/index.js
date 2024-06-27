@@ -36,51 +36,84 @@ function Index() {
 
     try {
       // Gửi yêu cầu đăng nhập tới API
-      const response = await axios.post(
+      const response = axios.post(
         process.env.NEXT_PUBLIC_API_URL + "/api/login",
         {
           email,
           password,
         }
       );
+      const promiseResult = response;
 
-      if (
-        response.data &&
-        response.data.data &&
-        response.data.data.access_token
-      ) {
-        // Lấy access_token từ response
-        const access_token = response.data.data.access_token;
-        console.log(response.data);
-        // Lưu access_token vào cookie
-        Cookies.set("token", access_token);
-        //setCookie("token", access_token);
-        // Redirect người dùng hoặc làm mới trạng thái của component/app
-        // ...
-        toast.success("Đăng nhập thành công");
+      toast.promise(promiseResult, {
+        loading: "Loading...",
+        success: (response) => {
+          // Lấy access_token từ response
+          const access_token = response.data.data.access_token;
+          console.log(response.data);
+          // Lưu access_token vào cookie
+          Cookies.set("token", access_token);
+          //setCookie("token", access_token);
+          // Redirect người dùng hoặc làm mới trạng thái của component/app
+          // ...
 
-        //auth
-        switch (response.data.data.groupWithRole.permission_id) {
-          case 3:
-            router.push("/");
-            break;
-          case 2:
-            router.push("/vendor/home");
-            break;
-          case 1:
-            router.push("/admin/home");
-            break;
-          default:
-            break;
-        }
-      } else {
-        // Xử lý trường hợp không tìm thấy access_token trong response
-        console.log("Token không tồn tại trong response");
-        toast.error("Đăng nhập không thành công.");
-      }
+          //auth
+          switch (response.data.data.groupWithRole.permission_id) {
+            case 3:
+              router.push("/");
+              return "Đăng nhập thành công";
+              break;
+            case 2:
+              router.push("/vendor/home");
+              return "Đăng nhập thành công";
+              break;
+            case 1:
+              router.push("/admin/home");
+              return "Đăng nhập thành công";
+              break;
+            default:
+              break;
+          }
+        },
+        error: "Đăng nhập thất bại",
+      });
+
+      // if (
+      //   response.data &&
+      //   response.data.data &&
+      //   response.data.data.access_token
+      // ) {
+      //   // Lấy access_token từ response
+      //   const access_token = response.data.data.access_token;
+      //   console.log(response.data);
+      //   // Lưu access_token vào cookie
+      //   Cookies.set("token", access_token);
+      //   //setCookie("token", access_token);
+      //   // Redirect người dùng hoặc làm mới trạng thái của component/app
+      //   // ...
+
+      //   //auth
+      //   switch (response.data.data.groupWithRole.permission_id) {
+      //     case 3:
+      //       router.push("/");
+      //       break;
+      //     case 2:
+      //       router.push("/vendor/home");
+      //       break;
+      //     case 1:
+      //       router.push("/admin/home");
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // } else {
+      //   // Xử lý trường hợp không tìm thấy access_token trong response
+      //   console.log("Token không tồn tại trong response");
+      //   toast.error("Đăng nhập không thành công.");
+      // }
     } catch (error) {
       console.error("Đăng nhập thất bại", error);
-      toast.error("Đăng nhập thất bại");
+      toast.error("Something's wrong");
       // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
     }
   };
@@ -210,7 +243,7 @@ function Index() {
                   Login
                 </button>
               </div>
-              <div className={Styles["or"]}>
+              {/* <div className={Styles["or"]}>
                 <p style={{ color: "white" }}>Or Login with</p>
               </div>
               <div className={Styles["icon"]}>
@@ -238,7 +271,7 @@ function Index() {
                   <GoogleIcon />
                   Google
                 </a>
-              </div>
+              </div> */}
             </form>
           </div>
           <div className={Styles["right"]}>

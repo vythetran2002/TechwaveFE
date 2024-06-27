@@ -10,15 +10,16 @@ import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 import { memo } from "react";
 import Link from "next/link";
 import useFetch from "@/api/useFetch";
-
+import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
+import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 function HeaderNav() {
-  const data = useFetch("http://localhost:3000/api/category");
+  const data = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
   if (data.isLoading) {
-    return <>Loading</>;
+    return <UserLoadingUI></UserLoadingUI>;
   }
   if (data.isError) {
-    return <>Error</>;
+    return <UserErrorUI></UserErrorUI>;
   } else
     return (
       <>
@@ -47,7 +48,7 @@ function HeaderNav() {
             <CustomerServiceOutlined />
             <span>Dịch vụ</span>
           </div> */}
-            <Link href={"/cate/2"} className={Styles["nav-item-container"]}>
+            <Link href={"/"} className={Styles["nav-item-container"]}>
               <SpeakerGroupOutlinedIcon />
               <span>Sản phẩm bán chạy</span>
             </Link>

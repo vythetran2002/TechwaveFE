@@ -117,9 +117,17 @@ function Header(props) {
   const searchContainerRef = useRef();
 
   const logOut = async () => {
-    const message = await LogOutAccount(token);
-    Cookies.remove("token");
-    router.push("/auth/login");
+    const message = LogOutAccount(token);
+    const promiseResult = message;
+    toast.promise(promiseResult, {
+      loading: "Loading...",
+      success: (result) => {
+        Cookies.remove("token");
+        router.push("/auth/login");
+        return "Đăng xuất thành công";
+      },
+      error: "Something's wrong",
+    });
   };
 
   const showDrawer = () => {

@@ -1,0 +1,12 @@
+.ui-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  height: 100%;
+  width: 100%;
+}
+.loading-ui {
+  font-size: 50px;
+  color: #1375cf;
+}

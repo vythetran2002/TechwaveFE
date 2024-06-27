@@ -4,7 +4,6 @@ import Head from "next/head";
 import Styles from "../styles.module.css";
 import AdminHeader from "@/components/global/Header/admin/Header";
 import AdminSidebar from "@/components/global/Sidebar/admin/Sidebar";
-import Circle from "react-circle";
 import Image from "next/image";
 import images from "@/assets/images";
 import TestDialog from "@/pages/Test/dialog";

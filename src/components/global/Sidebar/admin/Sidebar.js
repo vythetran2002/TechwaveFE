@@ -14,7 +14,7 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { useRouter } from "next/router";
-
+import toast from "react-hot-toast";
 import { LogOutAccount } from "@/api/auth/LogOutAcount";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import DiscountOutlinedIcon from "@mui/icons-material/DiscountOutlined";
@@ -25,11 +25,22 @@ function AdminSidebar(props) {
   // const [cookies, removeCookie] = useCookies();
   const handlingLogout = async () => {
     const token = Cookies.get("token");
-    const message = await LogOutAccount(token);
-    await Cookies.remove("token");
+    // const message = await LogOutAccount(token);
+    // await Cookies.remove("token");
 
-    route.push("/auth/login");
+    // route.push("/auth/login");
     // toast.success("logged out");
+    const message = LogOutAccount(token);
+    const promiseResult = message;
+    toast.promise(promiseResult, {
+      loading: "Loading...",
+      success: (result) => {
+        Cookies.remove("token");
+        route.push("/auth/login");
+        return "Đăng xuất thành công";
+      },
+      error: "Something's wrong",
+    });
   };
 
   const navRef = useRef();
