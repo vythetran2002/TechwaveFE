@@ -5,7 +5,6 @@ import images from "@/assets/images";
 import dayjs from "dayjs";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Tooltip } from "antd";
-import { Textfit } from "react-textfit";
 
 function ReportItem(props) {
   //   const menuRef = useRef(null);
@@ -75,9 +74,7 @@ function ReportItem(props) {
           <div className={Styles["list-item-date-wrapper"]}>
             {props.report.createAt ? (
               <>
-                <Textfit mode="single">
-                  {dayjs(props.report.createAt).format("DD/MM/YYYY")}
-                </Textfit>
+                <div>{dayjs(props.report.createAt).format("DD/MM/YYYY")}</div>
               </>
             ) : (
               <></>

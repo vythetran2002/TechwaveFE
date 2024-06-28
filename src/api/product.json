@@ -1,0 +1,312 @@
+[
+  {
+    "product_id": 11,
+    "name": "Đèn LED SEAMETAL cảm biến tự động hỗ trợ đọc sách trang trí bên trong xe hơi 15/ 10/ 21cm",
+    "price": 96000,
+    "promotional_price": 78000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127363/techwave/kdim3p6oexbsagzmrytt.jpg",
+    "option": [
+      {
+        "option_id": 19,
+        "product_id": 11,
+        "name": "10 CM",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127399/techwave/hqhy11t1czjry9xie5rj.jpg"
+      },
+      {
+        "option_id": 20,
+        "product_id": 11,
+        "name": "15 CM",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127435/techwave/pjum2tn0ffwjxhdtkbqm.jpg"
+      },
+      {
+        "option_id": 21,
+        "product_id": 11,
+        "name": "21 CM",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127462/techwave/c09ow2decivo8ldo8yjf.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 12,
+    "name": "Cáp sạc micro samsung, oppo dây sạc chân dẹp cho các máy đời thấp, loa đài, máy nghe nhạc",
+    "price": 100000,
+    "promotional_price": 50000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127275/techwave/k0vkeob7kiealegaflxg.jpg",
+    "option": [],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 13,
+    "name": "Mô-đun đánh lửa ô tô thông minh không cần chìa khóa và khởi động từ xa chất lượng",
+    "price": 630000,
+    "promotional_price": 592200,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704125493/techwave/d8xg3awbusdwnxnezg0a.jpg",
+    "option": [
+      {
+        "option_id": 17,
+        "product_id": 13,
+        "name": "DQD-LY(TY)",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704126954/techwave/ap46zvehqcskhvikd0ql.jpg"
+      },
+      {
+        "option_id": 18,
+        "product_id": 13,
+        "name": "DQD-LY(D288)",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704127006/techwave/ys67tze0rgmm0byzzxyg.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 15,
+    "name": "Bộ Chuyển Đổi Nguồn Điện Đa Năng 12v/24v Sang 220v Cho ô tô,Bình ắc quy",
+    "price": 260000,
+    "promotional_price": 229000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704124309/techwave/xu4va6jl6ruxoianwyjz.jpg",
+    "option": [
+      {
+        "option_id": 15,
+        "product_id": 15,
+        "name": "Bộ cho xe hơi",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704124370/techwave/o5xqlwi9lksxrow4lqwi.jpg"
+      },
+      {
+        "option_id": 16,
+        "product_id": 15,
+        "name": "Bộ kèm kẹp acqy",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704124418/techwave/muphlcdcymuofkzyrew5.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 20,
+    "name": "Bộ quần áo polo thời trang thể thao warrix super fex đội tuyển thái lan",
+    "price": 150000,
+    "promotional_price": 50000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1701888301/techwave/wg34lhsyhmz1dhla2bdf.jpg",
+    "option": [
+      {
+        "option_id": 7,
+        "product_id": 20,
+        "name": "Màu Đỏ",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1701888761/techwave/qgfeacual789jopl1wyh.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 21,
+    "name": "Nuoshou k47 điện thoại di động đơn bàn phím cơ bộ chuột bàn tay trái trò chơi di động ",
+    "price": 680000,
+    "promotional_price": null,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704115343/techwave/qutybnukxy9fo0bephtd.jpg",
+    "option": [
+      {
+        "option_id": 9,
+        "product_id": 21,
+        "name": "Bàn phím một tay K47",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704115546/techwave/pdhlq4jgfgca5ucjt0fc.jpg"
+      },
+      {
+        "option_id": 12,
+        "product_id": 21,
+        "name": "Bàn phím một tay K97",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704115648/techwave/inntohozthp5tt1a9lmb.jpg"
+      },
+      {
+        "option_id": 13,
+        "product_id": 21,
+        "name": "Bàn phím một tay K99 + Chuột c",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704115683/techwave/q3s5asunl7sheezljbin.jpg"
+      },
+      {
+        "option_id": 14,
+        "product_id": 21,
+        "name": "Bàn phím một tay K97 + Chuột c",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704116152/techwave/nvxu5dr3urwcyu1t4jld.jpg"
+      }
+    ],
+    "rating": "5.0",
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 25,
+    "name": "Quần áo đẹp",
+    "price": 100000,
+    "promotional_price": null,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1703698447/techwave/obg52l5fpgruribuhzfx.jpg",
+    "option": [],
+    "rating": null,
+    "haveSales": null,
+    "place": null,
+    "favStatus": false
+  },
+  {
+    "product_id": 26,
+    "name": "Củ sạc nhanh 20w chính hãng HOCO - Bộ sạc type c tiêu chuẩn pd20w điện thoại dùng cho iphone samsung xiaomi ..",
+    "price": 136000,
+    "promotional_price": 46000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128101/techwave/auqwzz3gkrd8baxeolx9.jpg",
+    "option": [
+      {
+        "option_id": 22,
+        "product_id": 26,
+        "name": "BÁN LẺ CÁP",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128370/techwave/nh9bk7ck4mfk9ddeexcw.jpg"
+      },
+      {
+        "option_id": 23,
+        "product_id": 26,
+        "name": "BÁN LẺ CỦ",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128405/techwave/ngb6gxwwkbon0depdr5c.jpg"
+      },
+      {
+        "option_id": 24,
+        "product_id": 26,
+        "name": "BỘ CỦ + CÁP",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128416/techwave/coqr5uloypy9ckxie5o0.jpg"
+      }
+    ],
+    "rating": "5.0",
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 27,
+    "name": "Điện thoại Apple iPhone 15 Pro Max 256GB",
+    "price": 34999000,
+    "promotional_price": 33390000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128545/techwave/tyxnrbmbhglakfn4nzqc.jpg",
+    "option": [
+      {
+        "option_id": 25,
+        "product_id": 27,
+        "name": "Titan - Tự Nhiên",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128622/techwave/aucqxixcf5anf02gh7ry.jpg"
+      },
+      {
+        "option_id": 26,
+        "product_id": 27,
+        "name": "Titan - Xanh",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704128666/techwave/bpcfmzytu5ylvrertfsx.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 28,
+    "name": "Loa Kéo karaoke siêu trầm bass 40 ONTEKCO âm thanh hay- tặng đôi micro hát đỉnh cao",
+    "price": 6880000,
+    "promotional_price": null,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704129671/techwave/x2e4wjjevopjvwbtcvqz.jpg",
+    "option": [
+      {
+        "option_id": 27,
+        "product_id": 28,
+        "name": "1502",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704129763/techwave/zqmetxvz2k3yyi4i6h2e.jpg"
+      },
+      {
+        "option_id": 28,
+        "product_id": 28,
+        "name": "1503",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704129786/techwave/edzjvxzbufaczwsgdcrr.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 29,
+    "name": "BỘ NGỦ NỮ CAXA ? SET PIJAMA MẶC NHÀ 2 MÀU XANH CAM?",
+    "price": 59000,
+    "promotional_price": 29900,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704129948/techwave/wyjgdgpqwus20kejky8z.jpg",
+    "option": [
+      {
+        "option_id": 29,
+        "product_id": 29,
+        "name": "Gấu trắng",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130037/techwave/r56iddk0sc810gjzvkux.jpg"
+      },
+      {
+        "option_id": 30,
+        "product_id": 29,
+        "name": "Lê Xanh",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130059/techwave/ixthp3m6x3c6ofstcism.jpg"
+      },
+      {
+        "option_id": 31,
+        "product_id": 29,
+        "name": "Gấu Bear Nâu",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130102/techwave/hhfksc4qxup6morh3rs1.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 30,
+    "name": "Bộ đồ nam thu đông bao đẹp có size to đến 90kg, bộ gió nam bigsize ",
+    "price": 650000,
+    "promotional_price": 550000,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130192/techwave/vwoniliht8whmo2s1df9.jpg",
+    "option": [
+      {
+        "option_id": 32,
+        "product_id": 30,
+        "name": "Xanh",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130261/techwave/jbl9kdlxrvrzizy5pukp.jpg"
+      },
+      {
+        "option_id": 33,
+        "product_id": 30,
+        "name": "Đen",
+        "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1704130282/techwave/oge0w2yijaclmlc7zitb.jpg"
+      }
+    ],
+    "rating": null,
+    "haveSales": null,
+    "place": "Đắk Nông",
+    "favStatus": false
+  },
+  {
+    "product_id": 31,
+    "name": "Giày KAMITO",
+    "price": 250000,
+    "promotional_price": null,
+    "image": "https://res.cloudinary.com/dspnvohki/image/upload/v1715100627/techwave/curxcrkcxe2pdlljaigp.jpg",
+    "option": [],
+    "rating": null,
+    "haveSales": null,
+    "place": "Sơn La",
+    "favStatus": false
+  }
+]

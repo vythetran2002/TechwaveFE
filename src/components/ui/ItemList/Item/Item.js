@@ -12,7 +12,6 @@ import { Tooltip } from "antd";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast from "react-hot-toast";
-import { Textfit } from "react-textfit";
 
 function Item(props) {
   // console.log(props.item);
@@ -106,7 +105,7 @@ function Item(props) {
               </span>
             </div>
 
-            <Textfit mode="single">
+            <div>
               <div className={Styles["item-rating-container"]}>
                 <div className={Styles["item-rating-wrapper"]}>
                   {/* {props.item.rating ? (
@@ -133,7 +132,7 @@ function Item(props) {
                   Đã bán {props.item.haveSales}
                 </span>
               </div>
-            </Textfit>
+            </div>
             <div className={Styles["item-rating-container"]}>
               <span className={Styles["buy-count"]}>{props.item.place}</span>
             </div>

@@ -4,7 +4,7 @@ import SortOutlinedIcon from "@mui/icons-material/SortOutlined";
 import VoucherItem from "./VoucherItem";
 import { useEffect } from "react";
 import useFetchProductsByPage from "@/api/vendor/useFetchProductsByPage";
-import { Textfit } from "react-textfit";
+
 import useFetchVouchersVendor from "@/api/vendor/useFetchVouchersVendor";
 import { Empty } from "antd";
 
@@ -17,43 +17,43 @@ function VoucherList(props) {
         <div className={Styles["item-list-heading-container"]}>
           <div className={Styles["id-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Tên</Textfit>
+              <div mode="single">Tên</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["fullname-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Số Lượng</Textfit>
+              <div mode="single">Số Lượng</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["email-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Giá giảm</Textfit>
+              <div mode="single">Giá giảm</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["email-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Đơn từ</Textfit>
+              <div mode="single">Đơn từ</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["dob-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Giảm tối đa</Textfit>
+              <div mode="single">Giảm tối đa</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["gender-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Ngày hết hạn</Textfit>
+              <div mode="single">Ngày hết hạn</div>
             </span>
             <SortOutlinedIcon />
           </div>
           <div className={Styles["status-wrapper"]}>
             <span className={Styles["head-title"]}>
-              <Textfit mode="single">Trạng thái</Textfit>
+              <div mode="single">Trạng thái</div>
             </span>
             <SortOutlinedIcon />
           </div>

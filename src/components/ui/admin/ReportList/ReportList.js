@@ -5,7 +5,6 @@ import ReportItem from "./ReportItem";
 import { useEffect } from "react";
 import useFetchReport from "@/api/vendor/useFetchReports";
 import { Empty } from "antd";
-import { Textfit } from "react-textfit";
 
 function ReportList(props) {
   const { limit, page, updateMax } = props;
@@ -29,34 +28,34 @@ function ReportList(props) {
           <div className={Styles["item-list-heading-container"]}>
             <div className={Styles["id-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">ID</Textfit>
+                <div>ID</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["fullname-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Nội dung</Textfit>
+                <div>Nội dung</div>
               </span>
             </div>
             <div className={Styles["email-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Tài khoản khách hàng</Textfit>
+                <div>Tài khoản khách hàng</div>
               </span>
             </div>
             <div className={Styles["dob-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Avatar</Textfit>
+                <div>Avatar</div>
               </span>
             </div>
             <div className={Styles["gender-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Thời gian</Textfit>
+                <div>Thời gian</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Trạng thái</Textfit>
+                <div>Trạng thái</div>
               </span>
             </div>
           </div>

@@ -1,13 +1,11 @@
 {
-  "rewrites":  [
-       {"source": "/(.*)", "destination": "/"}
-    ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/node",
       "config": {
-        "installCommand": "npm i --force"
+        "installCommand": "npm install --force"
       }
     }
   ]

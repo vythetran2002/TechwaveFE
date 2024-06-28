@@ -7,7 +7,6 @@ import CommentItem from "./CommentItem";
 import { useEffect } from "react";
 import useFetchComment from "@/api/vendor/useFetchComment";
 import { Empty } from "antd";
-import { Textfit } from "react-textfit";
 
 function CommentList(props) {
   const { status, limit, page, token, updateMax } = props;
@@ -29,30 +28,30 @@ function CommentList(props) {
           <div className={Styles["item-list-heading-container"]}>
             <div className={Styles["id-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single"> Tài khoản</Textfit>
+                <div> Tài khoản</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["fullname-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Sản phẩm</Textfit>
+                <div>Sản phẩm</div>
               </span>
             </div>
             <div className={Styles["email-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Nội dung</Textfit>
+                <div>Nội dung</div>
               </span>
             </div>
 
             <div className={Styles["gender-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Ngày đánh giá</Textfit>
+                <div>Ngày đánh giá</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Hành động</Textfit>
+                <div>Hành động</div>
               </span>
             </div>
           </div>

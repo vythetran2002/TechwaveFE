@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import OrderItem from "./OrderItem";
 import useFetchPendingOrders from "@/api/vendor/useFetchPendingOrder";
 import Empty from "antd/lib/empty";
-import { Textfit } from "react-textfit";
+
 import { LoadingOutlined } from "@ant-design/icons";
 
 const mockedData = {
@@ -156,42 +156,42 @@ function OrderList(props) {
           <div className={Styles["item-list-heading-container"]}>
             <div className={Styles["id-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Tên khách hàng</Textfit>
+                <div>Tên khách hàng</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["fullname-wrapper"]}>
               <span className={Styles["head-title"]}>
                 {" "}
-                <Textfit mode="single">Số điện thoại</Textfit>
+                <div>Số điện thoại</div>
               </span>
             </div>
             <div className={Styles["email-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Địa chỉ</Textfit>
+                <div>Địa chỉ</div>
               </span>
             </div>
             <div className={Styles["dob-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Thanh toán</Textfit>
+                <div>Thanh toán</div>
               </span>
             </div>
             <div className={Styles["gender-wrapper"]}>
               <span className={Styles["head-title"]}>
                 {" "}
-                <Textfit mode="single">Tổng đơn</Textfit>
+                <div>Tổng đơn</div>
               </span>
               <SortOutlinedIcon />
             </div>
             <div className={Styles["status-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Textfit mode="single">Ngày đặt</Textfit>
+                <div>Ngày đặt</div>
               </span>
             </div>
             <div className={Styles["status-wrapper"]}>
               <span className={Styles["head-title"]}>
                 {" "}
-                <Textfit mode="single">Hành động</Textfit>
+                <div>Hành động</div>
               </span>
             </div>
           </div>

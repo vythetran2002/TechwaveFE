@@ -2,7 +2,7 @@ import React from "react";
 import Styles from "./styles.module.css";
 import Image from "next/image";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import { Textfit } from "react-textfit";
+
 import images from "@/assets/images";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import { calculateRemainingDays } from "@/assets/utils/calculateDayRemain";
@@ -28,9 +28,9 @@ function voucherCard({ role, children, data }) {
                 className={Styles.img}
               ></Image>
               <span className={Styles.title}>
-                <Textfit mode="single" forceSingleModeWidth={false}>
+                <div mode="single" forceSingleModeWidth={false}>
                   SHOP AZ
-                </Textfit>
+                </div>
               </span>
             </div>
           </div>
@@ -46,17 +46,17 @@ function voucherCard({ role, children, data }) {
               <span>
                 {calculateRemainingDays(now, data.expires) ===
                 "Voucher đã hết hạn" ? (
-                  <Textfit
+                  <div
                     mode="single"
                     forceSingleModeWidth={false}
                     style={{ color: "red" }}
                   >
                     {calculateRemainingDays(now, data.expires)}
-                  </Textfit>
+                  </div>
                 ) : (
-                  <Textfit mode="single" forceSingleModeWidth={false}>
+                  <div mode="single" forceSingleModeWidth={false}>
                     {calculateRemainingDays(now, data.expires)}
-                  </Textfit>
+                  </div>
                 )}
               </span>
             </div>
@@ -79,9 +79,9 @@ function voucherCard({ role, children, data }) {
                 className={Styles.img}
               ></Image>
               <span className={Styles.title}>
-                <Textfit mode="single" forceSingleModeWidth={false}>
+                <div mode="single" forceSingleModeWidth={false}>
                   Techwave
-                </Textfit>
+                </div>
               </span>
             </div>
           </div>
@@ -99,17 +99,11 @@ function voucherCard({ role, children, data }) {
               <span>
                 {calculateRemainingDays(now, data.expires) ===
                 "Voucher đã hết hạn" ? (
-                  <Textfit
-                    mode="single"
-                    forceSingleModeWidth={false}
-                    style={{ color: "red" }}
-                  >
+                  <div style={{ color: "red" }}>
                     {calculateRemainingDays(now, data.expires)}
-                  </Textfit>
+                  </div>
                 ) : (
-                  <Textfit mode="single" forceSingleModeWidth={false}>
-                    {calculateRemainingDays(now, data.expires)}
-                  </Textfit>
+                  <div>{calculateRemainingDays(now, data.expires)}</div>
                 )}
                 {/* <Textfit mode="single" forceSingleModeWidth={false}>
                   {calculateRemainingDays(now, data.expires)}

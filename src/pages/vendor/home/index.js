@@ -18,7 +18,7 @@ import {
   UsergroupAddOutlined,
   TableOutlined,
 } from "@ant-design/icons";
-import { Textfit } from "react-textfit";
+
 // const mokedRevenue = {
 //   data: {
 //     revenue: 2000000, // Doanh thu

@@ -23,7 +23,7 @@ import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import countElementOfArray from "@/assets/utils/countArrayElement";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast, { Toaster } from "react-hot-toast";
-import { Textfit } from "react-textfit";
+
 import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { FacebookIcon, TwitterIcon } from "react-share";
 
@@ -321,11 +321,11 @@ function ProductDetail(props) {
                       textDecoration: "none",
                     }}
                   >
-                    <Textfit mode="single">{product.slReview} Đánh giá</Textfit>
+                    <div mode="single">{product.slReview} Đánh giá</div>
                   </span>
                   |
                   <span>
-                    <Textfit mode="single">{product.haveSales} đã bán</Textfit>
+                    <div mode="single">{product.haveSales} đã bán</div>
                   </span>
                 </div>
                 <span className={Styles["row-container"]}>
