@@ -7,7 +7,6 @@ import ReportItem from "./ReportItem";
 import useFetchAdminReport from "@/api/admin/useFetchAdminReport";
 import index from "@/pages/admin/home";
 import { Empty } from "antd";
-import { Textfit } from "react-textfit";
 
 function ReportList(props) {
   const { limit, page, token, updateMax, status } = props;

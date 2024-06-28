@@ -1,6 +1,6 @@
 import React from "react";
 import Styles from "./test.module.css";
-import { Textfit } from "react-textfit";
+
 import useFetch from "@/api/useFetch";
 
 function fetchData(url) {
