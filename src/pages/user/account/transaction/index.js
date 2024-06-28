@@ -1,5 +1,5 @@
 import React from "react";
-import useFetchTestPayment from "@/api/user/testPayment";
+import useFetchTestPayment from "@/api/user/useFetchTestPayment";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Styles from "./styles.module.css";

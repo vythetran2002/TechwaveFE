@@ -1,4 +1,4 @@
-import logo from "./tech-wave-logo.png";
+import logo from "./Techwave/techwave.png";
 import image1 from "./Slider/1-8487-hinh.png";
 import image2 from "./Slider/kebensl-9048-hinh.png";
 import image3 from "./Slider/kebensl2-1997-hinh.png";
@@ -26,7 +26,6 @@ import monster from "./sampleAvatar/monster.webp";
 import techwave from "./Techwave/techwave.png";
 import techwave2 from "./Techwave/techwave2.png";
 import cate from "./Category/cate.png";
-import samsung from "./shop/samsung.jpeg";
 import shopBg from "./shop/Gunmetal Gradient.jpeg";
 import empty from "./empty.jpg";
 import loginBg from "./login/login-bg.png";
@@ -63,7 +62,6 @@ const images = {
   techwave: techwave,
   techwave2: techwave2,
   cate: cate,
-  samsung: samsung,
   shopBg: shopBg,
   empty: empty,
   loginBg: loginBg,
