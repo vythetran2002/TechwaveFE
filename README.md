@@ -5,14 +5,14 @@ This is an Ecommerce project named Techwave and bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev -p 3001
+npm run dev 
 # or
-yarn dev -p 3001
+yarn dev
 # or
-pnpm dev -p 3001
+pnpm dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) with your browser to see the result. (We use the port 3001 instead of default 3000 because of the CORS modification from the backend server)
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result. 
 
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Roboto, a custom Google Font.
