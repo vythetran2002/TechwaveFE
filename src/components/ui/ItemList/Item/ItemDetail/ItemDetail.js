@@ -162,10 +162,6 @@ function ItemDetail(props) {
   //   setIsActive((prevState) => !prevState);
   // }
 
-  useEffect(() => {
-    console.log(img);
-  }, [img]);
-
   if (item)
     return (
       <>

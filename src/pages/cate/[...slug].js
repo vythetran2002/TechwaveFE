@@ -40,7 +40,8 @@ function CateIndex() {
 
   // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
   const listItem = useFetchCateListByPage(id0, id1, page, 10, token);
-  const cateList = useFetch("http://localhost:3000/api/category");
+  const cateList = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
+
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
   };
@@ -59,7 +60,6 @@ function CateIndex() {
     console.log("----");
     try {
       const message = await addCartItem(data, token);
-      console.log(data);
       if (message) {
         toast.success("Đã thêm vào giỏ");
       } else {
@@ -102,14 +102,14 @@ function CateIndex() {
     return <></>;
   }
 
-  // if (cateList.isError) return <>Error</>;
-  // if (cateList.isLoading) return <>Loading</>;
+  if (cateList.isError) return <>Error</>;
+  if (cateList.isLoading) return <>Loading</>;
   else
     return (
       <>
         <Head>
           {listItem.data && listItem.data.data ? (
-            <title>{listItem.data.listCate.slug}</title>
+            <title>{listItem.data.listCate.name}</title>
           ) : (
             <title>Techwave - Category</title>
           )}

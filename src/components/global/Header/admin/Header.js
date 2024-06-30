@@ -63,8 +63,12 @@ function AdminHeader() {
             )}
             <div className={Styles["avatar-dropdown-container"]}>
               <div className={Styles["info"]}>
-                <span className={Styles["info-name"]}>HCMUTE</span>
-                <span className={Styles["info-email"]}>hcmute@hotmail.com</span>
+                <span className={Styles["info-name"]}>
+                  {profile.data.username}
+                </span>
+                <span className={Styles["info-email"]}>
+                  {profile.data.email}
+                </span>
               </div>
               <div className={Styles["nav-avt-list"]}>
                 <Link

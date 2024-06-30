@@ -17,7 +17,7 @@ import CartItem from "@/components/ui/CartItem/CartItem";
 import Checkbox from "@mui/material/Checkbox";
 import { DeleteOutline } from "@mui/icons-material";
 import { memo } from "react";
-
+import debounce from "lodash/debounce";
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
@@ -31,36 +31,7 @@ import Cookies from "js-cookie";
 import useFetchSearchProduct from "@/api/useFetchSearchProduct";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SearchItemCard from "@/components/ui/SearchItemCard/SearchItemCard";
-// const Drawer = dynamic(() => import("antd"), { ssr: false });
-
-// function useAuthToken() {
-//   // State để theo dõi giá trị token
-//   const [authToken, setAuthToken] = useState(null);
-
-//   // useEffect để đọc token từ localStorage khi component được mount
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//     setAuthToken(token);
-//   }, []);
-
-//   // Bạn có thể thêm một event listener để theo dõi sự thay đổi của localStorage
-//   // và cập nhật token nếu cần
-//   useEffect(() => {
-//     const handleStorageChange = () => {
-//       setAuthToken(localStorage.getItem("token"));
-//     };
-
-//     // Đăng ký sự kiện khi window storage thay đổi
-//     window.addEventListener("storage", handleStorageChange);
-
-//     // Dọn dẹp khi component unmount
-//     return () => {
-//       window.removeEventListener("storage", handleStorageChange);
-//     };
-//   }, []);
-
-//   return authToken;
-// }
+import SearchItemContainer from "@/components/ui/SearchItemContainer.js/SearchItemContainer";
 
 const calculateTotalValue = (arr) => {
   if (arr) {
@@ -105,10 +76,12 @@ function Header(props) {
   const [amount, setAmount] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   const [isSearch, setIsSearch] = useState(false);
   const cart = useFetchCart();
-  const result = useFetchSearchProduct(search);
+  //const result = useState({ data: null, loading: true, error: false });
+  let result = { data: null, loading: true, error: false };
+
   // console.log(result);
   // const authToken = useAuthToken();
   // console.log(cart);
@@ -201,9 +174,18 @@ function Header(props) {
     }
   };
 
-  const onChangeSearchValue = useCallback((e) => {
-    setSearch(e.target.value), 2000;
-  }, []);
+  const debouncedHandleChange = useCallback(
+    debounce(async (value) => {
+      console.log("Debounced value:", value);
+      setSearch(value);
+    }, 300),
+    []
+  );
+
+  const handleChangeSearch = (event) => {
+    const value = event.target.value;
+    debouncedHandleChange(value);
+  };
 
   // useEffect(() => {
   //   console.log(cookies);
@@ -403,22 +385,10 @@ function Header(props) {
               <div className={Styles["search-form"]}>
                 <div className={Styles["input-group"]}>
                   <input
-                    onFocus={() => {
-                      if (searchContainerRef.current) {
-                        searchContainerRef.current.style.display = "block";
-                      }
-                    }}
-                    onBlur={() => {
-                      if (searchContainerRef.current) {
-                        setTimeout(() => {
-                          searchContainerRef.current.style.display = "none";
-                        }, 100);
-                      }
-                    }}
                     type="text"
                     className={Styles["input-search"]}
                     placeholder="Tìm kiếm ..."
-                    onChange={onChangeSearchValue}
+                    onChange={handleChangeSearch}
                   ></input>
                   <div
                     className={Styles["button-search"]}
@@ -427,25 +397,12 @@ function Header(props) {
                     <SearchOutlinedIcon />
                   </div>
                 </div>
-                {result.data &&
-                  search != "" &&
-                  result.data.results.length != 0 && (
-                    <div
-                      ref={searchContainerRef}
-                      className={
-                        Styles["search-suggestion-autocomplete-container"]
-                      }
-                    >
-                      {result.data.results.length != 0 &&
-                        result.data.results.map((item, index) => {
-                          return (
-                            <React.Fragment key={"search-item" + index}>
-                              <SearchItemCard item={item} />
-                            </React.Fragment>
-                          );
-                        })}
-                    </div>
-                  )}
+                {search !== "" && (
+                  <SearchItemContainer
+                    searchContainerRef={searchContainerRef}
+                    value={search}
+                  />
+                )}
               </div>
               <button className={Styles["phone-button"]}>
                 <CallOutlinedIcon

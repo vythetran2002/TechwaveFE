@@ -15,55 +15,57 @@ import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 function HeaderNav() {
   const data = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
-  if (data.isLoading) {
-    return <UserLoadingUI></UserLoadingUI>;
-  }
-  if (data.isError) {
-    return <UserErrorUI></UserErrorUI>;
-  } else
-    return (
-      <>
-        <section className={Styles["nav-container"]}>
-          <div className={Styles["list-section-container"]}>
-            <div className={Styles["cate-list-container"]}>
-              <div className={Styles["nav-cate-extend-container"]}>
-                <NavCate
-                  data={data.data}
-                  isError={data.isError}
-                  isLoading={data.isLoading}
-                />
-              </div>
-              <FormatListBulletedOutlinedIcon />
-              <span>Danh mục sản phẩm</span>
+  return (
+    <>
+      <section className={Styles["nav-container"]}>
+        <div className={Styles["list-section-container"]}>
+          <div className={Styles["cate-list-container"]}>
+            <div className={Styles["nav-cate-extend-container"]}>
+              {data.isLoading ? (
+                <UserLoadingUI />
+              ) : data.isError ? (
+                <UserErrorUI />
+              ) : (
+                <>
+                  <NavCate
+                    data={data.data}
+                    isError={data.isError}
+                    isLoading={data.isLoading}
+                  />
+                </>
+              )}
             </div>
-            <Link href={"/"} className={Styles["nav-item-container"]}>
-              <HomeOutlinedIcon style={{ color: "white !important" }} />
-              <span>Trang chủ</span>
-            </Link>
-            <Link href={"/contact"} className={Styles["nav-item-container"]}>
-              <InfoOutlinedIcon />
-              <span>Giới thiệu</span>
-            </Link>
-            {/* <div className={Styles["nav-item-container"]}>
+            <FormatListBulletedOutlinedIcon />
+            <span>Danh mục sản phẩm</span>
+          </div>
+          <Link href={"/"} className={Styles["nav-item-container"]}>
+            <HomeOutlinedIcon style={{ color: "white !important" }} />
+            <span>Trang chủ</span>
+          </Link>
+          <Link href={"/contact"} className={Styles["nav-item-container"]}>
+            <InfoOutlinedIcon />
+            <span>Giới thiệu</span>
+          </Link>
+          {/* <div className={Styles["nav-item-container"]}>
             <CustomerServiceOutlined />
             <span>Dịch vụ</span>
           </div> */}
-            <Link href={"/"} className={Styles["nav-item-container"]}>
-              <SpeakerGroupOutlinedIcon />
-              <span>Sản phẩm bán chạy</span>
-            </Link>
-            {/* <div className={Styles["nav-item-container"]}>
+          <Link href={"/"} className={Styles["nav-item-container"]}>
+            <SpeakerGroupOutlinedIcon />
+            <span>Sản phẩm bán chạy</span>
+          </Link>
+          {/* <div className={Styles["nav-item-container"]}>
             <NewspaperOutlinedIcon />
             <span>Tin tức</span>
           </div> */}
-            <Link href={"/contact"} className={Styles["nav-item-container"]}>
-              <CallOutlinedIcon />
-              <span>Liên hệ</span>
-            </Link>
-          </div>
-        </section>
-      </>
-    );
+          <Link href={"/contact"} className={Styles["nav-item-container"]}>
+            <CallOutlinedIcon />
+            <span>Liên hệ</span>
+          </Link>
+        </div>
+      </section>
+    </>
+  );
 }
 
 export default memo(HeaderNav);

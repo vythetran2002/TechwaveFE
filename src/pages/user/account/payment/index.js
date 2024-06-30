@@ -276,54 +276,47 @@ function Index() {
     info.ward = info.ward.value;
 
     console.log("Sucessssss", info);
-    // if (checkNullProperties(info) && option) {
-    //   messageRef.current.style.display = "none";
-    //   if (option == "ship") {
-    //     // console.log (temp);
-    //     // console.log("ship thwongf");
-    //     try {
-    //       const message = MakeShipPayment(info, token);
-    //       //console.log(message);
-    //       // toast.success("Thanh toán thành công");
-    //       router.push("/user/account/pendingOrder");
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
-    //   if (option == "vnpay") {
-    //     let amount = temp.totalBill;
-    //     let temp2 = {
-    //       ...temp,
-    //       amount: amount,
-    //       bankCode: null,
-    //       language: "vn",
-    //       returnUrl: "http://localhost:3001/user/account/transaction",
-    //       carts: extractCartIds(objectsArray),
-    //     };
-    //     //  console.log(temp2);
-    //     const message = SendPaymentAmount(temp2, token);
-    //     // console.log(message);
-    //   }
-    //   // const message = SendPaymentAmount(
-    //   //   {
-    //   //     amount:
-    //   //       parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
-    //   //     bankCode: null,
-    //   //     language: "vn",
-    //   //     returnUrl: "http://localhost:3001/user/account/transaction",
-    //   //   },
-    //   //   cookie["token"]
-    //   // );
-    //   // console.log(message);
-    // } else {
-    //   messageRef.current.style.display = "block";
-    // }
+    if (option == "ship") {
+      // console.log (temp);
+      // console.log("ship thwongf");
+      try {
+        const message = MakeShipPayment(info, token);
+        //console.log(message);
+        // toast.success("Thanh toán thành công");
+        router.push("/user/account/pendingOrder");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (option == "vnpay") {
+      let amount = temp.totalBill;
+      let temp2 = {
+        ...temp,
+        amount: amount,
+        bankCode: null,
+        language: "vn",
+        returnUrl: "http://localhost:3001/user/account/transaction",
+        carts: extractCartIds(objectsArray),
+      };
+      //  console.log(temp2);
+      const message = SendPaymentAmount(temp2, token);
+      // console.log(message);
+    }
+    // const message = SendPaymentAmount(
+    //   {
+    //     amount:
+    //       parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
+    //     bankCode: null,
+    //     language: "vn",
+    //     returnUrl: "http://localhost:3001/user/account/transaction",
+    //   },
+    //   cookie["token"]
+    // );
+    // console.log(message);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-  console.log(total);
 
   useEffect(() => {
     if (user.data?.address && !isUserDataProcessed) {

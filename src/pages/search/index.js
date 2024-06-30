@@ -68,10 +68,10 @@ function index() {
     setReload(!reload);
   }, [img]);
 
-  if (result.isLoading) {
+  if (result.loading) {
     return <CustomLoader />;
   }
-  if (result.isError) {
+  if (result.error) {
     return <>Error</>;
   } else
     return (

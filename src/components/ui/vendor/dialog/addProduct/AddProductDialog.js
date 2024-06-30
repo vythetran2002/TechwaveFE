@@ -41,7 +41,9 @@ export default function AddProductDialog(props) {
   const [genderValue, setGenderValue] = useState(1);
   const [checked, setChecked] = useState(false);
 
-  const categories = useFetch("http://localhost:3000/api/category");
+  const categories = useFetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/category"
+  );
   const [product, setProduct] = useState({});
   const [avatarSrc, setAvatarSrc] = useState(null);
   const [categoryChild, setCategoryChild] = useState(null);
@@ -422,7 +424,7 @@ export default function AddProductDialog(props) {
               >
                 <Select
                   placeholder="Danh mục cha"
-                  dropdownStyle={{ width: "600px", zIndex: "99999999" }}
+                  dropdownStyle={{ zIndex: "99999999" }}
                   showSearch
                 >
                   {categories.data &&
@@ -452,6 +454,7 @@ export default function AddProductDialog(props) {
                 onChange={handleChangeCheck}
                 inputProps={{ "aria-label": "controlled" }}
               />
+              <span>Thêm danh mục con</span>
             </div>
 
             <div

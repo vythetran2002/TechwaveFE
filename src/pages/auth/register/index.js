@@ -610,7 +610,6 @@ function Index() {
                     style={{
                       backgroundColor: "#88A3D2",
                       border: "none",
-                      color: "white !important",
                       height: "45px",
                       width: "100%",
                       color: "white",

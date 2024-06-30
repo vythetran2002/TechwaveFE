@@ -48,6 +48,8 @@ function Index() {
   const vendor = useFetchVendorProfile();
   const statistic = useFetchStatistic();
 
+  console.log(statistic.data);
+
   const onChangeOption = (value) => {
     setOption(value);
   };
@@ -79,11 +81,13 @@ function Index() {
                       <div className={Styles["left-body-item-card-status"]}>
                         <div className={Styles["left-body-item-card-info"]}>
                           <h3>Doanh thu</h3>
-
-                          {statistic.data && (
+                          {statistic.data &&
+                          statistic.data.statistic.revenue ? (
                             <h1>
                               {FormatPrice(statistic.data.statistic.revenue)}
                             </h1>
+                          ) : (
+                            <h1>{FormatPrice(0)}</h1>
                           )}
                         </div>
                         <div className={Styles["left-body-item-card-circle"]}>
@@ -234,7 +238,7 @@ function Index() {
 
               <div className={Styles["right-new-accounts-container"]}>
                 <span className={Styles["right-new-account-title"]}>
-                  Thống KÊ ĐƠN HÀNG
+                  THỐNG KÊ ĐƠN HÀNG
                 </span>
                 <div className={Styles["right-new-account-list-container"]}>
                   {statistic.data ? (

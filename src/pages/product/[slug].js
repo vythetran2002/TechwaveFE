@@ -33,7 +33,6 @@ function Index() {
 
   // console.log(slug);
   const product = useFetchProductById(slug, token);
-  // console.log(product);
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState();
 

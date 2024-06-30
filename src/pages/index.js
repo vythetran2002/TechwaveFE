@@ -22,6 +22,8 @@ import useFetchProductByCateId from "@/api/products/useFetchProductByCateId";
 import useFetchCart from "@/api/user/useFetchCart";
 import Cookies from "js-cookie";
 import ChatBotWidget from "@/components/ui/ChatBotWidget/ChatBotWidget";
+import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
+import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 
 function Index() {
   const token = Cookies.get("token");
@@ -30,7 +32,7 @@ function Index() {
   const { mutate } = useFetchCart();
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
-  const cateList02 = useFetchProductByCateId(19);
+  const cateList02 = useFetchProductByCateId(16);
   const cateList03 = useFetchProductByCateId(4);
   const route = useRouter();
 
@@ -84,67 +86,116 @@ function Index() {
         <CategoryList />
         <Slider />
         <ServiceList />
-        <CateHeading
-          cateTitle={cateList01.data}
-          loading={cateList01.isLoading}
-          error={cateList01.isError}
-        />
+        {cateList01.isLoading ? (
+          <>
+            <UserLoadingUI />
+          </>
+        ) : (
+          <>
+            {cateList01.isError ? (
+              <>
+                <UserErrorUI />
+              </>
+            ) : (
+              <>
+                <CateHeading
+                  cateTitle={cateList01.data}
+                  loading={cateList01.isLoading}
+                  error={cateList01.isError}
+                />
 
-        <ItemList
-          mutate={mutateCateList01}
-          token={token}
-          items={cateList01.data}
-          loading={cateList01.isLoading}
-          error={cateList01.isError}
-          isOpenDialog={isOpenDialog}
-          handlingOpenDialog={handlingOpenDialog}
-          handlingCloseDialog={handlingCloseDialog}
-          setDeTailItem={setDeTailItem}
-          itemKey="list01"
-          addFavourite={handlingAddFavouriteProduct}
-          addCartItem={handlingAddCartItem}
-        />
+                <ItemList
+                  mutate={mutateCateList01}
+                  token={token}
+                  items={cateList01.data}
+                  loading={cateList01.isLoading}
+                  error={cateList01.isError}
+                  isOpenDialog={isOpenDialog}
+                  handlingOpenDialog={handlingOpenDialog}
+                  handlingCloseDialog={handlingCloseDialog}
+                  setDeTailItem={setDeTailItem}
+                  itemKey="list01"
+                  addFavourite={handlingAddFavouriteProduct}
+                  addCartItem={handlingAddCartItem}
+                />
+              </>
+            )}
+          </>
+        )}
         <AdBar src={images.image9} />
-        <CateHeading
-          cateTitle={cateList02.data}
-          loading={cateList02.isLoading}
-          error={cateList02.isError}
-        />
-        <ItemList
-          mutate={mutateCateList02}
-          token={token}
-          items={cateList02.data}
-          loading={cateList02.isLoading}
-          error={cateList02.isError}
-          isOpenDialog={isOpenDialog}
-          setDeTailItem={setDeTailItem}
-          handlingOpenDialog={handlingOpenDialog}
-          handlingCloseDialog={handlingCloseDialog}
-          itemKey="list02"
-          addFavourite={handlingAddFavouriteProduct}
-          addCartItem={handlingAddCartItem}
-        />
-        <AdBar src={images.image11} />
-        <CateHeading
-          cateTitle={cateList03.data}
-          loading={cateList03.isLoading}
-          error={cateList03.isError}
-        />
+        {cateList02.isLoading ? (
+          <>
+            <UserLoadingUI />
+          </>
+        ) : (
+          <>
+            {cateList02.isError ? (
+              <>
+                <UserErrorUI />
+              </>
+            ) : (
+              <>
+                <CateHeading
+                  cateTitle={cateList02.data}
+                  loading={cateList02.isLoading}
+                  error={cateList02.isError}
+                />
+                <ItemList
+                  mutate={mutateCateList02}
+                  token={token}
+                  items={cateList02.data}
+                  loading={cateList02.isLoading}
+                  error={cateList02.isError}
+                  isOpenDialog={isOpenDialog}
+                  setDeTailItem={setDeTailItem}
+                  handlingOpenDialog={handlingOpenDialog}
+                  handlingCloseDialog={handlingCloseDialog}
+                  itemKey="list02"
+                  addFavourite={handlingAddFavouriteProduct}
+                  addCartItem={handlingAddCartItem}
+                />
+              </>
+            )}
+          </>
+        )}
 
-        <ItemList
-          mutate={mutateCateList03}
-          token={token}
-          items={cateList03.data}
-          loading={cateList03.isLoading}
-          error={cateList03.isError}
-          isOpenDialog={isOpenDialog}
-          setDeTailItem={setDeTailItem}
-          handlingOpenDialog={handlingOpenDialog}
-          handlingCloseDialog={handlingCloseDialog}
-          itemKey="list03"
-          addFavourite={handlingAddFavouriteProduct}
-          addCartItem={handlingAddCartItem}
-        />
+        <AdBar src={images.image11} />
+        {cateList03.isLoading ? (
+          <>
+            <UserLoadingUI />
+          </>
+        ) : (
+          <>
+            {cateList03.isError ? (
+              <>
+                <UserErrorUI />
+              </>
+            ) : (
+              <>
+                <CateHeading
+                  cateTitle={cateList03.data}
+                  loading={cateList03.isLoading}
+                  error={cateList03.isError}
+                />
+
+                <ItemList
+                  mutate={mutateCateList03}
+                  token={token}
+                  items={cateList03.data}
+                  loading={cateList03.isLoading}
+                  error={cateList03.isError}
+                  isOpenDialog={isOpenDialog}
+                  setDeTailItem={setDeTailItem}
+                  handlingOpenDialog={handlingOpenDialog}
+                  handlingCloseDialog={handlingCloseDialog}
+                  itemKey="list03"
+                  addFavourite={handlingAddFavouriteProduct}
+                  addCartItem={handlingAddCartItem}
+                />
+              </>
+            )}
+          </>
+        )}
         <StoreImageHeading title="HÌNH ẢNH CỬA HÀNG" />
         <StoreList />
         <StoreImageHeading title="KHÁCH HÀNG NÓI GÌ?" />

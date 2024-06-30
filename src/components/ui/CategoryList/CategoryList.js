@@ -41,26 +41,6 @@ const CategoryList = () => {
                   </React.Fragment>
                 );
               })}
-            {/* <CategoryItem name="Thời trang nam" />
-            <CategoryItem name="Điện thoại & phụ kiện" />
-            <CategoryItem name="Thiết Bị Điện Tử" />
-            <CategoryItem name="Máy Tính & Laptop" />
-            <CategoryItem name="Máy Ảnh & Máy Laptop" />
-            <CategoryItem name="Đồng Hồ" />
-            <CategoryItem name="Giày Dép Nam" />
-            <CategoryItem name="Thiết Bị Điện Gia Dụng" />
-            <CategoryItem name="Thể Thao & Du Dịch" />
-            <CategoryItem name="Ô Tô & Xe Máy & Xe Đạp" />
-            <CategoryItem name="Thời Trang Nữ" />
-            <CategoryItem name="Mẹ Và Bé" />
-            <CategoryItem name="Nhà Cửa & Đời Sống" />
-            <CategoryItem name="Sắc Đẹp" />
-            <CategoryItem name="Sức Khoẻ" />
-            <CategoryItem name="Giày Dép Nữ" />
-            <CategoryItem name="Túi Ví Nữ" />
-            <CategoryItem name="Phụ Kiện & Trang Sức Nữ" />
-            <CategoryItem name="Bách Hoá Online" />
-            <CategoryItem name="Nhà Sách Online" /> */}
           </div>
         </div>
       </section>

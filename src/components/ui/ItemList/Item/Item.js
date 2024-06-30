@@ -62,19 +62,6 @@ function Item(props) {
         <div className={Styles["item-wrapper"]}>
           <div className={Styles["item-card-container"]}>
             <div className={Styles["item-img-container"]}>
-              <div className={Styles["comparision-btn-wrapper"]}>
-                {/* <div className={Styles["dot-wrapper"]}>-36%</div> */}
-                <div
-                  className={Styles["comparision-btn-container"]}
-                  aria-describedby="trash-desc"
-                >
-                  <CompareArrowsOutlinedIcon
-                    sx={{
-                      fontSize: "20px",
-                    }}
-                  />
-                </div>
-              </div>
               {props.item.image != null ? (
                 <>
                   <Link href={"/"} style={{ width: "100%", height: "100%" }}>
@@ -99,9 +86,11 @@ function Item(props) {
             </span>
 
             <div className={Styles["item-price-container"]}>
-              <span>{FormatPrice(props.item.price)}</span>
-              <span id={Styles["promo-price"]}>
+              <span style={{ color: "red" }}>
                 {FormatPrice(props.item.promotional_price)}
+              </span>
+              <span id={Styles["promo-price"]}>
+                {FormatPrice(props.item.price)}
               </span>
             </div>
 

@@ -7,7 +7,7 @@
 }
 .item-list-container {
   display: flex;
-  width: 70%;
+  width: 80%;
   flex-direction: row;
   flex-wrap: wrap;
 }

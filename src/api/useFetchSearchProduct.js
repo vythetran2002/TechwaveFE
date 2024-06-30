@@ -1,30 +1,30 @@
-import useSWR from "swr";
+import { useState, useEffect } from "react";
 import axios from "axios";
-
-const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 const useFetchSearchProduct = (value) => {
   //   const [cookies] = useCookies();
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/search?name=" + value;
-  //   const token = "Bearer " + cookies["token"];
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  //   const headers = {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //     Authorization: `${token}`,
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(url);
+        setData(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const { data, error, mutate, isValidating } = useSWR(value ? url : null, () =>
-    fetcher(url)
-  );
+    fetchData();
+  }, [url]);
 
-  return {
-    data,
-    isLoading: !error && !data,
-    isError: error,
-    mutate,
-    isValidating,
-  };
+  return { data, loading, error };
 };
 
 export default useFetchSearchProduct;

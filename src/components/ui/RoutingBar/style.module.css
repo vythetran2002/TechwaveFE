@@ -10,7 +10,7 @@
   justify-content: center;
 }
 .routing-bar-wrapper {
-  width: 70%;
+  width: 80%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -26,4 +26,3 @@
 .link:hover {
   color: var(--header-bg-top);
 }
-

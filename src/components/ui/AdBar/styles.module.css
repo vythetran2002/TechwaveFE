@@ -9,7 +9,7 @@
 .adbar-wrapper {
   display: flex;
   height: 100% !important;
-  width: 70%;
+  width: 80%;
   flex-direction: row;
   background-color: aquamarine;
   flex-wrap: wrap;

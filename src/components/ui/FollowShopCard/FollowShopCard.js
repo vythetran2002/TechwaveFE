@@ -45,7 +45,10 @@ function FollowShopCard(props) {
 
         <div className={Styles["item-info-container"]}>
           <div className={Styles["img-name-container"]}>
-            <Link href={"/shop/1"} className={Styles["img-wrapper"]}>
+            <Link
+              href={"/shop/" + props.vendorId + "/0"}
+              className={Styles["img-wrapper"]}
+            >
               {props.avatar != null ? (
                 <Image
                   width={70}

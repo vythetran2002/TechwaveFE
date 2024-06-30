@@ -32,7 +32,7 @@ function ProductList(props) {
             </div>
             <div className={Styles["fullname-wrapper"]}>
               <span className={Styles["head-title"]}>
-                <Diversity1TwoTone>Số Lượng</Diversity1TwoTone>
+                <div>Số Lượng</div>
               </span>
               <SortOutlinedIcon />
             </div>

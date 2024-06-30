@@ -1,7 +1,7 @@
 .cate-item-container {
   display: flex;
   flex-direction: column;
-  flex: 0 0 9.9%;
+  flex: 0 0 10%;
   height: 151px;
   justify-content: center;
   align-items: center;

@@ -13,6 +13,7 @@
   border: 2px solid 0000;
   box-shadow: 0px 0px 2px #dfdfdf;
   cursor: pointer;
+  height: 100%;
 }
 .item-img-container {
   max-width: 100%;
@@ -38,10 +39,13 @@
 .item-price-container {
   gap: 5px;
   padding: 5px;
-  color: red;
+  color: black;
   font-weight: 400;
   margin-top: 10px;
-  display: flex;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .item-rating-container {
   padding-left: 5px;
@@ -69,6 +73,7 @@
   font-weight: 300;
   color: black;
   text-decoration: line-through;
+  margin-left: 5px;
 }
 .item-btn-container {
   display: flex;

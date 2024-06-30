@@ -131,6 +131,7 @@ function Index() {
             handleOpenDialog={handlingOpenEditProductDialog}
             handleCloseDialog={handlingOpenEditProductDialog}
           />
+
           <AddProductDialog
             token={token}
             isOpen={isOpenAddProductDialog}
