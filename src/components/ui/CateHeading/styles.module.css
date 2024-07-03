@@ -39,6 +39,7 @@
 }
 .cate-heading {
   text-decoration: none;
+  cursor: pointer;
   color: var(--header-bg-top);
 }
 .cate-heading:hover {

@@ -14,8 +14,6 @@ import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast from "react-hot-toast";
 
 function Item(props) {
-  // console.log(props.item);
-
   const handlingOpenDialog = () => {
     props.setDeTailItem(props.item);
     props.handlingOpenDialog();
@@ -64,19 +62,25 @@ function Item(props) {
             <div className={Styles["item-img-container"]}>
               {props.item.image != null ? (
                 <>
-                  <Link href={"/"} style={{ width: "100%", height: "100%" }}>
+                  <div
+                    style={{ width: "100%", height: "100%" }}
+                    onClick={handlingOpenDialog}
+                  >
                     <Image
                       width={1000}
                       height={1000}
                       src={props.item.image}
                       priority={true}
-                      alt=""
+                      alt={images.techwave}
                       className={Styles["img"]}
                     />
-                  </Link>
+                  </div>
                 </>
               ) : (
-                <Link href={"/"} style={{ width: "100%", height: "100%" }}>
+                <Link
+                  style={{ width: "100%", height: "100%" }}
+                  handlingOpenDialog
+                >
                   <Image src={images.image8} alt="" className={Styles["img"]} />
                 </Link>
               )}
@@ -84,15 +88,22 @@ function Item(props) {
             <span className={Styles["item-title-container"]}>
               {props.item.name}
             </span>
-
-            <div className={Styles["item-price-container"]}>
-              <span style={{ color: "red" }}>
-                {FormatPrice(props.item.promotional_price)}
-              </span>
-              <span id={Styles["promo-price"]}>
-                {FormatPrice(props.item.price)}
-              </span>
-            </div>
+            {props.item.promotional_price ? (
+              <div className={Styles["item-price-container"]}>
+                <span style={{ color: "red" }}>
+                  {FormatPrice(props.item.promotional_price)}
+                </span>
+                <span id={Styles["promo-price"]}>
+                  {FormatPrice(props.item.price)}
+                </span>
+              </div>
+            ) : (
+              <div className={Styles["item-price-container"]}>
+                <span id={Styles["price"]}>
+                  {FormatPrice(props.item.price)}
+                </span>
+              </div>
+            )}
 
             <div>
               <div className={Styles["item-rating-container"]}>
@@ -117,9 +128,13 @@ function Item(props) {
                     size="small"
                   />
                 </div>
-                <span className={Styles["buy-count"]}>
-                  Đã bán {props.item.haveSales}
-                </span>
+                {props.item.haveSales ? (
+                  <span className={Styles["buy-count"]}>
+                    Đã bán {props.item.haveSales}
+                  </span>
+                ) : (
+                  <span className={Styles["buy-count"]}>Đã bán 0</span>
+                )}
               </div>
             </div>
             <div className={Styles["item-rating-container"]}>

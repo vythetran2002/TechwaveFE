@@ -13,7 +13,6 @@
   border: 2px solid 0000;
   box-shadow: 0px 0px 2px #dfdfdf;
   cursor: pointer;
-  height: 100%;
 }
 .item-img-container {
   max-width: 100%;
@@ -46,6 +45,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+#price {
+  font-weight: 300;
 }
 .item-rating-container {
   padding-left: 5px;

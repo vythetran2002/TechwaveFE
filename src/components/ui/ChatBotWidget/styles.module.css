@@ -1,7 +1,4 @@
 .chatbot-toggler {
-  position: fixed;
-  bottom: 30px;
-  right: 35px;
   outline: none;
   border: none;
   height: 50px;
@@ -11,10 +8,30 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #0284c7;
+  background-color: #3498db;
   transition: all 0.2s ease;
   color: white;
   padding: 13px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+.chatbot-toggler:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.chatbot-toggler .chat-icon:hover {
+  transform: translateY(-2px);
+}
+.chat-icon {
+  transition: all 0.3s ease;
+}
+.widgets-container {
+  position: fixed;
+  bottom: 30px;
+  right: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .show-chatbox {
   transform: rotate(90deg);

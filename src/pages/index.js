@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useRef, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import Head from "next/head";
 import Slider from "@/components/ui/Slider/Slider";
@@ -11,7 +11,7 @@ import StoreImageHeading from "@/components/ui/StoreImageHeading/StoreImageHeadi
 import StoreList from "@/components/ui/StoreList/StoreList";
 import CustomerFeedBack from "@/components/ui/CustomerFeedBack/CustomerFeedBack";
 import Map from "@/components/ui/Map/Map";
-import { FloatButton } from "antd";
+import { Anchor } from "antd";
 import CategoryList from "@/components/ui/CategoryList/CategoryList";
 import ItemDetail from "@/components/ui/ItemList/Item/ItemDetail/ItemDetail";
 import toast, { Toaster } from "react-hot-toast";
@@ -24,9 +24,11 @@ import Cookies from "js-cookie";
 import ChatBotWidget from "@/components/ui/ChatBotWidget/ChatBotWidget";
 import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
 import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
+import ScrollOnTopWidget from "@/components/ui/ScrollOnTopWidget/ScrollOnTopWidget";
 
 function Index() {
   const token = Cookies.get("token");
+  const [isVisible, setIsVisible] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const { mutate } = useFetchCart();
@@ -35,6 +37,9 @@ function Index() {
   const cateList02 = useFetchProductByCateId(16);
   const cateList03 = useFetchProductByCateId(4);
   const route = useRouter();
+
+  //Refs
+  const trendingRef = useRef(null);
 
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
@@ -76,16 +81,92 @@ function Index() {
     }
   };
 
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    console.log("first");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", toggleVisibility);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
+  }, []);
+
+  const handleScrollToTrending = () => {
+    // trendingRef.current.scrollIntoView({ behavior: "smooth" });
+    if (trendingRef.current) {
+      const yOffset = -100; // Số pixel muốn scroll lên. Điều chỉnh giá trị này theo ý muốn.
+      const element = trendingRef.current;
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+    // console.log(trendingRef.current);
+  };
+
   return (
     <>
       <Head>
         <title>Techwave</title>
       </Head>
-      <Layout>
+      <Layout handleScrollToTrending={handleScrollToTrending}>
         <Toaster />
         <CategoryList />
         <Slider />
         <ServiceList />
+
+        {cateList01.isLoading ? (
+          <>
+            <UserLoadingUI />
+          </>
+        ) : (
+          <>
+            {cateList01.isError ? (
+              <>
+                <UserErrorUI />
+              </>
+            ) : (
+              <>
+                <CateHeading
+                  trendingRef={trendingRef}
+                  trendingTitle={"SẢN PHẨM BÁN CHẠY"}
+                  loading={cateList01.isLoading}
+                  error={cateList01.isError}
+                />
+
+                <ItemList
+                  mutate={mutateCateList01}
+                  token={token}
+                  items={cateList01.data}
+                  loading={cateList01.isLoading}
+                  error={cateList01.isError}
+                  isOpenDialog={isOpenDialog}
+                  handlingOpenDialog={handlingOpenDialog}
+                  handlingCloseDialog={handlingCloseDialog}
+                  setDeTailItem={setDeTailItem}
+                  itemKey="list01"
+                  addFavourite={handlingAddFavouriteProduct}
+                  addCartItem={handlingAddCartItem}
+                />
+              </>
+            )}
+          </>
+        )}
         {cateList01.isLoading ? (
           <>
             <UserLoadingUI />
@@ -209,8 +290,7 @@ function Index() {
           handlingOpenDialog={handlingOpenDialog}
           handlingCloseDialog={handlingCloseDialog}
         />
-        <ChatBotWidget />
-        {/* <FloatButton.BackTop /> */}
+        <ChatBotWidget scrollVisible={isVisible} scrollToTop={scrollToTop} />
       </Layout>
     </>
   );

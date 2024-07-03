@@ -23,6 +23,7 @@ function CateIndex() {
   const router = useRouter();
   const token = Cookies.get("token");
   const [img, setImg] = useState(null);
+  const [filter, setFilter] = useState(null);
   const [reload, setReload] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const [quantity, setQuantity] = useState(5);
@@ -39,7 +40,7 @@ function CateIndex() {
   }
 
   // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
-  const listItem = useFetchCateListByPage(id0, id1, page, 10, token);
+  const listItem = useFetchCateListByPage(id0, id1, page, 10, filter);
   const cateList = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
   const handlingOpenDialog = () => {
@@ -88,15 +89,18 @@ function CateIndex() {
     setImg(value);
   };
 
+  const updateFilter = (value) => {
+    setFilter(value);
+  };
+
   useEffect(() => {
     if (listItem.data) {
-      console.log("---");
       if (listItem.data.data) {
         updateMax(listItem.data.data.total);
       }
     }
     setReload(!reload);
-  }, [listItem.data, img]);
+  }, [listItem.data, img, filter]);
 
   if (!slug) {
     return <></>;
@@ -191,18 +195,53 @@ function CateIndex() {
               <div className={Styles["filter-list-container"]}>
                 <div className={Styles["filter-heading-container"]}>
                   <span>Sắp xếp theo</span>
-                  <Link
-                    href={""}
-                    className={`${Styles["filter-button"]} ${Styles["active"]}`}
-                  >
-                    Phổ biến
-                  </Link>
-                  <Link href={""} className={`${Styles["filter-button"]} `}>
-                    Mới nhất
-                  </Link>
-                  <Link href={""} className={`${Styles["filter-button"]} `}>
-                    Bán chạy
-                  </Link>
+                  {!filter ? (
+                    <div
+                      className={`${Styles["filter-button"]} ${Styles["active"]}`}
+                      onClick={() => updateFilter(null)}
+                    >
+                      Phổ biến
+                    </div>
+                  ) : (
+                    <div
+                      className={`${Styles["filter-button"]} `}
+                      onClick={() => updateFilter(null)}
+                    >
+                      Phổ biến
+                    </div>
+                  )}
+
+                  {filter === "newest" ? (
+                    <div
+                      className={`${Styles["filter-button"]} ${Styles["active"]}`}
+                      onClick={() => updateFilter("newest")}
+                    >
+                      Mới nhất
+                    </div>
+                  ) : (
+                    <div
+                      className={`${Styles["filter-button"]} `}
+                      onClick={() => updateFilter("newest")}
+                    >
+                      Mới nhất
+                    </div>
+                  )}
+
+                  {filter === "topsale" ? (
+                    <div
+                      className={`${Styles["filter-button"]} ${Styles["active"]}`}
+                      onClick={() => updateFilter("topsale")}
+                    >
+                      Bán chạy
+                    </div>
+                  ) : (
+                    <div
+                      className={`${Styles["filter-button"]} `}
+                      onClick={() => updateFilter("topsale")}
+                    >
+                      Bán chạy
+                    </div>
+                  )}
                 </div>
                 <div className={Styles["filter-item-list-container"]}>
                   {listItem.data && listItem.data.data.results.length != 0 ? (

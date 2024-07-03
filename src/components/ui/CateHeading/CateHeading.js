@@ -9,21 +9,34 @@ function CateHeading(props) {
   return (
     <>
       <section className={Styles["heading-wrapper"]}>
-        <div className={Styles["heading-container"]}>
-          {props.cateTitle && (
-            <Link
-              className={Styles["cate-heading"]}
-              href={"/cate/" + props.cateTitle.listCate.category_id}
-            >
-              {props.cateTitle && props.cateTitle.listCate.name}
-            </Link>
-          )}
+        {!props.trendingTitle ? (
+          <div className={Styles["heading-container"]}>
+            {props.cateTitle && (
+              <Link
+                className={Styles["cate-heading"]}
+                href={"/cate/" + props.cateTitle.listCate.category_id}
+              >
+                {props.cateTitle && props.cateTitle.listCate.name}
+              </Link>
+            )}
 
-          {/* <div className={Styles["buttons-container"]}>
-            <button className={Styles["button"]}>{props.miniCate1}</button>
-            <button className={Styles["button"]}>{props.miniCate2}</button>
+            {/* <div className={Styles["buttons-container"]}>
+            <button className={Styles["button"]}>ABC</button>
+            <button className={Styles["button"]}>ABC</button>
           </div> */}
-        </div>
+          </div>
+        ) : (
+          <div className={Styles["heading-container"]} ref={props.trendingRef}>
+            <span className={Styles["cate-heading"]}>
+              {props.trendingTitle}
+            </span>
+
+            {/* <div className={Styles["buttons-container"]}>
+            <button className={Styles["button"]}>ABC</button>
+            <button className={Styles["button"]}>ABC</button>
+          </div> */}
+          </div>
+        )}
       </section>
     </>
   );

@@ -221,7 +221,7 @@ function Header(props) {
         <section className={Styles["info-container"]}>
           <div className={Styles["phone-mail-container"]}>
             <div className={Styles["phone-mail-wrapper"]}>
-              <div className={Styles["phone-container"]}>
+              {/* <div className={Styles["phone-container"]}>
                 <CallOutlinedIcon sx={{ color: "white", marginRight: "1px" }} />
                 <span>0816.789.439</span>
               </div>
@@ -233,7 +233,7 @@ function Header(props) {
                   style={{ color: "white", marginRight: "3px" }}
                 />
                 <span>techwaveute@gmail.com</span>
-              </div>
+              </div> */}
             </div>
             <div className={Styles["phone-mail-wrapper"]}>
               {/* <Badge count={1} size="small"> */}
@@ -248,7 +248,6 @@ function Header(props) {
                             height={50}
                             src={user.data.avatar}
                             alt=""
-                            priority={true}
                             className={Styles["avatar"]}
                           />
                           <div className={Styles["avatar-dropdown-container"]}>
@@ -298,7 +297,7 @@ function Header(props) {
                           <Image
                             src={images.nonAvatar}
                             alt=""
-                            priority={true}
+                            priority
                             className={Styles["avatar"]}
                           />
                           <div className={Styles["avatar-dropdown-container"]}>
@@ -407,7 +406,7 @@ function Header(props) {
               <button className={Styles["phone-button"]}>
                 <CallOutlinedIcon
                   className={Styles["phone-button-wrapper"]}
-                  style={{ fontSize: "10px !important" }}
+                  style={{ fontSize: "8px !important" }}
                 />
                 <span style={{ flex: "1", textAlign: "start" }}>
                   0816.789.439

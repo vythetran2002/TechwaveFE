@@ -317,15 +317,29 @@ function ItemDetail(props) {
                       {/* <span className={Styles["percent-discount"]}>-36%</span> */}
                     </div>
                   )}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "5px",
-                    }}
-                  >
-                    <span>Đã bán:</span>
-                    <span>{item.haveSales}</span>
-                  </div>
+                  {item.haveSales ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "5px",
+                      }}
+                    >
+                      <span>Đã bán:</span>
+                      <span>{item.haveSales}</span>
+                    </div>
+                  ) : (
+                    <span className={Styles["buy-count"]}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "5px",
+                        }}
+                      >
+                        <span>Đã bán:</span>
+                        <span>0</span>
+                      </div>
+                    </span>
+                  )}
                 </div>
 
                 <div className={Styles["options-container"]}>

@@ -48,8 +48,6 @@ function Index() {
   const vendor = useFetchVendorProfile();
   const statistic = useFetchStatistic();
 
-  console.log(statistic.data);
-
   const onChangeOption = (value) => {
     setOption(value);
   };

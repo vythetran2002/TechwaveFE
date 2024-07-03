@@ -12,7 +12,7 @@ import Link from "next/link";
 import useFetch from "@/api/useFetch";
 import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
 import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
-function HeaderNav() {
+function HeaderNav(props) {
   const data = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
   return (
@@ -50,10 +50,15 @@ function HeaderNav() {
             <CustomerServiceOutlined />
             <span>Dịch vụ</span>
           </div> */}
-          <Link href={"/"} className={Styles["nav-item-container"]}>
+          <span
+            className={Styles["nav-item-container"]}
+            onClick={() => {
+              props.handleScrollToTrending();
+            }}
+          >
             <SpeakerGroupOutlinedIcon />
             <span>Sản phẩm bán chạy</span>
-          </Link>
+          </span>
           {/* <div className={Styles["nav-item-container"]}>
             <NewspaperOutlinedIcon />
             <span>Tin tức</span>

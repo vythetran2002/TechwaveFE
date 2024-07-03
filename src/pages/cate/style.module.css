@@ -52,6 +52,7 @@
   box-shadow: 0 0 8px 0 #ddd;
 }
 .filter-button {
+  cursor: pointer;
   padding: 0 15px 0 15px;
   color: #444;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.02);
