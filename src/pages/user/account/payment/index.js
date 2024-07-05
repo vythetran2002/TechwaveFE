@@ -116,7 +116,7 @@ function Index() {
   const [failureQueue, setFailureQueue] = useState(null);
 
   // PopUp Modals
-  const [openPopup, setOpenPopup] = useState(true);
+  const [openPopup, setOpenPopup] = useState(false);
   const showModalPopup = () => {
     setOpenPopup(true);
   };
@@ -291,7 +291,6 @@ function Index() {
     info.district = info.district.value;
     info.ward = info.ward.value;
     console.log("Sucessssss", info);
-
     if (option == "ship") {
       // console.log (temp);
       // console.log("ship thwongf");
@@ -319,16 +318,6 @@ function Index() {
       const message = SendPaymentAmount(temp2, token);
       // console.log(message);
     }
-    const message = SendPaymentAmount(
-      {
-        amount: parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
-        bankCode: null,
-        language: "vn",
-        returnUrl: "http://localhost:3001/user/account/transaction",
-      },
-      token
-    );
-    console.log(message);
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Something is wrong");
