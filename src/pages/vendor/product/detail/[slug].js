@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
-import { Row, Col, Divider } from "antd";
+import { Row, Col, Divider, Empty, Typography } from "antd";
 import { useRouter } from "next/router";
 import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
 import Image from "next/image";
@@ -178,19 +178,50 @@ function Index() {
                 <Row className="gutter-row">
                   <span className={Styles["detail-item-heading"]}>Mô tả</span>
                 </Row>
-                <Row className="gutter-row">
-                  <div
-                    className="ql-editor"
-                    style={{
-                      backgroundColor: "white",
-                      marginTop: "20px",
-                      padding: "20px",
-                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    <HtmlContent htmlString={product.data.content} />
-                  </div>
-                </Row>
+                {product.data.content == null || product.data.content == "" ? (
+                  <Row className="gutter-row">
+                    <div
+                      className="ql-editor"
+                      style={{
+                        backgroundColor: "white",
+                        marginTop: "20px",
+                        padding: "20px",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                        width: "100%",
+                        marginBottom: "50px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <Empty
+                        image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                        imageStyle={{
+                          height: 60,
+                        }}
+                        description={
+                          <Typography.Text>
+                            sản phẩm chưa có mô tả
+                          </Typography.Text>
+                        }
+                      ></Empty>
+                    </div>
+                  </Row>
+                ) : (
+                  <Row className="gutter-row">
+                    <div
+                      className="ql-editor"
+                      style={{
+                        backgroundColor: "white",
+                        marginTop: "20px",
+                        padding: "20px",
+                        marginBottom: "50px",
+                        borderRadius: "8px",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      <HtmlContent htmlString={product.data.content} />
+                    </div>
+                  </Row>
+                )}
               </Col>
               <Col className="gutter-row" span={12}>
                 <Row

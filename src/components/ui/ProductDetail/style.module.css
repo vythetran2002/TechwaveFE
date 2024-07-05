@@ -9,7 +9,7 @@
   margin-bottom: 20px;
 }
 .product-detail-wrapper {
-  width: 70%;
+  width: 90%;
   height: fit-content;
   display: flex;
   height: fit-content;
@@ -147,6 +147,10 @@
   border: 1px solid black;
   border-radius: 3px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
 }
 .product-quantity-button-container {
   width: 100%;
@@ -193,6 +197,7 @@
   background: -webkit-linear-gradient(top, #fd6e1d, #f59000);
 }
 .share-options-container {
+  gap: 5px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -371,5 +376,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.option-name-lable {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  flex: 1;
 }

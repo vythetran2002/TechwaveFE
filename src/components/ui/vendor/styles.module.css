@@ -144,8 +144,9 @@
   justify-content: center;
 }
 .list-item-gender-wrapper {
+  text-align: center;
   display: flex;
-  max-width: 11%;
+  width: 11%;
   padding: 5px 10px;
   align-items: center;
   flex-shrink: 0;

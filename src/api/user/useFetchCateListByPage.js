@@ -1,9 +1,12 @@
 import useSWR from "swr";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+const fetcher = (url, headers) =>
+  axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchCateListByPage = (id0, id1, page, limit, filter) => {
+  const acToken = Cookies.get("token");
   let url = null;
   let queryParams = null;
   if (id1) {
@@ -18,9 +21,21 @@ const useFetchCateListByPage = (id0, id1, page, limit, filter) => {
     queryParams = `page=${page}&limit=${limit}`;
   }
 
+  const token = "Bearer " + acToken;
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `${token}`,
+  };
+
+  if (acToken && acToken != "undefined") {
+    headers.Authorization = ` ${token}`;
+  }
+
   const { data, error, mutate, isValidating } = useSWR(
     id0 || id1 || (page && limit) ? `${url}?${queryParams}` : null,
-    () => fetcher(`${url}?${queryParams}`)
+    () => fetcher(`${url}?${queryParams}`, headers)
   );
 
   return {

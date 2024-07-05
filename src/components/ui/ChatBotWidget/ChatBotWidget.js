@@ -122,10 +122,10 @@ const avatarSrc =
 function ChatBotWidget(props) {
   const { scrollVisible, scrollToTop } = props;
   const [child, setChild] = useState([
-    {
-      role: "system",
-      content: "You must answer all question in vietnamese",
-    },
+    // {
+    //   role: "system",
+    //   content: "You must answer all question in vietnamese",
+    // },
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState("");
@@ -176,7 +176,7 @@ function ChatBotWidget(props) {
 
   useEffect(() => {
     const chatBody = chatBodyRef.current;
-    // console.log("currentChild", child);
+    console.log("currentChild", child);
     if (chatBody) {
       chatBody.scrollTop = chatBody.scrollHeight;
     }

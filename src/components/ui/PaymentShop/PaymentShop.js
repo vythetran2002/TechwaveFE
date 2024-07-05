@@ -36,6 +36,7 @@ function PaymentShop(props) {
     userWardId,
     shopDistrictId,
     shopWardId,
+    shopName,
   } = props;
 
   const [isVoucherProcessed, setIsVoucherProcessed] = useState(false);
@@ -155,7 +156,7 @@ function PaymentShop(props) {
       updateDiscountArray(index, 0);
       updateShopCards(index, {
         shopId: items[0].store.account_id,
-        cart_id: items,
+        cart: items,
         totalBill: calculateTotalValue(items) + shippingFee.data?.data.total,
         voucher_id: null,
       });
@@ -277,7 +278,7 @@ function PaymentShop(props) {
           </div>
         </div>
         <Modal
-          title="Vouchers"
+          title={shopName + " Vouchers"}
           open={visible}
           onOk={handleOk}
           onCancel={handleCancel}

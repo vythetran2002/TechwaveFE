@@ -261,7 +261,7 @@ function ItemDetail(props) {
                     }}
                   >
                     {item ? (
-                      <Tooltip title={item.name}>
+                      <Tooltip title={item.name} arrow={true}>
                         <span className={Styles["item-title-wrapper"]}>
                           {item.name}
                         </span>
@@ -355,55 +355,60 @@ function ItemDetail(props) {
                     {item && item.option.length != 0 ? (
                       item.option.map((option, index) => {
                         return (
-                          <div
-                            id={option.option_id}
+                          <Tooltip
                             key={option.option_id}
-                            onClick={(e) =>
-                              handleClick(
-                                option,
-                                option.option_id,
-                                option.image
-                              )
-                            }
-                            className={
-                              check(option, id)
-                                ? `${Styles["option-card"]} ${Styles["active"]}`
-                                : Styles["option-card"]
-                            }
+                            title={option.name}
+                            arrow={true}
                           >
                             <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
+                              id={option.option_id}
+                              onClick={(e) =>
+                                handleClick(
+                                  option,
+                                  option.option_id,
+                                  option.image
+                                )
+                              }
+                              className={
+                                check(option, id)
+                                  ? `${Styles["option-card"]} ${Styles["active"]}`
+                                  : Styles["option-card"]
+                              }
                             >
-                              <span
-                                className={Styles["option-name-lable"]}
-                                style={{ width: "100%" }}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
                               >
-                                {option.name}
-                              </span>
+                                <span
+                                  className={Styles["option-name-lable"]}
+                                  style={{ width: "100%" }}
+                                >
+                                  {option.name}
+                                </span>
+                              </div>
+                              {option.image != null ? (
+                                <div className={Styles["cate-img-wrapper"]}>
+                                  <Image
+                                    src={option.image}
+                                    alt=""
+                                    width={50}
+                                    height={50}
+                                  />
+                                </div>
+                              ) : (
+                                <div className={Styles["cate-img-wrapper"]}>
+                                  <Image
+                                    src={images.nonImg}
+                                    alt=""
+                                    width={50}
+                                    height={50}
+                                  />
+                                </div>
+                              )}
                             </div>
-                            {option.image != null ? (
-                              <div className={Styles["cate-img-wrapper"]}>
-                                <Image
-                                  src={option.image}
-                                  alt=""
-                                  width={50}
-                                  height={50}
-                                />
-                              </div>
-                            ) : (
-                              <div className={Styles["cate-img-wrapper"]}>
-                                <Image
-                                  src={images.nonImg}
-                                  alt=""
-                                  width={50}
-                                  height={50}
-                                />
-                              </div>
-                            )}
-                          </div>
+                          </Tooltip>
                         );
                       })
                     ) : (
@@ -415,17 +420,32 @@ function ItemDetail(props) {
                     )}
                   </div>
                 </div>
-                <div className={Styles["quantity-input-container"]}>
-                  <span>Số lượng:</span>
-                  <div>
-                    <InputNumber
-                      onChange={handleChangeQuantity}
-                      max={item.quantity}
-                      min={1}
-                      defaultValue={1}
-                    />
+                {item.quantity < 5 ? (
+                  <div className={Styles["quantity-input-container"]}>
+                    <span>Số lượng:</span>
+                    <div>
+                      <InputNumber
+                        onChange={handleChangeQuantity}
+                        max={item.quantity}
+                        min={1}
+                        defaultValue={1}
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={Styles["quantity-input-container"]}>
+                    <span>Số lượng:</span>
+                    <div>
+                      <InputNumber
+                        onChange={handleChangeQuantity}
+                        max={5}
+                        min={1}
+                        defaultValue={1}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div className={Styles["cart-button-container"]}>
                   <Button
                     onClick={handleAddCart}
@@ -438,7 +458,11 @@ function ItemDetail(props) {
                   <span>Chia sẻ:</span>
                   <div className={Styles["medias-container"]}>
                     <FacebookShareButton
-                      url={"https://github.com/nygardk/react-share"}
+                      url={
+                        process.env.NEXT_PUBLIC_API_URL +
+                        "/product/" +
+                        item.product_id
+                      }
                       hashtag={"#techwave"}
                       description={"techwave"}
                     >
@@ -447,7 +471,11 @@ function ItemDetail(props) {
 
                     <TwitterShareButton
                       title={"techwave"}
-                      url={"https://github.com/nygardk/react-share"}
+                      url={
+                        process.env.NEXT_PUBLIC_API_URL +
+                        "/product/" +
+                        item.product_id
+                      }
                       hashtag={"#techwave"}
                     >
                       <TwitterIcon size={32} style={{ borderRadius: "5px" }} />

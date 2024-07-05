@@ -318,7 +318,7 @@ export default function AddProductDialog(props) {
               >
                 <Select
                   placeholder={"Xuất xứ"}
-                  dropdownStyle={{ width: "600px", zIndex: "99999999" }}
+                  dropdownStyle={{ zIndex: "99999999" }}
                   placement="bottomRight"
                   showSearch
                   // onChange={handleChangeCountry}

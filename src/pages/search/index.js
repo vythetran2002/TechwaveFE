@@ -16,18 +16,19 @@ import { addCartItem } from "@/api/user/addCartItem";
 import toast, { Toaster } from "react-hot-toast";
 import useFetch from "@/api/useFetch";
 import Link from "next/link";
+import useFetchCart from "@/api/user/useFetchCart";
 
 function index() {
   const token = Cookies.get("token");
   const [detailItem, setDeTailItem] = useState(null);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [img, setImg] = useState(null);
+  const { mutate } = useFetchCart();
   const [reload, setReload] = useState(false);
   const router = useRouter();
   const name = router.query.name;
   const result = useFetchSearchProduct(name);
-  // console.log(result);
-  const cates = useFetch("http://localhost:3000/api/category");
+  const cates = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
   // console.log(cates);
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
@@ -38,9 +39,7 @@ function index() {
   };
 
   const handlingAddFavouriteProduct = (id) => {
-    console.log("----");
     const message = addFavouriteProduct(id, token);
-    console.log(message);
   };
 
   const handlingCloseDialog = () => {
@@ -48,10 +47,9 @@ function index() {
   };
 
   const handlingAddCartItem = async (data) => {
-    console.log("----");
     try {
       const message = await addCartItem(data, token);
-      console.log(data);
+      await mutate();
       if (message) {
         toast.success("Đã thêm vào giỏ");
       } else {
@@ -113,9 +111,11 @@ function index() {
                         return (
                           <React.Fragment key={"item-card" + index}>
                             <Item
+                              mutate={result.mutate}
                               addFavourite={handlingAddFavouriteProduct}
                               addCartItem={handlingAddCartItem}
                               item={item}
+                              token={token}
                               setDeTailItem={setDeTailItem}
                               handlingOpenDialog={handlingOpenDialog}
                             />

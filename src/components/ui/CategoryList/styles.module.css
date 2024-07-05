@@ -29,7 +29,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   overflow: scroll;
-  max-height: 302px;
+  padding: 0;
+  max-height: 350px;
 }
 
 .cate-list-item-container::-webkit-scrollbar {
@@ -46,5 +47,5 @@
 }
 
 .cate-list-item-container::-webkit-scrollbar-thumb:hover {
-  background: red;
+  background: #888;
 }

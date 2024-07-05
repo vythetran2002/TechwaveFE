@@ -185,7 +185,7 @@ function UserProfile(props) {
               </span>
               <span className={Styles["col"]}>{user.data.gender}</span>
             </div>
-            <div className={Styles["row"]}>
+            {/* <div className={Styles["row"]}>
               <span
                 className={Styles["col"]}
                 style={{ flexDirection: "row-reverse" }}
@@ -193,7 +193,7 @@ function UserProfile(props) {
                 Địa chỉ
               </span>
               <span className={Styles["col"]}>{user.data.address}</span>
-            </div>
+            </div> */}
           </div>
           {isRpMode && (
             <div className={Styles["info-container"]}>

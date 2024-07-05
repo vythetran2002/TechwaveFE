@@ -35,10 +35,11 @@ import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId"
 import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 import { UpdateArrayAtPosition } from "@/assets/utils/payment/UpdateArrayAtPosition";
 import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
+import { processCart } from "@/assets/utils/payment/handleCheckout/processCart";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
-    return cartItems.map((item) => ({ cart_id: item.cart_id }));
+    return cartItems.map((item) => ({ cart: item.cart_id }));
   }
 }
 
@@ -110,6 +111,20 @@ function Index() {
   const [discount, setDiscount] = useState(null);
   const [chosenVoucherId, setChosenVoucherId] = useState(null);
   const [techwaveVoucher, setTechwaveVoucher] = useState(null);
+  const [successQueue, setSuccessQueue] = useState(null);
+  const [failureQueue, setFailureQueue] = useState(null);
+
+  // PopUp Modals
+  const [openPopup, setOpenPopup] = useState(false);
+  const showModalPopup = () => {
+    setOpenPopup(true);
+  };
+  const handleOkPopup = () => {
+    setOpenPopup(false);
+  };
+  const handleCancelPopup = () => {
+    setOpenPopup(false);
+  };
 
   const selectRef = useRef(null);
 
@@ -250,7 +265,7 @@ function Index() {
       const voucher = await getVoucherByVoucherId(chosenVoucherId, total);
       await setTechwaveVoucher(voucher);
       handleCancel();
-      toast.success("added");
+      toast.success("Đã thêm Voucher");
     } else {
       handleCancel();
     }
@@ -263,49 +278,58 @@ function Index() {
     setIsModalVendorOpen(true);
   };
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     let info = {
       ...values,
       totalBill: total - techwaveVoucher?.result,
       payment: option,
       shop: shopCards,
-      voucher_id: techwaveVoucher.discount_id,
+      voucher_id: techwaveVoucher?.discount_id,
     };
     info.province = info.province.value;
     info.district = info.district.value;
     info.ward = info.ward.value;
-
     console.log("Sucessssss", info);
-    if (option == "ship") {
-      // console.log (temp);
-      // console.log("ship thwongf");
-      try {
-        const message = MakeShipPayment(info, token);
-        //console.log(message);
-        // toast.success("Thanh toán thành công");
-        router.push("/user/account/pendingOrder");
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    if (option == "vnpay") {
-      let amount = temp.totalBill;
-      let temp2 = {
-        ...temp,
-        amount: amount,
-        bankCode: null,
-        language: "vn",
-        returnUrl: "http://localhost:3001/user/account/transaction",
-        carts: extractCartIds(objectsArray),
-      };
-      //  console.log(temp2);
-      const message = SendPaymentAmount(temp2, token);
-      // console.log(message);
-    }
+    const handleProcess = await processCart(info.shop);
+    const promiseResult = handleProcess;
+    toast.promise(promiseResult, {
+      loading: "Đang xử lí",
+      success: (result) => {
+        console.log(result);
+      },
+      error: "Thanh toán thất bại",
+    });
+
+    // if (option == "ship") {
+    //   // console.log (temp);
+    //   // console.log("ship thwongf");
+    //   try {
+    //     const message = MakeShipPayment(info, token);
+    //     //console.log(message);
+    //     // toast.success("Thanh toán thành công");
+    //     router.push("/user/account/pendingOrder");
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // if (option == "vnpay") {
+    //   let amount = temp.totalBill;
+    //   let temp2 = {
+    //     ...temp,
+    //     amount: amount,
+    //     bankCode: null,
+    //     language: "vn",
+    //     returnUrl:
+    //       process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
+    //     carts: extractCartIds(objectsArray),
+    //   };
+    //   //  console.log(temp2);
+    //   const message = SendPaymentAmount(temp2, token);
+    //   // console.log(message);
+    // }
     // const message = SendPaymentAmount(
     //   {
-    //     amount:
-    //       parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
+    //     amount: parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
     //     bankCode: null,
     //     language: "vn",
     //     returnUrl: "http://localhost:3001/user/account/transaction",
@@ -315,7 +339,7 @@ function Index() {
     // console.log(message);
   };
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    toast.error("Something is wrong");
   };
 
   useEffect(() => {
@@ -592,6 +616,7 @@ function Index() {
                       updateShopId={setShopId}
                       countShipFee={LocationProvider.countShippingFee}
                       userDistrictId={districtId}
+                      shopName={shop[0].store.username}
                       shopDistrictId={shop[0].store.district_id}
                       shopWardId={shop[0].store.ward_id}
                       userWardId={wardId}
@@ -853,11 +878,13 @@ function Index() {
                 <div className={Styles["voucher-admin-wrapper"]}>
                   {techwaveVouchers.data ? (
                     techwaveVouchers.data.data.map((voucher, index) => {
-                      return (
-                        <VoucherCard role="admin" data={voucher} key={index}>
-                          <Radio value={voucher.discount_id} name="b"></Radio>
-                        </VoucherCard>
-                      );
+                      if (isFutureDate(voucher.expires)) {
+                        return (
+                          <VoucherCard role="admin" data={voucher} key={index}>
+                            <Radio value={voucher.discount_id} name="b"></Radio>
+                          </VoucherCard>
+                        );
+                      }
                     })
                   ) : (
                     <>Loading ...</>
@@ -875,6 +902,24 @@ function Index() {
               </div>
             </RadioGroup>
           </Modal>
+          <Modal
+            open={openPopup}
+            title="Oops"
+            onOk={handleOkPopup}
+            width={750}
+            onCancel={handleCancelPopup}
+            footer={(_, { OkBtn, CancelBtn }) => (
+              <div className={Styles["popup-footer"]}>
+                <Button>Về trang chủ</Button>
+                <Button type="primary" danger>
+                  Xoá sản phẩm ra khỏi giỏ hàng
+                </Button>
+                <Button type="primary">
+                  Chỉnh sửa số lượng sản phẩm phù hợp
+                </Button>
+              </div>
+            )}
+          ></Modal>
         </Layout>
       </>
     );

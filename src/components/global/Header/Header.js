@@ -121,10 +121,10 @@ function Header(props) {
   };
 
   const handleSearch = () => {
-    if (search) {
+    if (search && search !== "") {
       router.push("/search?name=" + search);
     } else {
-      toast.error("Vui lòng nhập thông tin");
+      toast.error("Vui lòng nhập tìm kiếm");
     }
   };
 

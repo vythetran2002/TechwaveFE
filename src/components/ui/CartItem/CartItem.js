@@ -32,7 +32,6 @@ function CartItem(props) {
   // console.log(select);
   const [isChecked, setIsChecked] = useState(false);
   const [reload, setReload] = useState();
-
   const [quantity, setQuantity] = useState(props.item.quantity);
 
   // console.log(props.item);
@@ -225,15 +224,32 @@ function CartItem(props) {
                 </span>
               </div>
               <span className={Styles["quantity"]}>
-                <InputNumber
-                  disabled={!isEditMode}
-                  min={1}
-                  max={props.item.product.quantity}
-                  value={quantity}
-                  defaultValue={props.item.quantity}
-                  size="small"
-                  onChange={handleUpdateQuantity}
-                />
+                {quantity < 5 ? (
+                  <>
+                    <InputNumber
+                      disabled={!isEditMode}
+                      min={1}
+                      max={props.item.product.quantity}
+                      value={quantity}
+                      defaultValue={props.item.quantity}
+                      size="small"
+                      onChange={handleUpdateQuantity}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <InputNumber
+                      disabled={!isEditMode}
+                      min={1}
+                      max={5}
+                      value={quantity}
+                      defaultValue={props.item.quantity}
+                      size="small"
+                      onChange={handleUpdateQuantity}
+                    />
+                  </>
+                )}
+
                 {isEditMode && (
                   <span
                     className={Styles["submit-update-cart-btn"]}

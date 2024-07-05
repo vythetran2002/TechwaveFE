@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Styles from "./style.module.css";
-import { Rate, InputNumber } from "antd";
+import { Rate, InputNumber, Tooltip } from "antd";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import images from "@/assets/images";
@@ -386,44 +386,48 @@ function ProductDetail(props) {
                     {product.option.length != 0 ? (
                       product.option.map((option, index) => {
                         return (
-                          <div
-                            key={option.option_id}
-                            className={
-                              check(option, id)
-                                ? `${Styles["option-card"]} ${Styles["active"]}`
-                                : Styles["option-card"]
-                            }
-                            onClick={(e) =>
-                              handleClick(
-                                option,
-                                option.option_id,
-                                option.image
-                              )
-                            }
-                          >
-                            <span style={{ width: "100%", height: "50px" }}>
-                              {option.name}
-                            </span>
-                            {option.image != null ? (
-                              <div className={Styles["cate-img-wrapper"]}>
-                                <Image
-                                  src={option.image}
-                                  alt=""
-                                  width={50}
-                                  height={50}
-                                />
-                              </div>
-                            ) : (
-                              <div className={Styles["cate-img-wrapper"]}>
-                                <Image
-                                  src={images.nonImg}
-                                  alt=""
-                                  width={50}
-                                  height={50}
-                                />
-                              </div>
-                            )}
-                          </div>
+                          <Tooltip key={option.option_id} title={option.name}>
+                            <div
+                              className={
+                                check(option, id)
+                                  ? `${Styles["option-card"]} ${Styles["active"]}`
+                                  : Styles["option-card"]
+                              }
+                              onClick={(e) =>
+                                handleClick(
+                                  option,
+                                  option.option_id,
+                                  option.image
+                                )
+                              }
+                            >
+                              <span
+                                style={{ width: "100%", height: "50px" }}
+                                className={Styles["option-name-lable"]}
+                              >
+                                {option.name}
+                              </span>
+                              {option.image != null ? (
+                                <div className={Styles["cate-img-wrapper"]}>
+                                  <Image
+                                    src={option.image}
+                                    alt=""
+                                    width={50}
+                                    height={50}
+                                  />
+                                </div>
+                              ) : (
+                                <div className={Styles["cate-img-wrapper"]}>
+                                  <Image
+                                    src={images.nonImg}
+                                    alt=""
+                                    width={50}
+                                    height={50}
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </Tooltip>
                         );
                       })
                     ) : (
@@ -434,13 +438,23 @@ function ProductDetail(props) {
                   </div>
                 </div>
                 <div className={Styles["product-quantity-button-container"]}>
-                  <InputNumber
-                    onChange={handleChangeQuantity}
-                    className={Styles["input-quantity"]}
-                    defaultValue={1}
-                    min={1}
-                    max={product.quantity}
-                  />
+                  {product.quantity < 5 ? (
+                    <InputNumber
+                      onChange={handleChangeQuantity}
+                      className={Styles["input-quantity"]}
+                      defaultValue={1}
+                      min={1}
+                      max={product.quantity}
+                    />
+                  ) : (
+                    <InputNumber
+                      onChange={handleChangeQuantity}
+                      className={Styles["input-quantity"]}
+                      defaultValue={1}
+                      min={1}
+                      max={5}
+                    />
+                  )}
                 </div>
                 <div className={Styles["product-contact-button-container"]}>
                   <button className={Styles["button-top"]}>
@@ -471,7 +485,11 @@ function ProductDetail(props) {
                   <span>Chia sẻ:</span>
                   <div className={Styles["medias-container"]}>
                     <FacebookShareButton
-                      url={"https://github.com/nygardk/react-share"}
+                      url={
+                        process.env.NEXT_PUBLIC_API_URL +
+                        "/product/" +
+                        product.product_id
+                      }
                       hashtag={"#techwave"}
                       description={"techwave"}
                     >
@@ -480,7 +498,11 @@ function ProductDetail(props) {
 
                     <TwitterShareButton
                       title={"techwave"}
-                      url={"https://github.com/nygardk/react-share"}
+                      url={
+                        process.env.NEXT_PUBLIC_API_URL +
+                        "/product/" +
+                        product.product_id
+                      }
                       hashtag={"#techwave"}
                     >
                       <TwitterIcon size={32} style={{ borderRadius: "5px" }} />

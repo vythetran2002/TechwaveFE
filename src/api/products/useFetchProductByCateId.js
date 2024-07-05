@@ -2,7 +2,8 @@ import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const fetcher = (url, headers) => axios.get(url).then((res) => res.data);
+const fetcher = (url, headers) =>
+  axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchProductByCateId = (id) => {
   const acToken = Cookies.get("token");
@@ -10,15 +11,10 @@ const useFetchProductByCateId = (id) => {
 
   const token = "Bearer " + acToken;
 
-  // const headers = {
-  //   Accept: "application/json",
-  //   "Content-Type": "application/json",
-  //   Authorization: `${token}`,
-  // };
-
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
+    Authorization: `${token}`,
   };
 
   if (acToken && acToken != "undefined") {

@@ -82,7 +82,16 @@ function ProductList(props) {
               );
             })
           ) : (
-            <>Empty</>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                padding: "20px 0 20px 0",
+              }}
+            >
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>
           )}
         </div>
         {/* <div className={Styles["item-pagination-container"]}>

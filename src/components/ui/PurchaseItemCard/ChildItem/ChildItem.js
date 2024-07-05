@@ -8,8 +8,6 @@ import images from "@/assets/images";
 function ChildItem(props) {
   const { data } = props;
 
-  console.log(data);
-
   return (
     <>
       <div className={Styles["item-card-container"]}>

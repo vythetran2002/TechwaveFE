@@ -50,15 +50,29 @@ function HeaderNav(props) {
             <CustomerServiceOutlined />
             <span>Dịch vụ</span>
           </div> */}
-          <span
-            className={Styles["nav-item-container"]}
-            onClick={() => {
-              props.handleScrollToTrending();
-            }}
-          >
-            <SpeakerGroupOutlinedIcon />
-            <span>Sản phẩm bán chạy</span>
-          </span>
+          {props.isHomePage ? (
+            <div
+              className={Styles["nav-item-container"]}
+              onClick={() => {
+                props.handleScrollToTrending();
+              }}
+            >
+              <SpeakerGroupOutlinedIcon />
+              <span>Sản phẩm bán chạy</span>
+            </div>
+          ) : (
+            <Link
+              href={"/?nav=trending"}
+              className={Styles["nav-item-container"]}
+              // onClick={() => {
+              //   props.handleScrollToTrending();
+              // }}
+            >
+              <SpeakerGroupOutlinedIcon />
+              <span>Sản phẩm bán chạy</span>
+            </Link>
+          )}
+
           {/* <div className={Styles["nav-item-container"]}>
             <NewspaperOutlinedIcon />
             <span>Tin tức</span>

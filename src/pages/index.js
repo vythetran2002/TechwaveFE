@@ -11,7 +11,7 @@ import StoreImageHeading from "@/components/ui/StoreImageHeading/StoreImageHeadi
 import StoreList from "@/components/ui/StoreList/StoreList";
 import CustomerFeedBack from "@/components/ui/CustomerFeedBack/CustomerFeedBack";
 import Map from "@/components/ui/Map/Map";
-import { Anchor } from "antd";
+import Link from "next/link";
 import CategoryList from "@/components/ui/CategoryList/CategoryList";
 import ItemDetail from "@/components/ui/ItemList/Item/ItemDetail/ItemDetail";
 import toast, { Toaster } from "react-hot-toast";
@@ -25,6 +25,7 @@ import ChatBotWidget from "@/components/ui/ChatBotWidget/ChatBotWidget";
 import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
 import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 import ScrollOnTopWidget from "@/components/ui/ScrollOnTopWidget/ScrollOnTopWidget";
+import { Element, scroller } from "react-scroll";
 
 function Index() {
   const token = Cookies.get("token");
@@ -37,9 +38,11 @@ function Index() {
   const cateList02 = useFetchProductByCateId(16);
   const cateList03 = useFetchProductByCateId(4);
   const route = useRouter();
+  const [reload, setReload] = useState(false);
 
   //Refs
   const trendingRef = useRef(null);
+  const trendingNavRef = useRef(null);
 
   const handlingOpenDialog = () => {
     setIsOpenDialog(true);
@@ -97,15 +100,6 @@ function Index() {
     });
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", toggleVisibility);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("scroll", toggleVisibility);
-    };
-  }, []);
-
   const handleScrollToTrending = () => {
     // trendingRef.current.scrollIntoView({ behavior: "smooth" });
     if (trendingRef.current) {
@@ -119,13 +113,36 @@ function Index() {
     // console.log(trendingRef.current);
   };
 
+  useEffect(() => {
+    if (!route.isReady) return;
+    if (route.query.nav) {
+      // Thêm một độ trễ nhỏ để đảm bảo DOM đã được render
+      setTimeout(() => {
+        scroller.scrollTo("trending", {
+          smooth: true,
+          duration: 500,
+          offset: -250,
+          block: "center",
+        });
+      }, 500);
+    }
+    window.addEventListener("scroll", toggleVisibility);
+    // Cleanup function
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
+  }, [route.isReady, route.query.nav]);
+
   return (
     <>
       <Head>
         <title>Techwave</title>
       </Head>
-      <Layout handleScrollToTrending={handleScrollToTrending}>
+      <Layout handleScrollToTrending={handleScrollToTrending} isHomePage={true}>
         <Toaster />
+        <Link href="#trending" ref={trendingNavRef}>
+          HEHE
+        </Link>
         <CategoryList />
         <Slider />
         <ServiceList />
@@ -148,21 +165,22 @@ function Index() {
                   loading={cateList01.isLoading}
                   error={cateList01.isError}
                 />
-
-                <ItemList
-                  mutate={mutateCateList01}
-                  token={token}
-                  items={cateList01.data}
-                  loading={cateList01.isLoading}
-                  error={cateList01.isError}
-                  isOpenDialog={isOpenDialog}
-                  handlingOpenDialog={handlingOpenDialog}
-                  handlingCloseDialog={handlingCloseDialog}
-                  setDeTailItem={setDeTailItem}
-                  itemKey="list01"
-                  addFavourite={handlingAddFavouriteProduct}
-                  addCartItem={handlingAddCartItem}
-                />
+                <div id="trending">
+                  <ItemList
+                    mutate={mutateCateList01}
+                    token={token}
+                    items={cateList01.data}
+                    loading={cateList01.isLoading}
+                    error={cateList01.isError}
+                    isOpenDialog={isOpenDialog}
+                    handlingOpenDialog={handlingOpenDialog}
+                    handlingCloseDialog={handlingCloseDialog}
+                    setDeTailItem={setDeTailItem}
+                    itemKey="trending"
+                    addFavourite={handlingAddFavouriteProduct}
+                    addCartItem={handlingAddCartItem}
+                  />
+                </div>
               </>
             )}
           </>

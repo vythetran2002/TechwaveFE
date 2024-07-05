@@ -53,7 +53,7 @@ function RoutingBar(props) {
                 </Link>
               </>
             )}
-            <span href="/"> {product.name}</span>
+            <span> {product.name}</span>
           </div>
         </div>
       </>

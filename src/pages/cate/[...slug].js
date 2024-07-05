@@ -18,9 +18,11 @@ import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import useFetchCateListByPage from "@/api/user/useFetchCateListByPage";
+import useFetchCart from "@/api/user/useFetchCart";
 
 function CateIndex() {
   const router = useRouter();
+  const { mutate } = useFetchCart();
   const token = Cookies.get("token");
   const [img, setImg] = useState(null);
   const [filter, setFilter] = useState(null);
@@ -41,6 +43,7 @@ function CateIndex() {
 
   // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
   const listItem = useFetchCateListByPage(id0, id1, page, 10, filter);
+
   const cateList = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");
 
   const handlingOpenDialog = () => {
@@ -48,9 +51,7 @@ function CateIndex() {
   };
 
   const handlingAddFavouriteProduct = (id) => {
-    console.log("----");
     const message = addFavouriteProduct(id, token);
-    console.log(message);
   };
 
   const handlingCloseDialog = () => {
@@ -58,9 +59,9 @@ function CateIndex() {
   };
 
   const handlingAddCartItem = async (data) => {
-    console.log("----");
     try {
       const message = await addCartItem(data, token);
+      await mutate();
       if (message) {
         toast.success("Đã thêm vào giỏ");
       } else {
@@ -249,9 +250,11 @@ function CateIndex() {
                       return (
                         <React.Fragment key={"item-card" + index}>
                           <Item
+                            mutate={listItem.mutate}
                             addFavourite={handlingAddFavouriteProduct}
                             addCartItem={handlingAddCartItem}
                             item={item}
+                            token={token}
                             img={img}
                             updateImg={updateImg}
                             setDeTailItem={setDeTailItem}

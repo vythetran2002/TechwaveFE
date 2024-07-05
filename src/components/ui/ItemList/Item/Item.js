@@ -157,8 +157,9 @@ function Item(props) {
                   Chọn mua
                 </button>
               </Tooltip>
-              <Tooltip title="Thêm vào danh sách yêu thích">
-                {props.item.favStatus ? (
+
+              {props.item.favStatus ? (
+                <Tooltip title="Xoá khỏi danh sách yêu thích">
                   <button
                     className={Styles["favor-btn"]}
                     onClick={handleRemoveFavProduct}
@@ -168,15 +169,17 @@ function Item(props) {
                       style={{ color: "red" }}
                     />
                   </button>
-                ) : (
+                </Tooltip>
+              ) : (
+                <Tooltip title="Thêm vào danh sách yêu thích">
                   <button
                     className={Styles["favor-btn"]}
                     onClick={handlingAddFavouriteProduct}
                   >
                     <FavoriteBorderOutlined className={Styles["icon"]} />
                   </button>
-                )}
-              </Tooltip>
+                </Tooltip>
+              )}
             </div>
           </div>
         </div>

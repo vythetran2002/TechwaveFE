@@ -25,8 +25,6 @@ function PurchaseItemCard(props) {
   const router = useRouter();
   const { card, status } = props;
 
-  console.log("card", card);
-
   const handleClickPay = (value) => {
     router.push(value);
   };
