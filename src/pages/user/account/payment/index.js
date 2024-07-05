@@ -36,6 +36,7 @@ import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 import { UpdateArrayAtPosition } from "@/assets/utils/payment/UpdateArrayAtPosition";
 import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
 import { processCart } from "@/assets/utils/payment/handleCheckout/processCart";
+import { handleProcessCart } from "@/assets/utils/payment/handleCheckout/processCart";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -115,7 +116,7 @@ function Index() {
   const [failureQueue, setFailureQueue] = useState(null);
 
   // PopUp Modals
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup, setOpenPopup] = useState(true);
   const showModalPopup = () => {
     setOpenPopup(true);
   };
@@ -290,53 +291,44 @@ function Index() {
     info.district = info.district.value;
     info.ward = info.ward.value;
     console.log("Sucessssss", info);
-    const handleProcess = await processCart(info.shop);
-    const promiseResult = handleProcess;
-    toast.promise(promiseResult, {
-      loading: "Đang xử lí",
-      success: (result) => {
-        console.log(result);
-      },
-      error: "Thanh toán thất bại",
-    });
 
-    // if (option == "ship") {
-    //   // console.log (temp);
-    //   // console.log("ship thwongf");
-    //   try {
-    //     const message = MakeShipPayment(info, token);
-    //     //console.log(message);
-    //     // toast.success("Thanh toán thành công");
-    //     router.push("/user/account/pendingOrder");
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-    // if (option == "vnpay") {
-    //   let amount = temp.totalBill;
-    //   let temp2 = {
-    //     ...temp,
-    //     amount: amount,
-    //     bankCode: null,
-    //     language: "vn",
-    //     returnUrl:
-    //       process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
-    //     carts: extractCartIds(objectsArray),
-    //   };
-    //   //  console.log(temp2);
-    //   const message = SendPaymentAmount(temp2, token);
-    //   // console.log(message);
-    // }
-    // const message = SendPaymentAmount(
-    //   {
-    //     amount: parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
-    //     bankCode: null,
-    //     language: "vn",
-    //     returnUrl: "http://localhost:3001/user/account/transaction",
-    //   },
-    //   cookie["token"]
-    // );
-    // console.log(message);
+    if (option == "ship") {
+      // console.log (temp);
+      // console.log("ship thwongf");
+      try {
+        const message = MakeShipPayment(info, token);
+        //console.log(message);
+        // toast.success("Thanh toán thành công");
+        router.push("/user/account/pendingOrder");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (option == "vnpay") {
+      let amount = temp.totalBill;
+      let temp2 = {
+        ...temp,
+        amount: amount,
+        bankCode: null,
+        language: "vn",
+        returnUrl:
+          process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
+        carts: extractCartIds(objectsArray),
+      };
+      //  console.log(temp2);
+      const message = SendPaymentAmount(temp2, token);
+      // console.log(message);
+    }
+    const message = SendPaymentAmount(
+      {
+        amount: parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
+        bankCode: null,
+        language: "vn",
+        returnUrl: "http://localhost:3001/user/account/transaction",
+      },
+      token
+    );
+    console.log(message);
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Something is wrong");

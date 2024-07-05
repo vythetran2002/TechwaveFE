@@ -7,6 +7,7 @@ const fetcher = (url, headers) =>
 
 const useFetchProductByCateId = (id) => {
   const acToken = Cookies.get("token");
+
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/category/" + id;
 
   const token = "Bearer " + acToken;
@@ -14,14 +15,13 @@ const useFetchProductByCateId = (id) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `${token}`,
   };
 
   if (acToken && acToken != "undefined") {
     headers.Authorization = ` ${token}`;
   }
 
-  const { data, error, mutate, isValidating } = useSWR(token ? url : null, () =>
+  const { data, error, mutate, isValidating } = useSWR(token ? url : url, () =>
     fetcher(url, headers)
   );
 

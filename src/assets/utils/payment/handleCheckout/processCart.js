@@ -1,4 +1,5 @@
 const axios = require("axios");
+import toast from "react-hot-toast";
 
 export async function processCart(cartData) {
   const successQueue = [];
@@ -27,4 +28,26 @@ export async function processCart(cartData) {
   }
 
   return { successQueue, failureQueue };
+}
+
+export function handleProcessCart(cartData) {
+  return toast.promise(
+    processCart(cartData),
+    {
+      loading: "Đang xử lý giỏ hàng...",
+      success: (result) => {
+        const { successQueue, failureQueue } = result;
+        return `Xử lý thành công ${successQueue.length} sản phẩm, ${failureQueue.length} sản phẩm thất bại`;
+      },
+      error: "Có lỗi xảy ra khi xử lý giỏ hàng",
+    },
+    {
+      style: {
+        minWidth: "250px",
+      },
+      success: {
+        duration: 5000,
+      },
+    }
+  );
 }
