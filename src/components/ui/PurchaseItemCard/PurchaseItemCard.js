@@ -25,13 +25,15 @@ function PurchaseItemCard(props) {
   const router = useRouter();
   const { card, status } = props;
 
+  console.log(card);
+
   const handleClickPay = (value) => {
     router.push(value);
   };
 
   const handleGoToComment = () => {
     router.push({
-      pathname: "/product/" + card.cart.product.product_id,
+      pathname: "/product/" + card.shop_bill_id[0].cart.product.product_id,
       query: {
         nav: "danhGia",
       },

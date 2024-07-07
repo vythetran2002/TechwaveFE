@@ -33,6 +33,7 @@
 }
 .name {
   width: 100%;
+  color: black;
   text-align: left;
   max-width: 400px;
   overflow: hidden;
@@ -40,6 +41,10 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  transition: 2ms;
+}
+.name:hover {
+  color: #60a5fa;
 }
 .option {
   font-weight: 300;

@@ -115,14 +115,20 @@ function Index() {
                 <InfoOutlinedIcon />
                 <span>Thông tin chi tiết</span>
               </div>
-              <Link
-                href={"#danhGia"}
+              <span
                 className={Styles["nav-item"]}
-                style={{ color: "var(--header-bg-top)" }}
+                style={{
+                  color: "var(--header-bg-top)",
+                  scrollBehavior: "smooth",
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToElement("danhGia");
+                }}
               >
                 <QuestionAnswerOutlinedIcon />
                 <span>Đánh giá - bình luận</span>
-              </Link>
+              </span>
             </div>
           </div>
           <Blog content={product.data.content} />

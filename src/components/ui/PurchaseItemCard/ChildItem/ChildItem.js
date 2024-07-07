@@ -4,6 +4,7 @@ import { FormatPrice } from "@/assets/utils/PriceFormat";
 import Image from "next/image";
 import { Divider, Tooltip } from "antd";
 import images from "@/assets/images";
+import Link from "next/link";
 
 function ChildItem(props) {
   const { data } = props;
@@ -51,7 +52,14 @@ function ChildItem(props) {
           </div>
           <div className={Styles["item-info-container"]}>
             <Tooltip title={data.cart.product?.name}>
-              <span className={Styles.name}>{data.cart.product?.name}</span>
+              <Link
+                href={
+                  "/product/" + data.cart.product?.product_id + "?nav=danhGia"
+                }
+                className={Styles.name}
+              >
+                {data.cart.product?.name}
+              </Link>
             </Tooltip>
             <div className={Styles["option-quantity-container"]}>
               {data.cart.option?.name && (

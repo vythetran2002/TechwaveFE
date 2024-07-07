@@ -94,7 +94,13 @@ function PaymentItem(props) {
             </span>
             <div className={Styles["price-quantity-container"]}>
               <span>{FormatPrice(item.product.promotional_price)} </span>
-              <span>x {item.quantity}</span>
+              {props.isFailedItem ? (
+                <span style={{ color: "red", fontWeight: "500" }}>
+                  x {item.quantity}
+                </span>
+              ) : (
+                <span>x {item.quantity}</span>
+              )}
             </div>
           </div>
         ) : (

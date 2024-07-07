@@ -68,7 +68,7 @@ function PaymentShop(props) {
       await setShopVoucher(voucher);
       // await handleUpdateTotalArray();
       handleCancel();
-      toast.success("added");
+      toast.success("Đã chọn voucher");
     } else {
       handleCancel();
     }

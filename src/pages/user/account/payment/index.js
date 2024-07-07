@@ -8,7 +8,7 @@ import Image from "next/image";
 import images from "@/assets/images";
 import { LoadingOutlined } from "@ant-design/icons";
 import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
-import { Button, Modal, Input, Form, Select, Spin } from "antd";
+import { Button, Modal, Input, Form, Select, Spin, Divider } from "antd";
 import Link from "next/link";
 import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { SendPaymentAmount } from "@/api/user/sendPaymentAmount";
@@ -34,9 +34,10 @@ import { isFutureDate } from "@/assets/utils/payment/IsFutureDate";
 import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId";
 import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 import { UpdateArrayAtPosition } from "@/assets/utils/payment/UpdateArrayAtPosition";
+import PaymentItem from "@/components/ui/PaymentItem/PaymentItem";
+import { removeProductFromCart } from "@/assets/utils/payment/handleCheckout/removeProductFromCart";
+import { DeleteCartItem } from "@/api/user/deleteCartItem";
 import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
-import { processCart } from "@/assets/utils/payment/handleCheckout/processCart";
-import { handleProcessCart } from "@/assets/utils/payment/handleCheckout/processCart";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -112,8 +113,7 @@ function Index() {
   const [discount, setDiscount] = useState(null);
   const [chosenVoucherId, setChosenVoucherId] = useState(null);
   const [techwaveVoucher, setTechwaveVoucher] = useState(null);
-  const [successQueue, setSuccessQueue] = useState(null);
-  const [failureQueue, setFailureQueue] = useState(null);
+  const [failedProduct, setFailedProduct] = useState();
 
   // PopUp Modals
   const [openPopup, setOpenPopup] = useState(false);
@@ -182,7 +182,7 @@ function Index() {
 
   const updateDiscountArray = (position, value) => {
     let temp = AddToTotalArray(discountArray, position, value);
-    setDiscount(FormatPrice(calculateArraySum(temp)));
+    setDiscount(calculateArraySum(temp));
   };
 
   const handleClickSend = () => {
@@ -279,10 +279,38 @@ function Index() {
     setIsModalVendorOpen(true);
   };
 
+  // Ve trang chu
+  const handleGoToHomePage = () => {
+    router.push("/");
+    toast.success("Đã trở lại trang chủ");
+  };
+
+  // Xoa san pham
+  const handleDeleteProduct = async (productId, token) => {
+    try {
+      // const res = await DeleteCartItem(productId, token);
+      // const data = decodeURIComponent(router.query.data);
+      console.log(objectsArray);
+      console.log(failedProduct);
+      let newData = removeProductFromCart(objectsArray, failedProduct.cart);
+      const stringifiedData = JSON.stringify(newData);
+      const encodedData = encodeURIComponent(stringifiedData);
+      console.log(encodedData);
+      // router.push(`/user/account/payment?data=${encodedData}`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const onFinish = async (values) => {
     let info = {
       ...values,
-      totalBill: total - techwaveVoucher?.result,
+      totalBill: total, // TONG CONG
+      shipFee: techwaveVoucher?.result
+        ? calculateDiscountFreeShip(shipFee, techwaveVoucher?.result)
+        : shipFee, // PHI VAN CHUYEN
+      totalVoucherDiscount: discount, // TONG VOUCHER GIAM GIA
+      incompletedTotal: calculateTotalValue(objectsArray), // TAM TINH
       payment: option,
       shop: shopCards,
       voucher_id: techwaveVoucher?.discount_id,
@@ -291,30 +319,39 @@ function Index() {
     info.district = info.district.value;
     info.ward = info.ward.value;
     console.log("Sucessssss", info);
-    if (option == "ship") {
-      // console.log (temp);
-      // console.log("ship thwongf");
-      try {
-        const message = MakeShipPayment(info, token);
-        //console.log(message);
-        // toast.success("Thanh toán thành công");
-        router.push("/user/account/pendingOrder");
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // if (option == "ship") {
+    //   // console.log (temp);
+    //   try {
+    //     const message = await MakeShipPayment(info, token);
+    //     if (message.success) {
+    //       console.log("Thanh toán thành công:", message.data);
+    //       toast.success("Thanh toán thành công");
+    //       router.push("/user/account/pendingOrder");
+    //       // Xử lý khi thanh toán thành công
+    //     } else {
+    //       toast.error("Thanh toán thất bại");
+    //       console.log("Thanh toán thất bại:", message.data || message.error);
+    //       showModalPopup();
+    //       setFailedProduct(message.data);
+    //       // Xử lý khi thanh toán thất bại
+    //     }
+    //     //console.log(message);
+    //     // toast.success("Thanh toán thành công");
+    //     //  router.push("/user/account/pendingOrder");
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
     if (option == "vnpay") {
-      let amount = temp.totalBill;
+      let amount = info.totalBill;
       let temp2 = {
-        ...temp,
         amount: amount,
         bankCode: null,
         language: "vn",
         returnUrl:
           process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
-        carts: extractCartIds(objectsArray),
+        carts: info,
       };
-      //  console.log(temp2);
       const message = SendPaymentAmount(temp2, token);
       // console.log(message);
     }
@@ -762,7 +799,6 @@ function Index() {
                 >
                   <div className={Styles["price-wrapper"]}>
                     <span>Tạm tính</span>
-
                     <span>
                       {FormatPrice(calculateTotalValue(objectsArray))}
                     </span>
@@ -791,7 +827,7 @@ function Index() {
                   </div>
                   <div className={Styles["price-wrapper"]}>
                     <span>Tổng voucher giảm giá:</span>
-                    <span>- {discount}</span>
+                    <span>- {FormatPrice(discount)}</span>
                   </div>
                 </div>
                 <div className={Styles["price-container"]}>
@@ -799,13 +835,14 @@ function Index() {
                     <span>Tổng cộng</span>
                     <span id={Styles["total"]}>
                       {/* {FormatPrice(calculateArraySum(arrayTotal))} */}
-                      {FormatPrice(
+                      {/* {FormatPrice(
                         CalculateTotalValue(
                           total,
                           shipFee,
                           techwaveVoucher?.result
                         )
-                      )}
+                      )} */}
+                      {FormatPrice(total)}
                     </span>
                   </div>
                 </div>
@@ -889,18 +926,67 @@ function Index() {
             onOk={handleOkPopup}
             width={750}
             onCancel={handleCancelPopup}
+            centered
+            maskClosable={false}
             footer={(_, { OkBtn, CancelBtn }) => (
               <div className={Styles["popup-footer"]}>
-                <Button>Về trang chủ</Button>
-                <Button type="primary" danger>
+                <Button onClick={handleGoToHomePage}>Về trang chủ</Button>
+                {/* <Button type="primary" danger onClick={handleDeleteProduct}>
                   Xoá sản phẩm ra khỏi giỏ hàng
                 </Button>
                 <Button type="primary">
                   Chỉnh sửa số lượng sản phẩm phù hợp
-                </Button>
+                </Button> */}
               </div>
             )}
-          ></Modal>
+          >
+            {failedProduct ? (
+              <div className={Styles["failed-product-container"]}>
+                {failedProduct?.cart.map((item, index) => {
+                  return (
+                    <React.Fragment key={"failedProduct" + index}>
+                      <PaymentItem item={item} isFailedItem={true} />
+                      <div className={Styles["failed-product-title-container"]}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-3"
+                          style={{
+                            color: "red",
+                            width: "20px",
+                            height: "20px",
+                          }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                          />
+                        </svg>
+
+                        <span>Xin lỗi, hiện tại chỉ còn</span>
+                        <span style={{ color: "red", fontWeight: "600" }}>
+                          {item.product.quantity}
+                        </span>
+                        <span>Sản phẩm trong cửa hàng</span>
+                        <span style={{ fontWeight: "600" }}>
+                          {item.store.username}
+                        </span>
+                      </div>
+                      <Divider />
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            ) : (
+              <>
+                <Empty />
+              </>
+            )}
+          </Modal>
         </Layout>
       </>
     );

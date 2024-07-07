@@ -50,9 +50,9 @@ function Index() {
         success: (response) => {
           // Lấy access_token từ response
           const access_token = response.data.data.access_token;
-          console.log(response.data);
+          // console.log(response.data);
           // Lưu access_token vào cookie
-          Cookies.set("token", access_token);
+          Cookies.set("token", access_token, { expires: 0.5 / 24 });
           //setCookie("token", access_token);
           // Redirect người dùng hoặc làm mới trạng thái của component/app
           // ...

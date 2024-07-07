@@ -16,6 +16,8 @@ function Index() {
   const orders = useFetchUserPendingProducts();
   const token = Cookies.get("token");
 
+  console.log("MY ORDER", orders);
+
   // const router = useRouter();
   // const { query } = router;
 

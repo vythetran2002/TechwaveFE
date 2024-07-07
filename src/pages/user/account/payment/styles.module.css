@@ -215,4 +215,16 @@
 .popup-footer {
   display: flex;
   justify-content: space-between;
+  flex-direction: row-reverse;
+}
+.failed-product-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px 20px 10px;
+}
+.failed-product-title-container {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
 }

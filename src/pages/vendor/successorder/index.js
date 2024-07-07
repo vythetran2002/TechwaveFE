@@ -10,6 +10,11 @@ import OrderList from "@/components/ui/vendor/order/OrderList";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import OrderPreview from "@/components/ui/vendor/order/preview-dialog/OrderPreview";
+// import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+// import AddCateDialog from "@/componentss/ui/admin/dialog/addCate/AddCateDialog";
+// import EditCateDialog from "@/components/ui/admin/dialog/editCate/EditUserDialog";
+// import EditImageDialog from "@/components/ui/EditImageDialog/EditImageDialog";
+// import images from "@/assets/images";
 import Link from "next/link";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -77,7 +82,7 @@ function Index() {
       <VendorLayout path="/order">
         <div className={Styles["user-managemnent-container"]}>
           <span style={{ fontWeight: "800", fontSize: "22px" }}>
-            QUẢN LÝ ĐƠN HÀNG BỊ HUỶ
+            QUẢN LÝ ĐƠN HÀNG THÀNH CÔNG
           </span>
           <div className={Styles["user-search-add-container"]}>
             <div className={Styles["user-search-filter-container"]}>
@@ -118,7 +123,8 @@ function Index() {
 
               <Link
                 href={"/vendor/successorder"}
-                className={Styles["user-filter-button-wrapper"]}
+                className={`${Styles["user-filter-button-wrapper"]}
+                   ${Styles["report-nav-active"]}`}
                 style={{ height: "100%" }}
               >
                 <span>Đơn hàng thành công</span>
@@ -126,8 +132,7 @@ function Index() {
 
               <Link
                 href={"/vendor/cancledorder"}
-                className={`${Styles["user-filter-button-wrapper"]}
-                   ${Styles["report-nav-active"]}`}
+                className={Styles["user-filter-button-wrapper"]}
                 style={{ height: "100%" }}
               >
                 <span>Đơn hàng bị huỷ</span>
@@ -163,7 +168,7 @@ function Index() {
             updateMax={updateMax}
             limit={quantity}
             page={page}
-            status={3}
+            status={2}
             updateOrder={handlingUpdateOrder}
             handleOpen={handleOpen}
           />

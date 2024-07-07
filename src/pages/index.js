@@ -26,6 +26,7 @@ import UserLoadingUI from "@/components/ui/UserLoadingUI/UserLoadingUI";
 import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 import ScrollOnTopWidget from "@/components/ui/ScrollOnTopWidget/ScrollOnTopWidget";
 import { Element, scroller } from "react-scroll";
+import useFetchTrending from "@/api/products/useFetchTrending";
 
 function Index() {
   const token = Cookies.get("token");
@@ -33,6 +34,7 @@ function Index() {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [detailItem, setDeTailItem] = useState(null);
   const { mutate } = useFetchCart();
+  const trending = useFetchTrending();
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
   const cateList02 = useFetchProductByCateId(16);
@@ -93,7 +95,6 @@ function Index() {
   };
 
   const scrollToTop = () => {
-    console.log("first");
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -169,7 +170,7 @@ function Index() {
                   <ItemList
                     mutate={mutateCateList01}
                     token={token}
-                    items={cateList01.data}
+                    items={trending.data}
                     loading={cateList01.isLoading}
                     error={cateList01.isError}
                     isOpenDialog={isOpenDialog}

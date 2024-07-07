@@ -123,6 +123,14 @@ function Index() {
               </Link>
 
               <Link
+                href={"/vendor/successorder"}
+                className={Styles["user-filter-button-wrapper"]}
+                style={{ height: "100%" }}
+              >
+                <span>Đơn hàng thành công</span>
+              </Link>
+
+              <Link
                 href={"/vendor/cancledorder"}
                 className={Styles["user-filter-button-wrapper"]}
                 style={{ height: "100%" }}
