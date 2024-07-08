@@ -214,6 +214,35 @@ function OrderItem(props) {
             </div> */}
           </div>
         )}
+        {props.mode == 4 && (
+          <div
+            className={Styles["list-item-date-wrapper"]}
+            style={{
+              flexDirection: "column",
+              gap: "10px",
+              width: "15%",
+            }}
+          >
+            <div
+              className={Styles["list-item-status-watch-button-wrapper"]}
+              onClick={handlingUpdateOrder}
+            >
+              <VisibilityIcon />
+            </div>
+            {/* <div
+              className={Styles["list-item-status-active-button-wrapper"]}
+              onClick={handlingAccept}
+            >
+              Duyệt
+            </div>
+            <div
+              className={Styles["list-item-status-banned-button-wrapper"]}
+              onClick={handlingReject}
+            >
+              Từ chối
+            </div> */}
+          </div>
+        )}
       </div>
     </>
   );

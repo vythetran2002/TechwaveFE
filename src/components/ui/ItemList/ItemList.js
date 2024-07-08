@@ -6,6 +6,7 @@ import { memo } from "react";
 
 function ItemList(props) {
   let listCate = null;
+
   if (props.isError) return <div>Lỗi khi tải dữ liệu</div>;
   if (props.isLoading) return <div>Đang tải...</div>;
   if (props.items) {

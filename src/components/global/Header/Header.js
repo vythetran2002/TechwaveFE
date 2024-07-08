@@ -176,7 +176,6 @@ function Header(props) {
 
   const debouncedHandleChange = useCallback(
     debounce(async (value) => {
-      console.log("Debounced value:", value);
       setSearch(value);
     }, 300),
     []

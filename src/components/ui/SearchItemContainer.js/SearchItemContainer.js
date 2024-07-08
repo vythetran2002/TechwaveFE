@@ -9,7 +9,7 @@ import { Empty, Typography } from "antd";
 function SearchItemContainer(props) {
   const { searchContainerRef, value } = props;
   const result = useFetchSearchProduct(value);
-  console.log("CONTAINER", result);
+
   return (
     <div
       ref={searchContainerRef}

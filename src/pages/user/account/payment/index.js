@@ -319,29 +319,29 @@ function Index() {
     info.district = info.district.value;
     info.ward = info.ward.value;
     console.log("Sucessssss", info);
-    // if (option == "ship") {
-    //   // console.log (temp);
-    //   try {
-    //     const message = await MakeShipPayment(info, token);
-    //     if (message.success) {
-    //       console.log("Thanh toán thành công:", message.data);
-    //       toast.success("Thanh toán thành công");
-    //       router.push("/user/account/pendingOrder");
-    //       // Xử lý khi thanh toán thành công
-    //     } else {
-    //       toast.error("Thanh toán thất bại");
-    //       console.log("Thanh toán thất bại:", message.data || message.error);
-    //       showModalPopup();
-    //       setFailedProduct(message.data);
-    //       // Xử lý khi thanh toán thất bại
-    //     }
-    //     //console.log(message);
-    //     // toast.success("Thanh toán thành công");
-    //     //  router.push("/user/account/pendingOrder");
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+    if (option == "ship") {
+      // console.log (temp);
+      try {
+        const message = await MakeShipPayment(info, token);
+        if (message.success) {
+          console.log("Thanh toán thành công:", message.data);
+          toast.success("Thanh toán thành công");
+          router.push("/user/account/pendingOrder");
+          // Xử lý khi thanh toán thành công
+        } else {
+          toast.error("Thanh toán thất bại");
+          console.log("Thanh toán thất bại:", message.data || message.error);
+          showModalPopup();
+          setFailedProduct(message.data);
+          // Xử lý khi thanh toán thất bại
+        }
+        //console.log(message);
+        // toast.success("Thanh toán thành công");
+        //  router.push("/user/account/pendingOrder");
+      } catch (error) {
+        console.log(error);
+      }
+    }
     if (option == "vnpay") {
       let amount = info.totalBill;
       let temp2 = {
@@ -930,7 +930,9 @@ function Index() {
             maskClosable={false}
             footer={(_, { OkBtn, CancelBtn }) => (
               <div className={Styles["popup-footer"]}>
-                <Button onClick={handleGoToHomePage}>Về trang chủ</Button>
+                <Button onClick={handleGoToHomePage} type="primary">
+                  Về trang chủ
+                </Button>
                 {/* <Button type="primary" danger onClick={handleDeleteProduct}>
                   Xoá sản phẩm ra khỏi giỏ hàng
                 </Button>
@@ -943,6 +945,7 @@ function Index() {
             {failedProduct ? (
               <div className={Styles["failed-product-container"]}>
                 {failedProduct?.cart.map((item, index) => {
+                  console.log(item);
                   return (
                     <React.Fragment key={"failedProduct" + index}>
                       <PaymentItem item={item} isFailedItem={true} />

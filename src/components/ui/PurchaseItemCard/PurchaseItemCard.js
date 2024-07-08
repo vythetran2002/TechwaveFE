@@ -469,15 +469,15 @@ function PurchaseItemCard(props) {
                     <ShopOutlined />
                     <span>{card.shopname}</span>
                   </div>
-                  <div className={Styles["chat-btn-container"]}>
+                  {/* <div className={Styles["chat-btn-container"]}>
                     <ChatBubbleOutlineOutlinedIcon
                       style={{ fontSize: "20px" }}
                     />
                     <span>Chat</span>
-                  </div>
-                  <div className={Styles["shop-watch-btn"]}>
+                  </div> */}
+                  {/* <div className={Styles["shop-watch-btn"]}>
                     <span>Xem shop</span>
-                  </div>
+                  </div> */}
                 </div>
                 <div className={Styles["header-right-container"]}>
                   {status === 0 && (

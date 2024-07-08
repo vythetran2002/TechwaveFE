@@ -34,6 +34,7 @@
   font-size: 16px;
   color: #333;
   gap: 20px;
+  height: fit-content;
 }
 .row {
   width: 100%;
@@ -42,6 +43,9 @@
   gap: 20px;
 }
 .col {
-  flex: 1;
+  width: 100%;
   display: flex;
+}
+.input-wrapper {
+  width: 100%;
 }

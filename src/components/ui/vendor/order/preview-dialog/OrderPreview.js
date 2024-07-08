@@ -20,16 +20,15 @@ const handleStatus = (value) => {
   } else if (value == 1) {
     return <span style={{ color: "#059669" }}>Đã được phê duyệt</span>;
   } else if (value == 2) {
-    return <span style={{ color: "#dc2626" }}>Đơn hàng không được duyệt</span>;
+    return <span style={{ color: "#059669" }}>Đơn hàng đã được giao</span>;
   } else {
-    return <span>Đơn hàng bị huỷ</span>;
+    return <span style={{ color: "#f43f5e" }}>Đơn hàng bị huỷ</span>;
   }
 };
 
 function OrderPreview(props) {
   const { order, status } = props;
 
-  console.log(order);
   if (order)
     return (
       <>
@@ -243,7 +242,7 @@ function OrderPreview(props) {
 
                 <div className={Styles["total-container"]}>
                   <span>Trạng thái:</span>
-                  {handleStatus(status)}
+                  {handleStatus(order.status)}
                 </div>
               </div>
               <div className={Styles["order-status-container"]}>
@@ -253,7 +252,19 @@ function OrderPreview(props) {
                   {order.paid ? (
                     <span style={{ color: "#059669" }}>Đã thanh toán</span>
                   ) : (
-                    <span style={{ color: "#dc2626" }}>Chưa thanh toán</span>
+                    <>
+                      {order.payment == "Thanh toán khi nhận hàng" &&
+                      order.status != 0 &&
+                      order.status != 1 &&
+                      order.status != 3 &&
+                      order.status != 4 ? (
+                        <span style={{ color: "#059669" }}>Đã thanh toán</span>
+                      ) : (
+                        <span style={{ color: "#dc2626" }}>
+                          Chưa thanh toán
+                        </span>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

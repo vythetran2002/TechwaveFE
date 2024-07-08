@@ -1,14 +1,28 @@
 import useSWR from "swr";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+const fetcher = (url, headers) =>
+  axios.get(url, { headers }).then((res) => res.data);
 
 const useFetchProductById = (id) => {
+  const acToken = Cookies.get("token");
   // const url = "http://localhost:3000/api/product/" + id;
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
 
-  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
-    fetcher(id ? url : null)
+  const token = "Bearer " + acToken;
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  if (acToken && acToken != "undefined") {
+    headers.Authorization = ` ${token}`;
+  }
+
+  const { data, error, mutate, isValidating } = useSWR(token ? url : url, () =>
+    fetcher(url, headers)
   );
 
   return {

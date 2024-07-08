@@ -155,7 +155,7 @@ function Index() {
             onClose={handleClose}
           >
             <DialogContent>
-              <OrderPreview order={order} status={0} />
+              <OrderPreview order={order} />
             </DialogContent>
           </Dialog>
           <div

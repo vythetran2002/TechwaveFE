@@ -47,6 +47,7 @@ function ShopIndex() {
   // console.log(id0);
   // console.log(id1);
   const store = useFetchShopById(id0);
+
   const updateImg = (value) => {
     setImg(value);
     setReload(!reload);
@@ -105,19 +106,26 @@ function ShopIndex() {
 
   const handlingAddCartItem = async (data) => {
     // console.log("----");
-    try {
-      const message = await addCartItem(data, token);
-      await mutate();
-      // console.log(data);
-      if (message) {
-        toast.success("Đã thêm vào giỏ");
-      } else {
+    console.log(data);
+    if (data.stock > 0) {
+      try {
+        const { quantity, price, product_id } = data;
+        const temp = { quantity, price, product_id };
+        const message = await addCartItem(temp, token);
+        await mutate();
+        // console.log(data);
+        if (message) {
+          toast.success("Đã thêm vào giỏ");
+        } else {
+          toast.error("Cần đăng nhập");
+          route.push("/auth/login");
+        }
+      } catch (error) {
         toast.error("Cần đăng nhập");
-        route.push("/auth/login");
+        router.push("/auth/login");
       }
-    } catch (error) {
-      toast.error("Cần đăng nhập");
-      router.push("/auth/login");
+    } else {
+      toast.error("Xin lỗi, mặt hàng hiện tại đã hết");
     }
   };
 

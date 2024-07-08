@@ -14,7 +14,6 @@ const useFetchSearchProduct = (value) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `${token}`,
   };
 
   if (acToken && acToken != "undefined") {

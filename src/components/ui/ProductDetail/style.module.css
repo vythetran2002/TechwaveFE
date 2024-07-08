@@ -179,6 +179,10 @@
   margin-bottom: 10px;
   border-radius: 3px;
   cursor: pointer;
+  transition: 0.1s;
+}
+.button-top:hover {
+  background-color: #0ea5e9;
 }
 .button-bottom {
   display: flex;
@@ -195,6 +199,10 @@
   height: 60px;
   cursor: pointer;
   background: -webkit-linear-gradient(top, #fd6e1d, #f59000);
+  transition: background 0.3s ease;
+}
+.button-bottom:hover {
+  background: -webkit-linear-gradient(top, #ff8f4d, #ffb340);
 }
 .share-options-container {
   gap: 5px;

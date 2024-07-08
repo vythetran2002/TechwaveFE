@@ -47,18 +47,25 @@ function index() {
   };
 
   const handlingAddCartItem = async (data) => {
-    try {
-      const message = await addCartItem(data, token);
-      await mutate();
-      if (message) {
-        toast.success("Đã thêm vào giỏ");
-      } else {
+    console.log(data);
+    if (data.stock > 0) {
+      try {
+        const { quantity, price, product_id } = data;
+        const temp = { quantity, price, product_id };
+        const message = await addCartItem(temp, token);
+        await mutate();
+        if (message) {
+          toast.success("Đã thêm vào giỏ");
+        } else {
+          toast.error("Cần đăng nhập");
+          router.push("/auth/login");
+        }
+      } catch (error) {
         toast.error("Cần đăng nhập");
         router.push("/auth/login");
       }
-    } catch (error) {
-      toast.error("Cần đăng nhập");
-      router.push("/auth/login");
+    } else {
+      toast.error("Xin lỗi, mặt hàng này hiện tại đã hết");
     }
   };
 
@@ -108,6 +115,7 @@ function index() {
                     </div>
                     <div className={Styles["item-list-container"]}>
                       {result.data.results.map((item, index) => {
+                        console.log(item);
                         return (
                           <React.Fragment key={"item-card" + index}>
                             <Item

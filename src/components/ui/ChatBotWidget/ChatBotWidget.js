@@ -9,8 +9,9 @@ import ReactDOM from "react-dom";
 import { sendMessageToCoze } from "@/api/Coze/sendMessageToCoze";
 import { sendMessageToAzure } from "@/api/Azure/sendMessageToAzure";
 import ScrollOnTopWidget from "../ScrollOnTopWidget/ScrollOnTopWidget";
-
 import images from "@/assets/images";
+
+import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 
 const InComingChat = (props) => {
   const { avatar, message, messages, updateContent } = props;
@@ -55,13 +56,7 @@ const InComingChat = (props) => {
     return (
       <li className={Styles["chat-incoming"]}>
         <div className={Styles["avatar-wrapper"]}>
-          <img
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/2048px-ChatGPT_logo.svg.png"
-            }
-            alt=""
-            className={Styles.avatar}
-          />
+          <img src={images.techwave} alt="" className={Styles.avatar} />
         </div>
         <div className={Styles["incoming-text"]}>
           <div className={Styles["loader"]}>
@@ -109,7 +104,11 @@ const OutgoingChat = (props) => {
   return (
     <li className={Styles["chat-outgoing"]}>
       <div className={Styles["avatar-wrapper"]}>
-        <img src={avatar} alt="" className={Styles.avatar} />
+        {avatar ? (
+          <img src={avatar} alt="" className={Styles.avatar} />
+        ) : (
+          <img src={images.nonAvatar} alt="" className={Styles.avatar} />
+        )}
       </div>
       <p className={Styles["outgoing-text"]}>{message}</p>
     </li>
@@ -121,6 +120,7 @@ const avatarSrc =
 
 function ChatBotWidget(props) {
   const { scrollVisible, scrollToTop } = props;
+  const userProfile = useFetchUserProfile();
   const [child, setChild] = useState([
     // {
     //   role: "system",
@@ -269,7 +269,7 @@ function ChatBotWidget(props) {
                 return (
                   <React.Fragment key={index}>
                     <OutgoingChat
-                      avatar={avatarSrc}
+                      avatar={userProfile.data?.avatar}
                       message={data.content}
                       messages={child}
                     />
@@ -280,7 +280,6 @@ function ChatBotWidget(props) {
                   <React.Fragment key={index}>
                     <InComingChat
                       updateContent={updateLastElementContent}
-                      avatar={avatarSrc}
                       message={data.content}
                       messages={child}
                     />

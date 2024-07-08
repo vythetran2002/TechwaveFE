@@ -12,6 +12,7 @@ import { Tooltip } from "antd";
 import { DeleteFavouriteItem } from "@/api/user/deleteFavouriteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import toast from "react-hot-toast";
+import { EyeOutlined, HeartOutlined, HeartTwoTone } from "@ant-design/icons";
 
 function Item(props) {
   const handlingOpenDialog = () => {
@@ -45,8 +46,15 @@ function Item(props) {
       let id = props.item.product_id;
       let quantity = 1;
       let price = props.item.promotional_price;
+      let stock = props.item.quantity;
       // let optionId = 5;
-      let temp = { quantity: quantity, price: price, product_id: id };
+      let temp = {
+        quantity: quantity,
+        price: price,
+        product_id: id,
+        stock: stock,
+      };
+
       props.addCartItem(temp);
     }
   };
@@ -146,7 +154,7 @@ function Item(props) {
                   className={Styles["visibility-btn"]}
                   onClick={handlingOpenDialog}
                 >
-                  <VisibilityOutlinedIcon className={Styles["icon"]} />
+                  <EyeOutlined className={Styles["icon"]} />
                 </button>
               </Tooltip>
               <Tooltip title="Đặt hàng">
@@ -164,9 +172,9 @@ function Item(props) {
                     className={Styles["favor-btn"]}
                     onClick={handleRemoveFavProduct}
                   >
-                    <FavoriteBorderOutlined
+                    <HeartTwoTone
                       className={Styles["icon"]}
-                      style={{ color: "red" }}
+                      twoToneColor="#eb2f96"
                     />
                   </button>
                 </Tooltip>
@@ -176,7 +184,7 @@ function Item(props) {
                     className={Styles["favor-btn"]}
                     onClick={handlingAddFavouriteProduct}
                   >
-                    <FavoriteBorderOutlined className={Styles["icon"]} />
+                    <HeartOutlined className={Styles["icon"]} />
                   </button>
                 </Tooltip>
               )}

@@ -3,10 +3,12 @@ import Styles from "./styles.module.css";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
 import images from "@/assets/images";
-import { Input, Button } from "antd";
+import { Input, Button, Form } from "antd";
 import { uploadImage } from "@/components/utils/Upload";
 import toast, { Toaster } from "react-hot-toast";
 import { PostReport } from "@/api/user/PostReport";
+import { UploadOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 
 const { TextArea } = Input;
 
@@ -18,12 +20,13 @@ const roboto = Roboto({
 
 function ReportForm(props) {
   const { id, token } = props;
-
+  const router = useRouter();
   const [imgSrc, setImgSrc] = useState(null);
   const [text, setText] = useState();
 
   //Refs
   const messageRef = useRef();
+  const inputRef = useRef();
 
   const handleCloseDialog = () => {
     props.handlingCloseDialog();
@@ -34,15 +37,16 @@ function ReportForm(props) {
     console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        //console.log("imagePath:", imagePath);
         setImgSrc(imagePath);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
 
   const deleteImg = () => {
@@ -54,7 +58,7 @@ function ReportForm(props) {
     setText(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     if (text) {
       messageRef.current.style.display = "none";
       let temp = {
@@ -62,11 +66,19 @@ function ReportForm(props) {
         id_account_report: id,
         picture: imgSrc,
       };
-      PostReport(temp, token);
+      const message = await PostReport(temp, token);
       handleCloseDialog();
     } else {
+      toast.error("Vui lòng nhập thông tin");
       messageRef.current.style.display = "block";
     }
+  };
+
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -76,7 +88,11 @@ function ReportForm(props) {
         <div className={Styles["avatar-container"]}>
           <span className={Styles["name-container"]}>Nội dung báo cáo</span>
         </div>
-        <div className={Styles["info-container"]}>
+        <div
+          className={Styles["info-container"]}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
           <div className={Styles["row"]}>
             <span
               className={Styles["col"]}
@@ -99,7 +115,17 @@ function ReportForm(props) {
             className={Styles["row"]}
             style={{ width: "100%", justifyContent: "center" }}
           >
+            <Button
+              icon={<UploadOutlined />}
+              size={30}
+              onClick={() => {
+                inputRef.current.click();
+              }}
+            >
+              Upload ảnh
+            </Button>
             <input
+              ref={inputRef}
               accept=".jpg, .jpeg, .png, image/jpeg, image/png"
               type="file"
               onChange={handleFileUpload}
@@ -109,6 +135,7 @@ function ReportForm(props) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                display: "none",
               }}
             />
           </div>
@@ -130,6 +157,7 @@ function ReportForm(props) {
               </>
             )}
           </div>
+
           <span
             className={Styles["row"]}
             style={{

@@ -3,7 +3,7 @@ import Styles from "./CommentForm.module.css";
 import Rating from "@mui/material/Rating";
 import { useState } from "react";
 import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
-import { Input } from "antd";
+import { Input, Typography } from "antd";
 import MailOutlineOutlined from "@mui/icons-material/MailOutlineOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
@@ -51,24 +51,40 @@ function CommentForm(props) {
     inputRef.current.click();
   };
 
+  // function handleFileUpload(event) {
+  //   const file = event.target.files[0];
+  //   console.log(file);
+  //   const message = uploadImage(file);
+  //   const promiseResult = message;
+  //   promiseResult
+  //     .then((result) => {
+  //       const imagePath = result.imagePath;
+  //       console.log("imagePath:", imagePath);
+  //       setAvatarSrc(imagePath);
+  //       // let temp = { ...userProfile, avatar: imagePath };
+  //       // setUserProfile(temp);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi:", error);
+  //     });
+  // }
+
   function handleFileUpload(event) {
     const file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     const message = uploadImage(file);
     const promiseResult = message;
-    promiseResult
-      .then((result) => {
+    toast.promise(promiseResult, {
+      loading: "Đang tải lên...",
+      success: (result) => {
         const imagePath = result.imagePath;
-        console.log("imagePath:", imagePath);
+        //console.log("imagePath:", imagePath);
         setAvatarSrc(imagePath);
-        // let temp = { ...userProfile, avatar: imagePath };
-        // setUserProfile(temp);
-      })
-      .catch((error) => {
-        console.error("Lỗi:", error);
-      });
+        return "Tải lên thành công!";
+      },
+      error: "Lỗi tải lên!",
+    });
   }
-
   const handleClickProfile = (value) => {
     updateId(value);
     handleOpenDialog();
@@ -274,7 +290,17 @@ function CommentForm(props) {
             })
           ) : (
             <>
-              <Empty />
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                imageStyle={{
+                  height: 60,
+                }}
+                description={
+                  <Typography.Text style={{ opacity: "0.7" }}>
+                    Sản phẩm chưa có đánh giá
+                  </Typography.Text>
+                }
+              ></Empty>
             </>
           )}
         </div>

@@ -22,6 +22,8 @@ import toast from "react-hot-toast";
 import { Element, scroller } from "react-scroll";
 import Cookies from "js-cookie";
 import useFetchCart from "@/api/user/useFetchCart";
+import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
+import useFetchShopById from "@/api/shop/useFetchShopByPage";
 
 function Index() {
   const token = Cookies.get("token");
@@ -33,6 +35,9 @@ function Index() {
 
   // console.log(slug);
   const product = useFetchProductById(slug, token);
+
+  // const shop = useFetchShopById(slug);
+  // console.log(shop);
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState();
 
@@ -54,20 +59,33 @@ function Index() {
 
   const handlingAddCartItem = async (data) => {
     // console.log("----");
-    try {
-      const message = await addCartItem(data, token);
-      await mutate();
-      if (message) {
-        toast.success("Đã thêm vào giỏ");
-      } else {
+
+    if (data.stock > 0) {
+      try {
+        const message = await addCartItem(data, token);
+        await mutate();
+        if (message) {
+          toast.success("Đã thêm vào giỏ");
+        } else {
+          toast.error("Cần đăng nhập");
+          router.push("/auth/login");
+        }
+      } catch (error) {
         toast.error("Cần đăng nhập");
         router.push("/auth/login");
       }
-    } catch (error) {
-      toast.error("Cần đăng nhập");
-      router.push("/auth/login");
+    } else {
+      toast.error("Xin lỗi, mặt hàng này hiện tại đã hết");
     }
   };
+
+  function scrollToElement(element) {
+    const rect = element.getBoundingClientRect();
+    window.scrollTo({
+      top: rect.top + window.pageYOffset,
+      behavior: "smooth",
+    });
+  }
 
   useEffect(() => {
     if (router.query.nav) {
@@ -120,10 +138,11 @@ function Index() {
                 style={{
                   color: "var(--header-bg-top)",
                   scrollBehavior: "smooth",
+                  cursor: "pointer",
                 }}
                 onClick={(e) => {
-                  e.preventDefault();
-                  scrollToElement("danhGia");
+                  const targetElement = document.getElementById("danhGia");
+                  scrollToElement(targetElement);
                 }}
               >
                 <QuestionAnswerOutlinedIcon />

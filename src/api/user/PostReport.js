@@ -13,10 +13,9 @@ export const PostReport = async (data, token) => {
         },
       }
     );
-
-    toast.success("Report Account Successfully");
+    toast.success("Báo cáo tài khoản thành công");
     return response.data;
   } catch (error) {
-    toast.error(error.response.data.message);
+    toast.error("Cần đăng nhập");
   }
 };

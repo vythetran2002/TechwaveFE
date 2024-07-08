@@ -136,6 +136,7 @@ function ProductDetail(props) {
         quantity: quantity,
         price: parseInt(quantity) * parseInt(product.price),
         product_id: product.product_id,
+        stock: product.quantity,
       };
       props.handleAddCart(temp);
     } else if (product.option.length === 0) {
@@ -144,6 +145,7 @@ function ProductDetail(props) {
         quantity: quantity,
         price: parseInt(quantity) * parseInt(product.price),
         product_id: product.product_id,
+        stock: product.quantity,
       };
       props.handleAddCart(temp);
     } else {
@@ -465,7 +467,9 @@ function ProductDetail(props) {
                     className={Styles["button-top"]}
                     style={{ backgroundColor: "#f88e20" }}
                   >
-                    <span>Gọi ngay</span>
+                    <a href="tel:+1234567890" id="callButton">
+                      Gọi ngay
+                    </a>
                     <span>0816.789.439</span>
                   </button>
                   <button
