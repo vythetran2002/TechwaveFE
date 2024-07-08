@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 export const AcceptOrder = async (id, token) => {
   const url =
     process.env.NEXT_PUBLIC_API_URL + "/api/vendor/bill/approve/" + id;
-  // "http://localhost:3000/api/vendor/bill/approve/" + id;
 
   try {
     const response = await axios.put(

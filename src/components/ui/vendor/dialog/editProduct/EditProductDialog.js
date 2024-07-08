@@ -38,7 +38,9 @@ const roboto = Roboto({
 });
 
 export default function EditProductDialog(props) {
-  const categories = useFetch("http://localhost:3000/api/category");
+  const categories = useFetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/category"
+  );
   // console.log(categories);
   const { Option } = Select;
   const [parentCateId, setParentCateId] = useState(null);

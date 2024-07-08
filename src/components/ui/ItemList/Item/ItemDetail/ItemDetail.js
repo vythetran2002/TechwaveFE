@@ -459,7 +459,7 @@ function ItemDetail(props) {
                   <div className={Styles["medias-container"]}>
                     <FacebookShareButton
                       url={
-                        process.env.NEXT_PUBLIC_API_URL +
+                        process.env.NEXT_PUBLIC_WEB_URL +
                         "/product/" +
                         item.product_id
                       }

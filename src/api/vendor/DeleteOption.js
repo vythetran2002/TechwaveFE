@@ -9,7 +9,6 @@ export const DeleteOption = async (productId, optionId, token) => {
     "/remove/" +
     optionId;
 
-  // "http://localhost:3000/api/vendor/product/option/" +
   //   productId +
   //   "/remove/" +
   //   optionId;

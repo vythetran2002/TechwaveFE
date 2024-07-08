@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchCart = () => {
   const acToken = Cookies.get("token"); // Only get the 'token' cookie
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/user/cart";
-  // "http://localhost:3000/api/user/cart";
 
   // Check if token exists before creating the Authorization header
   const token = acToken && acToken != "undefined" ? `Bearer ${acToken}` : null;

@@ -5,33 +5,33 @@ This is an Ecommerce project named Techwave and bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev 
+npm run dev
 # or
 yarn dev
 # or
 pnpm dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) with your browser to see the result. 
-
+Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Roboto, a custom Google Font.
 
 ## Features
+
 **Common**
 
 - SignUp, Login, Forgot Password
 - Update Profile
-  
+
 **User**
 
-- Sharing products 
+- Sharing products
 - Add products to cart
 - Add favourite products
 - Checkout cart
 - Review products
 - Asisstant Chat bot (in progress)
-  
+
 **Vendor**
 
 - Products management
@@ -39,7 +39,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - View Revenue Statistics
 - Orders management
 - Coupons management
-  
+
 **Admin**
 
 - Accounts management
@@ -57,13 +57,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 For demonstration purposes, you can use the following accounts to access different roles in the system:
 
 Admin Account:
-   - Username: linh@gmail.com
-   - Password: abc
+
+- Username: linh@gmail.com
+- Password: abc
 
 Vendor Account:
-   - Username: huy@gmail.com
-   - Password: abc
+
+- Username: huy@gmail.com
+- Password: abc
 
 Customer Account:
-   - Username: vy@gmail.com
-   - Password: abc
+
+- Username: vy@gmail.com
+- Password: abc

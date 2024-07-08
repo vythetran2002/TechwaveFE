@@ -490,7 +490,7 @@ function ProductDetail(props) {
                   <div className={Styles["medias-container"]}>
                     <FacebookShareButton
                       url={
-                        process.env.NEXT_PUBLIC_API_URL +
+                        process.env.NEXT_PUBLIC_WEB_URL +
                         "/product/" +
                         product.product_id
                       }
@@ -503,7 +503,7 @@ function ProductDetail(props) {
                     <TwitterShareButton
                       title={"techwave"}
                       url={
-                        process.env.NEXT_PUBLIC_API_URL +
+                        process.env.NEXT_PUBLIC_WEB_URL +
                         "/product/" +
                         product.product_id
                       }

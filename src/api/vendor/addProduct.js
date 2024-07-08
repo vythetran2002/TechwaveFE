@@ -5,7 +5,6 @@ export const AddProduct = async (data, token) => {
   try {
     const response = await axios.post(
       process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product/create/",
-      // "http://localhost:3000/api/vendor/product/create/",
       data,
       {
         headers: {

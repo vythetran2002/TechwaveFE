@@ -8,7 +8,6 @@ export const PutProductDesc = async (id, data, token) => {
     id +
     "/edit";
 
-  // "http://localhost:3000/api/vendor/product/detail/" + id + "/edit";
   try {
     const response = await axios.put(
       url,

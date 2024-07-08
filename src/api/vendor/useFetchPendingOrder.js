@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchPendingOrders = (status, page, limit, myToken) => {
   const acToken = Cookies.get("token");
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/bill";
-  // "http://localhost:3000/api/vendor/bill/";
 
   const token = "Bearer " + acToken;
 

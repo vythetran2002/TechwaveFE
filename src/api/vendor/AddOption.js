@@ -8,7 +8,6 @@ export const AddOption = async (id, data, token) => {
         "/api/vendor/product/option/" +
         id +
         "/create",
-      // "http://localhost:3000/api/vendor/product/option/" + id + "/create",
       data,
       {
         headers: {

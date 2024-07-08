@@ -2,7 +2,6 @@ const axios = require("axios");
 import toast from "react-hot-toast";
 
 export const DeleteCategory = async (id, token) => {
-  // const url = "http://localhost:3000/api/admin/category/remove/" + id;
   const url =
     process.env.NEXT_PUBLIC_API_URL + "/api/admin/category/remove/" + id;
   const config = {

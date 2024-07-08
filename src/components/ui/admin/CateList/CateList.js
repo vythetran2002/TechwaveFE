@@ -10,7 +10,6 @@ import { Empty } from "antd";
 
 function CateList(props) {
   const { limit, page, token, updateMax } = props;
-  // const cates = useFetch("http://localhost:3000/api/category/");
   const cates = useFetchAdminCategories(page, limit, token);
   // console.log(cates);
 

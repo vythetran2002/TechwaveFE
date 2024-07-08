@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 export const DeleteProduct = async (productId, token) => {
   const url =
     process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product/remove/" + productId;
-  // "http://localhost:3000/api/vendor/product/remove/" + productId;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

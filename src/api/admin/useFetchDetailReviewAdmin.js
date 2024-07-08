@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 
 const useFetchDetailReviewAdmin = (myID) => {
   const acToken = Cookies.get("token");
-  // const url = "http://localhost:3000/api/admin/review/" + myID;
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/review/" + myID;
   const token = "Bearer " + acToken;
 
@@ -17,9 +16,8 @@ const useFetchDetailReviewAdmin = (myID) => {
   const fetcher = (url, headers) =>
     axios.get(myID ? url : null, { headers }).then((res) => res.data);
 
-  const { data, error, mutate, isValidating } = useSWR(
-    myID ? `http://localhost:3000/api/admin/review/${myID}` : null,
-    () => fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(myID ? url : null, () =>
+    fetcher(url, headers)
   );
 
   return {

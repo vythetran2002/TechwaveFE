@@ -15,7 +15,9 @@ const roboto = Roboto({
 
 function CateDetailDialog(props) {
   const { id } = props;
-  const cate = useFetch("http://localhost:3000/api/category/" + id);
+  const cate = useFetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/category/" + id
+  );
 
   if (cate.isLoading) {
     return <>Loading</>;

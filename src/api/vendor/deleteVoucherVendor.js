@@ -6,7 +6,6 @@ export const DeleteVoucherVendor = async (voucherId, token) => {
     process.env.NEXT_PUBLIC_API_URL +
     "/api/vendor/discount/delete/" +
     voucherId;
-  // "http://localhost:3000/api/vendor/discount/delete/" + voucherId;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -108,61 +108,6 @@ function Index() {
     setRole(e.target.value);
   };
 
-  const handleResgiter = async (e) => {
-    e.preventDefault();
-    let info = {
-      fullname: name,
-      email: email,
-      address: address,
-      phone: phone,
-      dob: date,
-      gender: gender,
-      username: username,
-      password: pass,
-    };
-
-    if (checkAllProperties(info)) {
-      if (role == "user") {
-        try {
-          // Gửi yêu cầu đăng nhập tới API
-          const response = await axios.post(
-            "http://localhost:3000/api/register",
-            info
-          );
-          if (response.data) {
-            console.log(response.data);
-            toast.success("Đăng ký thành công");
-            router.push("/auth/login");
-          }
-        } catch (error) {
-          console.error("Đăng ký thất bại", error);
-          toast.error("Đăng ký thất bại");
-          // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
-        }
-      } else if (role == "vendor") {
-        try {
-          // Gửi yêu cầu đăng nhập tới API
-          const response = await axios.post(
-            "http://localhost:3000/api/registerStaff",
-            info
-          );
-          if (response.data) {
-            console.log(response.data);
-            toast.success("Đăng ký thành công");
-            router.push("/auth/login");
-          }
-        } catch (error) {
-          console.error("Đăng ký thất bại", error);
-          toast.error("Đăng ký thất bại");
-          // Xử lý lỗi (hiển thị thông báo lỗi, v.v.)
-        }
-      }
-    } else {
-      messRef.current.style.display = "block";
-      toast.error("Cần nhập đầy đủ thông");
-    }
-  };
-
   const onFinish = async (values) => {
     let final = {
       ...values,

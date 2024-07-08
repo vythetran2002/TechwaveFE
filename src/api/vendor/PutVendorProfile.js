@@ -6,7 +6,6 @@ export const PutVendorProfile = async (data, token) => {
     const response = await axios.put(
       process.env.NEXT_PUBLIC_API_URL + "/api/vendor/account/edit",
 
-      // "http://localhost:3000/api/vendor/account/edit",
       data,
       {
         headers: {

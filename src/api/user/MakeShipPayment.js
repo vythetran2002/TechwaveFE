@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 //   try {
 //     const response = await axios.post(
 //       process.env.NEXT_PUBLIC_API_URL + "/api/user/createBill",
-//       // "http://localhost:3000/api/user/createBill",
 //       data,
 //       {
 //         headers: {

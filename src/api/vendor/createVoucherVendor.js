@@ -5,7 +5,6 @@ export const AddVoucherVendor = async (data, token) => {
   try {
     const response = await axios.post(
       process.env.NEXT_PUBLIC_API_URL + "/api/vendor/discount/create",
-      // "http://localhost:3000/api/vendor/discount/create",
       data,
       {
         headers: {

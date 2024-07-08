@@ -12,7 +12,6 @@ export const RemoveFollowVendor = async (id, token) => {
   try {
     const response = await axios.delete(
       process.env.NEXT_PUBLIC_API_URL + "/api/user/folow/remove/" + id,
-      // `http://localhost:3000/api/user/folow/remove/${id}`,
       config
     );
     toast.success("Unfollowed!");

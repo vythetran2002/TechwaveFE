@@ -9,7 +9,6 @@ export const PutOption = async (productId, optionId, data, token) => {
     "/edit/" +
     optionId;
 
-  // "http://localhost:3000/api/vendor/product/option/" +
   // productId +
   // "/edit/" +
   // optionId;

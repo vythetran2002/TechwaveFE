@@ -10,7 +10,7 @@ export const DeleteCartItem = async (id, token) => {
 
   try {
     const response = await axios.delete(
-      `http://localhost:3000/api/user/cart/remove/${id}`,
+      process.env.NEXT_PUBLIC_API_URL + `/api/user/cart/remove/${id}`,
       config
     );
 

@@ -7,9 +7,7 @@ import UserLoadingUI from "../UserLoadingUI/UserLoadingUI";
 import UserErrorUI from "../UserErrorUI/UserErrorUI";
 
 const CategoryList = () => {
-  // const cateList = UseFetchCate("http://localhost:3000/api/category/");
   // const { data, error, isLoading } = useSWR(
-  //   "http://localhost:3000/api/category/",
   //   fetcher
   // );
 

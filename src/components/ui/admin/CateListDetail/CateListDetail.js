@@ -16,7 +16,6 @@ function CateListDetail(props) {
   const id = router.query.slug;
   const { limit, page, token, updateMax } = props;
 
-  // const cates = useFetch("http://localhost:3000/api/category/");
   const cates = useFetchCateGoryDetail(id, page, limit, token);
   const handleMutate = () => {
     cates.mutate();

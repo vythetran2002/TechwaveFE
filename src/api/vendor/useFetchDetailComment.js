@@ -6,7 +6,6 @@ const fetcher = (url, headers) =>
 
 const useFetchDetailComment = (id, myToken) => {
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/review/" + id;
-  // "http://localhost:3000/api/vendor/review/" + id;
 
   const token = "Bearer " + myToken;
 
@@ -16,9 +15,8 @@ const useFetchDetailComment = (id, myToken) => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/vendor/review/${id}` : null,
-    () => fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
+    fetcher(url, headers)
   );
 
   return {

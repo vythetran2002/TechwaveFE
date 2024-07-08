@@ -5,7 +5,6 @@ export const sendPostRequestWithToken = async (data, token) => {
   try {
     const response = await axios.put(
       process.env.NEXT_PUBLIC_API_URL + "/api/user/account/edit",
-      // "http://localhost:3000/api/user/account/edit",
       data,
       {
         headers: {

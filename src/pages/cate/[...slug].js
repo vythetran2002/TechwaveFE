@@ -41,7 +41,6 @@ function CateIndex() {
     id1 = slug[1];
   }
 
-  // const listItem = useFetch("http://localhost:3000/api/category/" + slug);
   const listItem = useFetchCateListByPage(id0, id1, page, 10, filter);
 
   const cateList = useFetch(process.env.NEXT_PUBLIC_API_URL + "/api/category");

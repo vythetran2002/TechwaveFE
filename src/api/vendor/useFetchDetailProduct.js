@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchDetailProduct = (id) => {
   const acToken = Cookies.get("token");
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product/" + id;
-  //"http://localhost:3000/api/vendor/product/" + id;
 
   const token = "Bearer " + acToken;
 
@@ -18,9 +17,8 @@ const useFetchDetailProduct = (id) => {
     Authorization: `${token}`,
   };
 
-  const { data, error, mutate, isValidating } = useSWR(
-    id ? `http://localhost:3000/api/vendor/product/${id}` : null,
-    () => fetcher(url, headers)
+  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
+    fetcher(url, headers)
   );
 
   return {

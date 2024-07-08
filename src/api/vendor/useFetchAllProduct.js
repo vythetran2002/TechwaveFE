@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchAllProduct = () => {
   const acToken = Cookies.get("token");
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/vendor/product";
-  // "http://localhost:3000/api/vendor/product/";
 
   const token = "Bearer " + acToken;
 

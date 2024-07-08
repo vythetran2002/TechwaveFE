@@ -215,7 +215,8 @@ function Index() {
           amount: amount,
           bankCode: null,
           language: "vn",
-          returnUrl: "http://localhost:3001/user/account/transaction",
+          returnUrl:
+            process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
           carts: extractCartIds(objectsArray),
         };
         //  console.log(temp2);
@@ -228,7 +229,7 @@ function Index() {
       //       parseInt(calculateTotalValue(objectsArray)) + parseInt(shipFee),
       //     bankCode: null,
       //     language: "vn",
-      //     returnUrl: "http://localhost:3001/user/account/transaction",
+
       //   },
       //   cookie["token"]
       // );

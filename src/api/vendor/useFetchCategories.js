@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchCategories = () => {
   const acToken = Cookies.get("token");
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/category/";
-  // "http://localhost:3000/api/category/";
 
   const token = "Bearer " + acToken;
 

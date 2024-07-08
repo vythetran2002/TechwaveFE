@@ -9,7 +9,6 @@ const useFetchVoucherByShopId = (shopId) => {
   const acToken = Cookies.get("token");
   const url =
     process.env.NEXT_PUBLIC_API_URL + "/api/user/discount?idshop=" + shopId;
-  // "http://localhost:3000/api/user/discount?idshop=" + shopId;
   const token = "Bearer " + acToken;
 
   const headers = {

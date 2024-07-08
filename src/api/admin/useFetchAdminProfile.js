@@ -8,7 +8,6 @@ const fetcher = (url, headers) =>
 const useFetchAdminProfile = () => {
   // const [cookies] = useCookies();
   const acToken = Cookies.get("token");
-  // const url = "http://localhost:3000/api/admin/account/detail";
 
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/admin/account/detail";
 

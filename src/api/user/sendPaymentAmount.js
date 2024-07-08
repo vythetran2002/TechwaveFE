@@ -5,7 +5,6 @@ export const SendPaymentAmount = async (data, token) => {
   try {
     const response = await axios.post(
       process.env.NEXT_PUBLIC_API_URL + "/api/user/payment/create_payment_url",
-      // "http://localhost:3000/api/user/payment/create_payment_url",
       data,
       {
         headers: {

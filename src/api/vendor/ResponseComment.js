@@ -5,7 +5,6 @@ export const ResponseComment = async (data, token) => {
   try {
     const response = await axios.post(
       process.env.NEXT_PUBLIC_API_URL + "/api/vendor/response",
-      // "http://localhost:3000/api/vendor/response",
       data,
       {
         headers: {
