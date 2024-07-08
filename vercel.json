@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/product/[^/]+", "dest": "/product/[slug]" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
