@@ -13,6 +13,9 @@ import images from "@/assets/images";
 
 import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 
+const avatarSrc =
+  "https://png.pngtree.com/png-vector/20220718/ourmid/pngtree-chat-bot-icon-vector-png-image_5569967.png";
+
 const InComingChat = (props) => {
   const { avatar, message, messages, updateContent } = props;
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +59,7 @@ const InComingChat = (props) => {
     return (
       <li className={Styles["chat-incoming"]}>
         <div className={Styles["avatar-wrapper"]}>
-          <img src={images.techwave} alt="" className={Styles.avatar} />
+          <img src={avatarSrc} alt="" className={Styles.avatar} />
         </div>
         <div className={Styles["incoming-text"]}>
           <div className={Styles["loader"]}>
@@ -71,13 +74,7 @@ const InComingChat = (props) => {
     return (
       <li className={Styles["chat-incoming"]}>
         <div className={Styles["avatar-wrapper"]}>
-          <img
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/2048px-ChatGPT_logo.svg.png"
-            }
-            alt=""
-            className={Styles.avatar}
-          />
+          <img src={avatarSrc} alt="" className={Styles.avatar} />
         </div>
         <p className={Styles["incoming-text"]}>Something's wrong ...</p>
       </li>
@@ -86,13 +83,7 @@ const InComingChat = (props) => {
     return (
       <li className={Styles["chat-incoming"]}>
         <div className={Styles["avatar-wrapper"]}>
-          <img
-            src={
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/2048px-ChatGPT_logo.svg.png"
-            }
-            alt=""
-            className={Styles.avatar}
-          />
+          <img src={avatarSrc} alt="" className={Styles.avatar} />
         </div>
         <p className={Styles["incoming-text"]}>{data}</p>
       </li>
@@ -114,9 +105,6 @@ const OutgoingChat = (props) => {
     </li>
   );
 };
-
-const avatarSrc =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS2M_ic4B2hXod3eQgo54NjQjE-A4ipn4JmA&s";
 
 function ChatBotWidget(props) {
   const { scrollVisible, scrollToTop } = props;

@@ -5,11 +5,12 @@ import ProductItem from "./ProductItem";
 import { useEffect } from "react";
 import useFetchProductsByPage from "@/api/vendor/useFetchProductsByPage";
 import { Diversity1TwoTone } from "@mui/icons-material";
+import { Empty, Typography } from "antd";
 
 function ProductList(props) {
   const { limit, page, token, updateMax } = props;
   const products = useFetchProductsByPage(page, limit, token);
-  // console.log(products);
+  console.log(products.data);
 
   useEffect(() => {
     if (products.data) {
@@ -67,7 +68,7 @@ function ProductList(props) {
               <SortOutlinedIcon />
             </div>
           </div>
-          {products.data.results.lenght != 0 ? (
+          {products.data.results.length != 0 ? (
             products.data.results.map((productItem, index) => {
               return (
                 <React.Fragment key={"productItem" + index}>

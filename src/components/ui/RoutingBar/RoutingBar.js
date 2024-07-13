@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function RoutingBar(props) {
   const { product } = props;
-  console.log(product);
+  // console.log(product);
 
   if (product)
     return (

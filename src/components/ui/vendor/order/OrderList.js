@@ -195,7 +195,7 @@ function OrderList(props) {
           </div>
           {pendingOrders.data.results.length != 0 ? (
             pendingOrders.data.results.map((order, index) => {
-              if (order.shop_bill_id.length != 0)
+              if (order.cart_shop.length != 0)
                 return (
                   <React.Fragment key={"order" + index}>
                     <OrderItem

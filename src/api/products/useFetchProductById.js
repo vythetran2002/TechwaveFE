@@ -20,7 +20,7 @@ const useFetchProductById = (id) => {
     headers.Authorization = ` ${token}`;
   }
 
-  const { data, error, mutate, isValidating } = useSWR(token ? url : url, () =>
+  const { data, error, mutate, isValidating } = useSWR(id ? url : null, () =>
     fetcher(url, headers)
   );
 

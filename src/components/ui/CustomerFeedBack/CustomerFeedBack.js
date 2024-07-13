@@ -13,8 +13,7 @@ function CustomerFeedBack() {
               <div className={Styles["message-tail"]}></div>
               <div className={Styles["message-wrapper"]}>
                 <span>
-                  Neque porro quisquam est qui dolorem ipsum quia dolor sit
-                  amet, consectetur, adipisci velit...
+                  Giao hàng nhanh, sản phẩm chất lượng, tôi hoàn toàn hài lòng!
                 </span>
               </div>
             </div>
@@ -37,8 +36,7 @@ function CustomerFeedBack() {
               <div className={Styles["message-tail"]}></div>
               <div className={Styles["message-wrapper"]}>
                 <span>
-                  Neque porro quisquam est qui dolorem ipsum quia dolor sit
-                  amet, consectetur, adipisci velit...
+                  Trang web đơn giản và dễ sử dụng, rất tiện lợi khi mua sắm!
                 </span>
               </div>
             </div>
@@ -61,8 +59,7 @@ function CustomerFeedBack() {
               <div className={Styles["message-tail"]}></div>
               <div className={Styles["message-wrapper"]}>
                 <span>
-                  Neque porro quisquam est qui dolorem ipsum quia dolor sit
-                  amet, consectetur, adipisci velit...
+                  Sản phẩm đa dạng, giá cả hợp lý, tôi sẽ tiếp tục ủng hộ!
                 </span>
               </div>
             </div>

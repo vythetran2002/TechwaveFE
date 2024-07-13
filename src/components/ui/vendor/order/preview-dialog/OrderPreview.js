@@ -29,6 +29,8 @@ const handleStatus = (value) => {
 function OrderPreview(props) {
   const { order, status } = props;
 
+  console.log(order);
+
   if (order)
     return (
       <>
@@ -206,8 +208,8 @@ function OrderPreview(props) {
             </div>
             <div className={Styles["order-container"]}>
               <div className={Styles["list-product-container"]}>
-                {order?.shop_bill_id.length != 0 ? (
-                  order?.shop_bill_id.map((cart, index) => {
+                {order?.cart_shop.length != 0 ? (
+                  order?.cart_shop.map((cart, index) => {
                     return (
                       <React.Fragment key={cart.cart.cart_id}>
                         <ChildItem data={cart} />

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Styles from "./styles.module.css";
 import { memo } from "react";
-import { Empty } from "antd";
+import { Empty, Typography } from "antd";
 
 function HtmlContent({ htmlString }) {
   return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
@@ -25,7 +25,17 @@ function Blog(props) {
           className={Styles["blog-wrapper"]}
           style={{ justifyContent: "center" }}
         >
-          <Empty />
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            imageStyle={{
+              height: 60,
+            }}
+            description={
+              <Typography.Text style={{ opacity: "0.7" }}>
+                Sản phẩm chưa có mô tả
+              </Typography.Text>
+            }
+          ></Empty>
         </article>
       </div>
     );

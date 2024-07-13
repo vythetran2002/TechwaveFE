@@ -88,6 +88,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
+  align-items: center;
 }
 .avatar {
   height: 154px;
@@ -385,4 +387,12 @@
   align-items: center;
   gap: 20px;
   width: 100%;
+}
+.product-detail-name-wrapper {
+  display: block;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Hoặc bất kỳ chiều rộng nào bạn muốn */
 }

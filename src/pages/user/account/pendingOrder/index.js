@@ -14,9 +14,8 @@ import Cookies from "js-cookie";
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchUserPendingProducts();
+  // console.log(orders);
   const token = Cookies.get("token");
-
-  console.log("MY ORDER", orders);
 
   // const router = useRouter();
   // const { query } = router;
@@ -70,7 +69,7 @@ function Index() {
                 {orders.data ? (
                   orders.data.length != 0 ? (
                     orders.data.map((item, index) => {
-                      if (item.shop_bill_id.length != 0)
+                      if (item.cart_shop.length != 0)
                         return (
                           <React.Fragment key={"item" + index}>
                             <PurchaseItemCard

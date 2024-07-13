@@ -25,7 +25,7 @@ function PurchaseItemCard(props) {
   const router = useRouter();
   const { card, status } = props;
 
-  console.log(card);
+  // console.log("CARRRRDD", card);
 
   const handleClickPay = (value) => {
     router.push(value);
@@ -33,22 +33,21 @@ function PurchaseItemCard(props) {
 
   const handleGoToComment = () => {
     router.push({
-      pathname: "/product/" + card.shop_bill_id[0].cart.product.product_id,
+      pathname: "/product/" + card.cart_shop[0].cart.product.product_id,
       query: {
         nav: "danhGia",
       },
     });
   };
 
-  const handleReceive = () => {
-    const message = HandleReceiveOrder(card.bill_id, props.token);
+  const handleReceive = async () => {
+    const message = await HandleReceiveOrder(card.shop_bill_id, props.token);
     console.log(message);
     router.push("/user/account/received");
   };
 
   const handleCancle = async () => {
-    console.log("askldjlsakjdlksa");
-    const message = await HandleCancleOrder(card.bill_id, props.token);
+    const message = await HandleCancleOrder(card.shop_bill_id, props.token);
     await props.handleMutateCancleOrder();
   };
 
@@ -518,11 +517,21 @@ function PurchaseItemCard(props) {
                   {status === 3 && (
                     <div className={Styles["item-status-wrapper"]}>
                       <span className={Styles["item-status-wrapper"]}>
-                        <CloseOutlinedIcon />
+                        {props.isShopReject ? (
+                          <CloseOutlinedIcon style={{ color: "red" }} />
+                        ) : (
+                          <CloseOutlinedIcon />
+                        )}
                       </span>
-                      <span style={{ marginLeft: "10px" }}>
-                        Đơn hàng đã bị Shop {card.shopname} huỷ
-                      </span>
+                      {props.isShopReject ? (
+                        <span style={{ marginLeft: "10px", color: "red" }}>
+                          Đơn hàng đã bị Shop {card.shopname} huỷ
+                        </span>
+                      ) : (
+                        <span style={{ marginLeft: "10px" }}>
+                          Bạn đã huỷ đơn hàng của Shop {card.shopname}
+                        </span>
+                      )}
                     </div>
                   )}
 
@@ -548,8 +557,8 @@ function PurchaseItemCard(props) {
               </div>
             </div>
             <div className={Styles["card-body"]}>
-              {card?.shop_bill_id.length != 0 ? (
-                card?.shop_bill_id.map((cart, index) => {
+              {card?.cart_shop.length != 0 ? (
+                card?.cart_shop.map((cart, index) => {
                   return (
                     <React.Fragment key={cart.cart.cart_id}>
                       <ChildItem data={cart} />

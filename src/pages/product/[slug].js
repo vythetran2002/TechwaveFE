@@ -21,6 +21,7 @@ import { addCartItem } from "@/api/user/addCartItem";
 import toast from "react-hot-toast";
 import { Element, scroller } from "react-scroll";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 import useFetchCart from "@/api/user/useFetchCart";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import useFetchShopById from "@/api/shop/useFetchShopByPage";
@@ -57,10 +58,9 @@ function Index() {
     setReload(!reload);
   };
 
-  const handlingAddCartItem = async (data) => {
+  const handlingAddCartItem = async (data, stock) => {
     // console.log("----");
-
-    if (data.stock > 0) {
+    if (stock > 0) {
       try {
         const message = await addCartItem(data, token);
         await mutate();
@@ -99,7 +99,16 @@ function Index() {
   }, [router.query.nav, product.data]);
 
   if (product.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <Layout>
+          <FullScreenLoader />
+        </Layout>
+      </>
+    );
   }
 
   if (product.isError) {
@@ -170,6 +179,7 @@ function Index() {
             review={product.data.review}
             productId={product.data.product_id}
             token={token}
+            mutate={product.mutate}
             status={product.data.statusReview}
           />
           <Dialog

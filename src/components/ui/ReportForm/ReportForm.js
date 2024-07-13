@@ -66,10 +66,11 @@ function ReportForm(props) {
         id_account_report: id,
         picture: imgSrc,
       };
+      console.log(temp);
       const message = await PostReport(temp, token);
       handleCloseDialog();
     } else {
-      toast.error("Vui lòng nhập thông tin");
+      toast.error("Vui lòng nhập nội dung báo cáo");
       messageRef.current.style.display = "block";
     }
   };

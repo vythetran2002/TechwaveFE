@@ -15,6 +15,7 @@ function Index() {
   const rejectedOrders = useFetchRejectedOrders();
 
   const token = Cookies.get("token");
+
   // const router = useRouter();
   // const { query } = router;
 
@@ -48,7 +49,7 @@ function Index() {
                 {orders.data ? (
                   orders.data.length != 0 ? (
                     orders.data.map((item, index) => {
-                      if (item.shop_bill_id.length != 0)
+                      if (item.cart_shop.length != 0)
                         return (
                           <React.Fragment key={"item" + index}>
                             <PurchaseItemCard
@@ -70,10 +71,11 @@ function Index() {
                 {rejectedOrders.data ? (
                   rejectedOrders.data.length != 0 ? (
                     rejectedOrders.data.map((item, index) => {
-                      if (item.shop_bill_id.length != 0)
+                      if (item.cart_shop.length != 0)
                         return (
                           <React.Fragment key={"item" + index}>
                             <PurchaseItemCard
+                              isShopReject={true}
                               token={token}
                               card={item}
                               status={3}

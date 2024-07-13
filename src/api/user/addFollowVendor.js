@@ -1,13 +1,12 @@
 const axios = require("axios");
 import toast from "react-hot-toast";
 
-export const addFollowVendor = (id, token) => {
+export const addFollowVendor = async (id, token) => {
   const data = {
     vender_id: id,
   };
-
   try {
-    const response = axios.post(
+    const response = await axios.post(
       process.env.NEXT_PUBLIC_API_URL + "/api/user/folow/add",
       data,
       {
@@ -16,10 +15,9 @@ export const addFollowVendor = (id, token) => {
         },
       }
     );
-    toast.success("Followed");
-    // Xử lý kết quả response ở đây (nếu cần)
     return response.data;
   } catch (error) {
-    toast.error(error.response.data.message);
+    // toast.error(error.response.data.message);
+    throw error;
   }
 };

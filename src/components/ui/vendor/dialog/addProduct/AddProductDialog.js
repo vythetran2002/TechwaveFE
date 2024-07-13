@@ -150,6 +150,8 @@ export default function AddProductDialog(props) {
     const message = await AddProduct(final, props.token);
     await props.mutate();
     props.handleClose();
+    setAvatarSrc(null);
+    setChecked(false);
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Mời nhập lại thông tin");

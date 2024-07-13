@@ -26,7 +26,6 @@ const useFetchCateListByPage = (id0, id1, page, limit, filter) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `${token}`,
   };
 
   if (acToken && acToken != "undefined") {

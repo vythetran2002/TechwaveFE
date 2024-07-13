@@ -50,7 +50,7 @@ function Index() {
               {orders.data ? (
                 orders.data.length != 0 ? (
                   orders.data.map((item, index) => {
-                    if (item.shop_bill_id.length != 0)
+                    if (item.cart_shop.length != 0)
                       return (
                         <React.Fragment key={"item" + index}>
                           <PurchaseItemCard

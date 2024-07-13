@@ -2,8 +2,8 @@ import axios from "axios";
 
 const URL = "https://api.coze.com/open_api/v2/chat";
 const API_KEY =
-  "pat_dfKCtemCTB3z1722KiXZQePBPp6DUWMA2CF2dzsKoKzCHH6bT0BW9THsUR6KbPCT";
-const BOT_ID = "7380381810368495623";
+  "pat_nuA2V4Pt8xJSmNn2lAzK1bivk7QSJenAumMo9kQSIIB3gg8pNGCPy40EyJKaQhIR";
+const BOT_ID = "7390017177010765831";
 
 export const sendMessageToCoze = async (messsage) => {
   try {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import VendorLayout from "@/components/layout/VendorLayout";
 import Head from "next/head";
 import Styles from "../../styles.module.css";
-import { Row, Col, Divider, Empty, Typography } from "antd";
+import { Row, Col, Divider, Empty, Typography, Tooltip } from "antd";
 import { useRouter } from "next/router";
 import useFetchDetailProduct from "@/api/vendor/useFetchDetailProduct";
 import Image from "next/image";
@@ -93,18 +93,21 @@ function Index() {
                       ></Image>
                     )}
                   </div>
-                  <span
-                    style={{
-                      fontSize: "35px",
-                      fontWeight: "600",
-                      textDecoration: "bold",
-                      width: "100%",
-                      textAlign: "center",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    {product.data.name}
-                  </span>
+                  <Tooltip title={product.data.name}>
+                    <span
+                      className={Styles["product-detail-name-wrapper"]}
+                      style={{
+                        fontSize: "35px",
+                        fontWeight: "600",
+                        textDecoration: "bold",
+                        width: "100%",
+                        textAlign: "center",
+                        marginBottom: "20px",
+                      }}
+                    >
+                      {product.data.name}
+                    </span>
+                  </Tooltip>
                 </Row>
                 <Row className="gutter-row">
                   <span className={Styles["detail-item-heading"]}>

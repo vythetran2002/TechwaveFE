@@ -27,6 +27,7 @@ import UserErrorUI from "@/components/ui/UserErrorUI/UserErrorUI";
 import ScrollOnTopWidget from "@/components/ui/ScrollOnTopWidget/ScrollOnTopWidget";
 import { Element, scroller } from "react-scroll";
 import useFetchTrending from "@/api/products/useFetchTrending";
+import CozeChat from "@/components/ui/CozeChat/CozeChat";
 
 function Index() {
   const token = Cookies.get("token");
@@ -37,8 +38,8 @@ function Index() {
   const trending = useFetchTrending();
   const cateList01 = useFetchProductByCateId(2);
   // console.log(cateList01);
-  const cateList02 = useFetchProductByCateId(16);
-  const cateList03 = useFetchProductByCateId(4);
+  const cateList02 = useFetchProductByCateId(19);
+  const cateList03 = useFetchProductByCateId(25);
   const route = useRouter();
   const [reload, setReload] = useState(false);
 
@@ -69,13 +70,12 @@ function Index() {
     const message = await addFavouriteProduct(id, token);
   };
 
-  const handlingAddCartItem = async (data) => {
+  const handlingAddCartItem = async (data, stock) => {
     // console.log(data);
-    if (data.stock > 0) {
+    if (stock > 0) {
       try {
-        const { quantity, price, product_id } = data;
-        const temp = { quantity, price, product_id };
-        const message = await addCartItem(temp, token);
+        console.log(data);
+        const message = await addCartItem(data, token);
         await mutate();
         // console.log(data);
         if (message) {
@@ -148,9 +148,6 @@ function Index() {
       </Head>
       <Layout handleScrollToTrending={handleScrollToTrending} isHomePage={true}>
         <Toaster />
-        <Link href="#trending" ref={trendingNavRef}>
-          HEHE
-        </Link>
         <CategoryList />
         <Slider />
         <ServiceList />
@@ -316,7 +313,8 @@ function Index() {
           handlingOpenDialog={handlingOpenDialog}
           handlingCloseDialog={handlingCloseDialog}
         />
-        <ChatBotWidget scrollVisible={isVisible} scrollToTop={scrollToTop} />
+        {/* <ChatBotWidget scrollVisible={isVisible} scrollToTop={scrollToTop} /> */}
+        {/* <CozeChat /> */}
       </Layout>
     </>
   );

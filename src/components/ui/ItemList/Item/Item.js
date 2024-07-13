@@ -39,9 +39,9 @@ function Item(props) {
   const handlingAddCartItem = () => {
     if (props.item.option.length != 0) {
       handlingOpenDialog();
-      // toast("Hãy chọn loại sản phẩm", {
-      //   icon: "⌨️",
-      // });
+      toast("Hãy chọn loại sản phẩm", {
+        icon: "📦",
+      });
     } else {
       let id = props.item.product_id;
       let quantity = 1;
@@ -52,10 +52,8 @@ function Item(props) {
         quantity: quantity,
         price: price,
         product_id: id,
-        stock: stock,
       };
-
-      props.addCartItem(temp);
+      props.addCartItem(temp, stock);
     }
   };
 
@@ -85,12 +83,12 @@ function Item(props) {
                   </div>
                 </>
               ) : (
-                <Link
+                <div
                   style={{ width: "100%", height: "100%" }}
                   handlingOpenDialog
                 >
-                  <Image src={images.image8} alt="" className={Styles["img"]} />
-                </Link>
+                  <Image src={images.nonImg} alt="" className={Styles["img"]} />
+                </div>
               )}
             </div>
             <span className={Styles["item-title-container"]}>

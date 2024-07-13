@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import e from "cors";
 import Empty from "antd/lib/empty";
 import Image from "next/image";
+import { Image as AntImage } from "antd";
 import images from "@/assets/images";
 import dayjs from "dayjs";
 import { Divider } from "@mui/joy";
@@ -21,8 +22,15 @@ import toast from "react-hot-toast";
 const { TextArea } = Input;
 
 function CommentForm(props) {
-  const { status, review, productId, token, updateId, handleOpenDialog } =
-    props;
+  const {
+    status,
+    review,
+    productId,
+    token,
+    updateId,
+    handleOpenDialog,
+    mutate,
+  } = props;
   const [value, setValue] = useState(null);
   const [cmt, setCmt] = useState("");
   const [avatarSrc, setAvatarSrc] = useState();
@@ -77,9 +85,7 @@ function CommentForm(props) {
     toast.promise(promiseResult, {
       loading: "Đang tải lên...",
       success: (result) => {
-        const imagePath = result.imagePath;
-        //console.log("imagePath:", imagePath);
-        setAvatarSrc(imagePath);
+        mutate();
         return "Tải lên thành công!";
       },
       error: "Lỗi tải lên!",
@@ -90,7 +96,7 @@ function CommentForm(props) {
     handleOpenDialog();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (value == null || cmt == "") {
       messageRef.current.style.display = "block";
     } else {
@@ -101,9 +107,18 @@ function CommentForm(props) {
         product_id: productId,
         picture: avatarSrc,
       };
+      //const message = PostComment(temp, token);
       const message = PostComment(temp, token);
+      const promiseResult = message;
+      toast.promise(promiseResult, {
+        loading: "Loading ...",
+        success: (result) => {
+          return "Bình luận thành công";
+        },
+        error: "Something went wrong!",
+      });
       console.log(message);
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -174,7 +189,7 @@ function CommentForm(props) {
                         </span>
                         <span style={{ marginTop: "20px" }}>
                           {review.picture && (
-                            <Image
+                            <AntImage
                               style={{ borderRadius: "5px" }}
                               src={review.picture}
                               alt=""

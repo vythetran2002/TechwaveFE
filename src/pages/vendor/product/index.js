@@ -147,7 +147,11 @@ function Index() {
             mutate={mutate}
           />
           <div
-            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
             {page && (
               <Pagination onChange={handlePaging} count={max} size="large" />

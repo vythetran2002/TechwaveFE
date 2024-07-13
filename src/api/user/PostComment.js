@@ -13,7 +13,6 @@ export const PostComment = async (data, token) => {
       }
     );
 
-    toast.success("Comment posted");
     return response.data;
   } catch (error) {
     toast.error(error.response.data.message);

@@ -2,6 +2,7 @@ import React from "react";
 import Styles from "./styles.module.css";
 import { Roboto } from "next/font/google";
 import Image from "next/image";
+import { Image as AntdImage } from "antd";
 import images from "@/assets/images";
 import useFetchReportById from "@/api/admin/useFetchReportById";
 import dayjs from "dayjs";
@@ -25,6 +26,7 @@ const handleStatus = (status) => {
 function ReportDetailDialog(props) {
   const { id } = props;
   const report = useFetchReportById(id);
+  console.log(report);
   // console.log(report);
   if (report.isLoading) {
     return <>Loading</>;
@@ -72,6 +74,7 @@ function ReportDetailDialog(props) {
             </div>
           </div>
           <div className={Styles["content-container"]}>
+            <span style={{ fontWeight: "600" }}>NỘI DUNG</span>
             {report.data.content}
           </div>
           <div
@@ -84,7 +87,7 @@ function ReportDetailDialog(props) {
             }}
           >
             {report.data.picture ? (
-              <Image
+              <AntdImage
                 src={report.data.picture}
                 alt=""
                 width={200}

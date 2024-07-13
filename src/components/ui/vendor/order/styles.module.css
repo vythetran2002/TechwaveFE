@@ -29,6 +29,7 @@
 }
 .head-title {
   color: white;
+  text-align: center;
 }
 .fullname-wrapper {
   display: flex;

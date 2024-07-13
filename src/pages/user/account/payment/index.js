@@ -35,8 +35,12 @@ import { getVoucherByVoucherId } from "@/api/user/payment/getVoucherByVoucherId"
 import { formatCurrencyVoucher } from "@/assets/utils/FormatCurrencyVoucher";
 import { UpdateArrayAtPosition } from "@/assets/utils/payment/UpdateArrayAtPosition";
 import PaymentItem from "@/components/ui/PaymentItem/PaymentItem";
+import { updateCartQuantities } from "@/assets/utils/payment/handleCheckout/handleContinueCheckout";
+import { filterZeroQuantityCarts } from "@/assets/utils/payment/handleCheckout/handleContinueCheckout";
+import { updateContinueShop } from "@/assets/utils/payment/handleCheckout/handleContinueCheckout";
 import { removeProductFromCart } from "@/assets/utils/payment/handleCheckout/removeProductFromCart";
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
+import { UpdateCartItem } from "@/api/user/updateCartItem";
 import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
 
 function extractCartIds(cartItems) {
@@ -113,7 +117,10 @@ function Index() {
   const [discount, setDiscount] = useState(null);
   const [chosenVoucherId, setChosenVoucherId] = useState(null);
   const [techwaveVoucher, setTechwaveVoucher] = useState(null);
+  const [zeroQuantityProducts, setZeroQuantityProducts] = useState([]);
   const [failedProduct, setFailedProduct] = useState();
+  const [successProduct, setSuccessProduct] = useState();
+  const [isDisabledCheckoutBtn, setDisabledCheckoutBtn] = useState(false);
 
   // PopUp Modals
   const [openPopup, setOpenPopup] = useState(false);
@@ -281,31 +288,112 @@ function Index() {
   };
 
   // Ve trang chu
-  const handleGoToHomePage = () => {
-    router.push("/");
-    toast.success("Đã trở lại trang chủ");
+  const handleGoToHomePage = async (listItem) => {
+    if (listItem.length > 0) {
+      listItem.map(async (item, index) => {
+        console.log(item.cart_id);
+        const message = await DeleteCartItem(item.cart_id, token);
+        console.log(message);
+      });
+      toast.success("Đã xoá sản phẩm khỏi giỏ hàng");
+      router.push("/");
+    } else {
+      router.push("/");
+      toast.success("Đã trở lại trang chủ");
+    }
   };
 
   // Xoa san pham
-  const handleDeleteProduct = async (productId, token) => {
-    try {
-      // const res = await DeleteCartItem(productId, token);
-      // const data = decodeURIComponent(router.query.data);
-      console.log(objectsArray);
-      console.log(failedProduct);
-      let newData = removeProductFromCart(objectsArray, failedProduct.cart);
-      const stringifiedData = JSON.stringify(newData);
-      const encodedData = encodeURIComponent(stringifiedData);
-      console.log(encodedData);
-      // router.push(`/user/account/payment?data=${encodedData}`);
-    } catch (e) {
-      console.log(e);
+  // const handleDeleteProduct = async (productId, token) => {
+  //   try {
+  //     // const res = await DeleteCartItem(productId, token);
+  //     // const data = decodeURIComponent(router.query.data);
+  //     console.log(objectsArray);
+  //     console.log(failedProduct);
+  //     let newData = removeProductFromCart(objectsArray, failedProduct.cart);
+  //     const stringifiedData = JSON.stringify(newData);
+  //     const encodedData = encodeURIComponent(stringifiedData);
+  //     console.log(encodedData);
+  //     // router.push(`/user/account/payment?data=${encodedData}`);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
+  const handleUpdateCarts = async (listCarts) => {
+    listCarts.map(async (item) => {
+      const message = await UpdateCartItem(item.cart_id, item.quantity, token);
+    });
+  };
+
+  // Tiep tuc thanh toan
+  const handleContinueCheckout = async () => {
+    // Kiem tra xem co san pham nao het hang hay khong
+    let newFailedProduct = updateCartQuantities(failedProduct.cart);
+    // Thuc hien Update Carts
+    const processUpdateCarts = await handleUpdateCarts(newFailedProduct);
+    // Tao new body
+    let newShopCards = updateContinueShop(
+      newFailedProduct,
+      successProduct.shop
+    );
+    let newInfo = { ...successProduct };
+    newInfo.shop = newShopCards;
+    if (option == "ship") {
+      try {
+        const messagePromise = MakeShipPayment(newInfo, token);
+
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
+
+        const message = await messagePromise;
+
+        if (message.success) {
+          // console.log("Thanh toán thành công:", message.data);
+          toast.success("Thanh toán thành công");
+          router.push("/user/account/pendingOrder");
+          // Xử lý khi thanh toán thành công
+        } else {
+          toast.error("Thanh toán thất bại");
+          // console.log("Thanh toán thất bại:", message.data || message.error);
+          showModalPopup();
+          setFailedProduct(message.data);
+          // Kiem tra xem co san pham nao het hang hay khong
+          let newFailedProduct = updateCartQuantities(message.data.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
+          // console.log(zeroQuantityCarts);
+          // Xử lý khi thanh toán thất bại
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const onFinish = async (values) => {
     let info = {
       ...values,
+      email: user.data.email,
       totalBill: total, // TONG CONG
       shipFee: techwaveVoucher?.result
         ? calculateDiscountFreeShip(shipFee, techwaveVoucher?.result)
@@ -319,41 +407,63 @@ function Index() {
     info.province = info.province.value;
     info.district = info.district.value;
     info.ward = info.ward.value;
-    console.log("Sucessssss", info);
+    console.log("FINALL", info);
+    setSuccessProduct(info);
+
     if (option == "ship") {
-      // console.log (temp);
       try {
-        const message = await MakeShipPayment(info, token);
-        if (message.success) {
-          console.log("Thanh toán thành công:", message.data);
+        const messagePromise = MakeShipPayment(info, token);
+
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
+
+        const result = await messagePromise;
+
+        if (result.success) {
           toast.success("Thanh toán thành công");
           router.push("/user/account/pendingOrder");
-          // Xử lý khi thanh toán thành công
         } else {
           toast.error("Thanh toán thất bại");
-          console.log("Thanh toán thất bại:", message.data || message.error);
           showModalPopup();
-          setFailedProduct(message.data);
-          // Xử lý khi thanh toán thất bại
+          setFailedProduct(result.data);
+
+          let newFailedProduct = updateCartQuantities(result.data.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
         }
-        //console.log(message);
-        // toast.success("Thanh toán thành công");
-        //  router.push("/user/account/pendingOrder");
       } catch (error) {
         console.log(error);
+        toast.error("Đã xảy ra lỗi");
       }
     }
     if (option == "vnpay") {
-      let amount = info.totalBill;
       let temp2 = {
-        amount: amount,
         bankCode: null,
         language: "vn",
-        returnUrl:
-          process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
-        carts: info,
+        // returnUrl:
+        //   process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
+        ...info,
       };
-      const message = SendPaymentAmount(temp2, token);
+      // const message = SendPaymentAmount(temp2, token);
       // console.log(message);
     }
   };
@@ -931,13 +1041,23 @@ function Index() {
             maskClosable={false}
             footer={(_, { OkBtn, CancelBtn }) => (
               <div className={Styles["popup-footer"]}>
-                <Button onClick={handleGoToHomePage} type="primary">
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    handleContinueCheckout();
+                  }}
+                  disabled={isDisabledCheckoutBtn}
+                >
+                  Tiếp tục thanh toán
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleGoToHomePage(zeroQuantityProducts);
+                  }}
+                >
                   Về trang chủ
                 </Button>
-                {/* <Button type="primary" danger onClick={handleDeleteProduct}>
-                  Xoá sản phẩm ra khỏi giỏ hàng
-                </Button>
-                <Button type="primary">
+                {/* <Button type="primary">
                   Chỉnh sửa số lượng sản phẩm phù hợp
                 </Button> */}
               </div>
@@ -946,7 +1066,6 @@ function Index() {
             {failedProduct ? (
               <div className={Styles["failed-product-container"]}>
                 {failedProduct?.cart.map((item, index) => {
-                  console.log(item);
                   return (
                     <React.Fragment key={"failedProduct" + index}>
                       <PaymentItem item={item} isFailedItem={true} />

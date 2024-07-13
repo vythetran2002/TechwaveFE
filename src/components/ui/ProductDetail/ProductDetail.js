@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import images from "@/assets/images";
 import Image from "next/image";
+import { Image as AntdImage } from "antd";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import { useRef, useState } from "react";
@@ -39,26 +40,6 @@ function ProductDetail(props) {
   const imgSlideRef = useRef();
   const [id, setId] = useState(null);
   const [quantity, setQuantity] = useState(1);
-
-  const options = {
-    items: 1,
-    loop: true,
-    autoplay: true,
-    autoplayTimeout: 2000,
-    nav: true,
-    dots: false,
-    navContainerClass: Styles["top-carousel-nav-container"],
-    navClass: [
-      Styles["top-carousel-prev-buton"],
-      Styles["top-carousel-next-buton"],
-    ],
-    stageClass: Styles["top-carousel-stage"],
-    stageOuterClass: Styles["top-carousel-stage-outer"],
-    navText: [
-      `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg></div>`,
-      `<div><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#000000}</style><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg></div>`,
-    ],
-  };
 
   const jumpTo1 = (e) => {
     var carousel = $(".owl-carousel").data("owl.carousel");
@@ -130,24 +111,25 @@ function ProductDetail(props) {
   // };
 
   const handleAddCart = () => {
+    // If Has Option
     if (id) {
       let temp = {
         option_id: id,
         quantity: quantity,
-        price: parseInt(quantity) * parseInt(product.price),
+        // price: parseInt(quantity) * parseInt(product.price),
         product_id: product.product_id,
-        stock: product.quantity,
       };
-      props.handleAddCart(temp);
+      const stock = product.quantity;
+      props.handleAddCart(temp, stock);
     } else if (product.option.length === 0) {
       let temp = {
         option_id: id,
         quantity: quantity,
         price: parseInt(quantity) * parseInt(product.price),
         product_id: product.product_id,
-        stock: product.quantity,
       };
-      props.handleAddCart(temp);
+      const stock = product.quantity;
+      props.handleAddCart(temp, stock);
     } else {
       toast.error("Hãy chọn loại sản phẩm");
     }
@@ -163,10 +145,8 @@ function ProductDetail(props) {
               <div className={Styles["product-carousel-wrapper"]}>
                 {img ? (
                   <>
-                    <Image
+                    <AntdImage
                       src={img}
-                      width={500}
-                      height={500}
                       alt=""
                       className={Styles["img"]}
                       priority={true}
@@ -176,10 +156,8 @@ function ProductDetail(props) {
                   <>
                     {product.image ? (
                       <>
-                        <Image
+                        <AntdImage
                           src={product.image}
-                          width={500}
-                          height={500}
                           alt=""
                           className={Styles["img"]}
                           priority={true}
@@ -187,8 +165,8 @@ function ProductDetail(props) {
                       </>
                     ) : (
                       <>
-                        <Image
-                          src={images.image8}
+                        <AntdImage
+                          src={images.nonImg}
                           width={500}
                           height={500}
                           alt=""
@@ -331,10 +309,10 @@ function ProductDetail(props) {
                   </span>
                 </div>
                 <span className={Styles["row-container"]}>
-                  {product.quantity - product.haveSales == 0 ? (
-                    <>Trạng thái: Hết hàng</>
+                  {product.quantity == 0 ? (
+                    <span>Trạng thái: Hết hàng</span>
                   ) : (
-                    <>Trạng thái: Còn hàng</>
+                    <span>Trạng thái: Còn hàng</span>
                   )}
                 </span>
                 <span className={Styles["row-container"]}>Số lượt xem: 4</span>

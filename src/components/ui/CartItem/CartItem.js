@@ -10,6 +10,7 @@ import { UpdateCartItem } from "@/api/user/updateCartItem";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
 import Link from "next/link";
 import { Tooltip } from "antd";
+import toast from "react-hot-toast";
 
 function addElementToArray(arr, element) {
   if (typeof element === "number") {
@@ -55,13 +56,10 @@ function CartItem(props) {
   };
 
   const handleUpdateCartItem = async () => {
-    const message = await UpdateCartItem(
-      props.item.cart_id,
-      quantity,
-      props.item.option_id,
-      props.item.product.price,
-      token
-    );
+    const message = await UpdateCartItem(props.item.cart_id, quantity, token);
+    if (message) {
+      toast.success("Cập nhật đơn hàng thành công");
+    }
     await props.mutate();
     setIsEditMode(false);
     props.resetSelect();

@@ -154,7 +154,6 @@ function Header(props) {
     let temp = select;
     if (temp) {
       temp.map((item) => {
-        console.log(item.cart_id);
         handlingDeleteCartItem(item.cart_id);
       });
     }

@@ -117,10 +117,11 @@ function ItemDetail(props) {
       let temp = {
         option_id: id,
         quantity: quantity,
-        price: parseInt(quantity) * parseInt(item.price),
+        // price: parseInt(quantity) * parseInt(item.price),
         product_id: item.product_id,
       };
-      props.addCartItem(temp);
+      const stock = item.quantity;
+      props.addCartItem(temp, stock);
       props.handlingCloseDialog();
     } else if (item.option.length === 0) {
       let temp = {
@@ -128,8 +129,10 @@ function ItemDetail(props) {
         quantity: quantity,
         price: parseInt(quantity) * parseInt(item.price),
         product_id: item.product_id,
+        //stock: item.quantity,
       };
-      props.addCartItem(temp);
+      const stock = item.quantity;
+      props.addCartItem(temp, stock);
       props.handlingCloseDialog();
     } else {
       toast.error("Hãy chọn loại sản phẩm");
@@ -340,6 +343,21 @@ function ItemDetail(props) {
                       </div>
                     </span>
                   )}
+                  <span className={Styles["buy-count"]}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "5px",
+                      }}
+                    >
+                      <span>Số lượng:</span>
+                      {item.quantity < 5 ? (
+                        <span style={{ color: "red" }}>{item.quantity}</span>
+                      ) : (
+                        <span>{item.quantity}</span>
+                      )}
+                    </div>
+                  </span>
                 </div>
 
                 <div className={Styles["options-container"]}>

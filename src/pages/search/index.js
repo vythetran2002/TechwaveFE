@@ -46,14 +46,13 @@ function index() {
     setIsOpenDialog(false);
   };
 
-  const handlingAddCartItem = async (data) => {
-    console.log(data);
-    if (data.stock > 0) {
+  const handlingAddCartItem = async (data, stock) => {
+    // console.log(data);
+    if (stock > 0) {
       try {
-        const { quantity, price, product_id } = data;
-        const temp = { quantity, price, product_id };
-        const message = await addCartItem(temp, token);
+        const message = await addCartItem(data, token);
         await mutate();
+        // console.log(data);
         if (message) {
           toast.success("Đã thêm vào giỏ");
         } else {
@@ -65,7 +64,7 @@ function index() {
         router.push("/auth/login");
       }
     } else {
-      toast.error("Xin lỗi, mặt hàng này hiện tại đã hết");
+      toast.error("Xin lỗi, mặt hàng hiện tại đã hết");
     }
   };
 

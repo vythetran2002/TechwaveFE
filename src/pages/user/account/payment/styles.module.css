@@ -214,7 +214,7 @@
 }
 .popup-footer {
   display: flex;
-  justify-content: space-between;
+  gap: 40px;
   flex-direction: row-reverse;
 }
 .failed-product-container {

@@ -78,8 +78,13 @@ function ShopIndex() {
   const handlingAddFavouriteVendor = async (id) => {
     try {
       const message = await addFollowVendor(id, token);
+      if (message) {
+        toast.success("Đã theo dõi cửa hàng");
+      } else {
+        toast.error("Bạn cần đăng nhập trước");
+      }
     } catch (error) {
-      //console.log(error);
+      toast.error("Bạn cần đăng nhập trước");
     }
   };
 
@@ -104,21 +109,18 @@ function ShopIndex() {
     setMax(value);
   };
 
-  const handlingAddCartItem = async (data) => {
-    // console.log("----");
-    console.log(data);
-    if (data.stock > 0) {
+  const handlingAddCartItem = async (data, stock) => {
+    // console.log(data);
+    if (stock > 0) {
       try {
-        const { quantity, price, product_id } = data;
-        const temp = { quantity, price, product_id };
-        const message = await addCartItem(temp, token);
+        const message = await addCartItem(data, token);
         await mutate();
         // console.log(data);
         if (message) {
           toast.success("Đã thêm vào giỏ");
         } else {
           toast.error("Cần đăng nhập");
-          route.push("/auth/login");
+          router.push("/auth/login");
         }
       } catch (error) {
         toast.error("Cần đăng nhập");
