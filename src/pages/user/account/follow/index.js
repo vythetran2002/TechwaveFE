@@ -9,7 +9,7 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import toast, { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
 const Empty = dynamic(() => import("antd/lib/empty"), { ssr: false });
-
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 import Cookies from "js-cookie";
 
 function Index() {
@@ -29,6 +29,21 @@ function Index() {
       console.log(error);
     }
   };
+  if (vendors.isLoading) {
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/follows"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
+  }
+  if (vendors.isError) {
+    return <>Error</>;
+  }
 
   return (
     <>

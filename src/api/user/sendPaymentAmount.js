@@ -12,11 +12,14 @@ export const SendPaymentAmount = async (data, token) => {
         },
       }
     );
-    // toast.success("Success");
-    // return response.data;
-    console.log(response.data.http);
-    window.location.href = `${response.data.http}`;
+    return { success: true, data: response.data };
   } catch (error) {
-    toast.error(error.response.data.message);
+    if (error.response && error.response.status === 400) {
+      // Xử lý trường hợp status 400
+      return { success: false, data: error.response.data };
+    } else {
+      // Xử lý các lỗi khác
+      return { success: false, error: error.message };
+    }
   }
 };

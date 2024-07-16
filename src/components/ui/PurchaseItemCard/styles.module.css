@@ -161,13 +161,13 @@
   gap: 5px;
   align-items: center;
   padding: 5px 14px 5px 14px;
-  background-color: #0284c7;
+  background-color: #dc2626;
   border-radius: 5px;
   color: white;
   transition: 200ms;
 }
 .chat-btn-container:hover {
-  background-color: #0369a1;
+  background-color: #b91c1c;
   cursor: pointer;
 }
 .shop-watch-btn {
@@ -176,14 +176,15 @@
   gap: 5px;
   align-items: center;
   padding: 5px 14px 5px 14px;
-  background-color: transparent;
+  background-color: #22c55e;
   border-radius: 5px;
-  color: black;
+  color: white;
   border: 1px solid rgba(0, 0, 0, 0.09);
   transition: 200ms;
+  cursor: pointer;
 }
 .shop-watch-btn:hover {
-  background-color: #fafafa;
+  background-color: #65a30d;
   cursor: pointer;
 }
 .item-card-container {
@@ -237,7 +238,7 @@
 .total-container {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 20px;
   font-weight: 600;
 }
@@ -248,11 +249,26 @@
 }
 .total-wrapper {
   display: flex;
-  gap: 10px;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 .date-wrapper {
   display: flex;
   gap: 10px;
   font-weight: 400;
   opacity: 0.5;
+}
+.payment-method-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 3px;
+}
+.total-bill-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }

@@ -25,6 +25,7 @@ import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader"
 import useFetchCart from "@/api/user/useFetchCart";
 import useFetchVendorProfile from "@/api/vendor/useFetchVendorProfile";
 import useFetchShopById from "@/api/shop/useFetchShopByPage";
+import CozeChat from "@/components/ui/CozeChat/CozeChat";
 
 function Index() {
   const token = Cookies.get("token");
@@ -199,6 +200,7 @@ function Index() {
 
           {/* <CateHeading cateTitle={"SẢN PHẨM CÙNG CHUYÊN MỤC"} /> */}
           <ItemList />
+          <CozeChat isVisible={true} />
         </Layout>
       </>
     );

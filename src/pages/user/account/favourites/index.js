@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Delete } from "@mui/icons-material";
 import { Empty } from "antd";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const token = Cookies.get("token");
@@ -23,7 +24,7 @@ function Index() {
     // try {
 
     const message = await DeleteFavouriteItem(id, token);
-    console.log(message);
+    //console.log(message);
     await products.mutate();
     // } catch (error) {}
   };
@@ -32,7 +33,16 @@ function Index() {
   const [topAllCheckBox, setTopAllCheckBox] = useState(false);
 
   if (products.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/favourite"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
   if (products.isError) {
     return <>Error</>;

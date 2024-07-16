@@ -66,7 +66,7 @@ function ReportForm(props) {
         id_account_report: id,
         picture: imgSrc,
       };
-      console.log(temp);
+      // console.log(temp);
       const message = await PostReport(temp, token);
       handleCloseDialog();
     } else {

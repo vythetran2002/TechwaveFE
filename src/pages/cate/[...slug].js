@@ -19,6 +19,8 @@ import Cookies from "js-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
 import useFetchCateListByPage from "@/api/user/useFetchCateListByPage";
 import useFetchCart from "@/api/user/useFetchCart";
+import CozeChat from "@/components/ui/CozeChat/CozeChat";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function CateIndex() {
   const router = useRouter();
@@ -113,7 +115,17 @@ function CateIndex() {
   }
 
   if (cateList.isError) return <>Error</>;
-  if (cateList.isLoading) return <>Loading</>;
+  if (cateList.isLoading)
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <Layout>
+          <FullScreenLoader />
+        </Layout>
+      </>
+    );
   else
     return (
       <>
@@ -303,6 +315,7 @@ function CateIndex() {
             handlingOpenDialog={handlingOpenDialog}
             handlingCloseDialog={handlingCloseDialog}
           />
+          <CozeChat isVisible={true} />
         </Layout>
       </>
     );

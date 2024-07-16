@@ -143,6 +143,8 @@ function PaymentShop(props) {
           calculateTotalValue(items) +
           shippingFee.data?.data.total -
           shopVoucher.result,
+        totalVoucherDiscount: shopVoucher?.result,
+        shipFee: shippingFee.data?.data.total,
         voucher_id: shopVoucher.discount_id,
       });
     }
@@ -159,6 +161,8 @@ function PaymentShop(props) {
         cart: items,
         totalBill: calculateTotalValue(items) + shippingFee.data?.data.total,
         voucher_id: null,
+        totalVoucherDiscount: null,
+        shipFee: shippingFee.data?.data.total,
       });
     }
   }, [shopVoucher, initialVoucher]);

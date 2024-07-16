@@ -4,6 +4,7 @@ import { FormatPrice } from "@/assets/utils/PriceFormat";
 import Image from "next/image";
 import { Divider, Tooltip } from "antd";
 import images from "@/assets/images";
+import { Image as AntImage } from "antd";
 import Link from "next/link";
 
 function ChildItem(props) {
@@ -16,7 +17,7 @@ function ChildItem(props) {
           <div className={Styles["item-img-container"]}>
             {data.cart.option?.image ? (
               <>
-                <Image
+                <AntImage
                   className={Styles.image}
                   width={80}
                   height={80}
@@ -28,7 +29,7 @@ function ChildItem(props) {
               <>
                 {data.cart.product?.image ? (
                   <>
-                    <Image
+                    <AntImage
                       className={Styles.image}
                       width={80}
                       height={80}
@@ -38,7 +39,7 @@ function ChildItem(props) {
                   </>
                 ) : (
                   <>
-                    <Image
+                    <AntImage
                       className={Styles.image}
                       width={80}
                       height={80}

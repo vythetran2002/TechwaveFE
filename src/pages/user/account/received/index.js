@@ -9,6 +9,7 @@ import useFetchReceivedProducts from "@/api/user/useFetchRecievedProduct";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -30,58 +31,78 @@ function Index() {
     cancledItem.current.classList.toggle("appear");
   };
 
-  return (
-    <>
-      <Head>
-        <title>Đơn hàng đã nhận</title>
-      </Head>
-      <UserLayout user={user} path={"/receivedOrders"} isActiveOrdersNav={true}>
-        <Toaster />
+  if (orders.isLoading) {
+    return (
+      <div>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/receivedOrders"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </div>
+    );
+  }
 
-        <div className={Styles["profile-right-edit-form-wrapper"]}>
-          <div className={Styles["profile-title-container"]}>
-            <span style={{ fontWeight: "400", fontSize: "20px" }}>
-              Danh sách đơn hàng
-            </span>
-            <span>Quản lý danh sách đơn hàng</span>
-          </div>
-          <div className={Styles["product-purchase-item-container"]}>
-            <div>
-              {orders.data ? (
-                orders.data.length != 0 ? (
-                  orders.data.map((item, index) => {
-                    if (item.cart_shop.length != 0)
-                      return (
-                        <React.Fragment key={"item" + index}>
-                          <PurchaseItemCard
-                            token={token}
-                            card={item}
-                            status={2}
-                          />
-                        </React.Fragment>
-                      );
-                  })
+  if (orders.isError) {
+    return <div>Error</div>;
+  } else
+    return (
+      <>
+        <Head>
+          <title>Đơn hàng đã nhận</title>
+        </Head>
+        <UserLayout
+          user={user}
+          path={"/receivedOrders"}
+          isActiveOrdersNav={true}
+        >
+          <Toaster />
+
+          <div className={Styles["profile-right-edit-form-wrapper"]}>
+            <div className={Styles["profile-title-container"]}>
+              <span style={{ fontWeight: "400", fontSize: "20px" }}>
+                Danh sách đơn hàng
+              </span>
+              <span>Quản lý danh sách đơn hàng</span>
+            </div>
+            <div className={Styles["product-purchase-item-container"]}>
+              <div>
+                {orders.data ? (
+                  orders.data.length != 0 ? (
+                    orders.data.map((item, index) => {
+                      if (item.cart_shop.length != 0)
+                        return (
+                          <React.Fragment key={"item" + index}>
+                            <PurchaseItemCard
+                              token={token}
+                              card={item}
+                              status={2}
+                            />
+                          </React.Fragment>
+                        );
+                    })
+                  ) : (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "20px 0 20px 0",
+                      }}
+                    >
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
+                  )
                 ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      padding: "20px 0 20px 0",
-                    }}
-                  >
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                  </div>
-                )
-              ) : (
-                <>Loading</>
-              )}
+                  <>Loading</>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </UserLayout>
-    </>
-  );
+        </UserLayout>
+      </>
+    );
 }
 
 export default Index;

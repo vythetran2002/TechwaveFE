@@ -21,6 +21,8 @@ import { addCartItem } from "@/api/user/addCartItem";
 import useFetchCart from "@/api/user/useFetchCart";
 import Cookies from "js-cookie";
 import { addFavouriteProduct } from "@/api/user/addFavouriteProduct";
+import CozeChat from "@/components/ui/CozeChat/CozeChat";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function ShopIndex() {
   const router = useRouter();
@@ -139,7 +141,16 @@ function ShopIndex() {
   }, [img]);
 
   if (store.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <Layout>
+          <FullScreenLoader />
+        </Layout>
+      </>
+    );
   }
 
   if (store.isError) {
@@ -258,6 +269,7 @@ function ShopIndex() {
             handlingCloseDialog={handlingCloseDialog}
             addCartItem={handlingAddCartItem}
           />
+          <CozeChat isVisible={true} />
           <Dialog
             fullWidth={true}
             maxWidth="sm"

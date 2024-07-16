@@ -29,7 +29,7 @@ const handleStatus = (value) => {
 function OrderPreview(props) {
   const { order, status } = props;
 
-  console.log(order);
+  //console.log(order);
 
   if (order)
     return (
@@ -247,29 +247,53 @@ function OrderPreview(props) {
                   {handleStatus(order.status)}
                 </div>
               </div>
-              <div className={Styles["order-status-container"]}>
-                <div></div>
-                <div className={Styles["total-container"]}>
-                  <span>Thanh toán:</span>
-                  {order.paid ? (
-                    <span style={{ color: "#059669" }}>Đã thanh toán</span>
-                  ) : (
-                    <>
-                      {order.payment == "Thanh toán khi nhận hàng" &&
-                      order.status != 0 &&
-                      order.status != 1 &&
-                      order.status != 3 &&
-                      order.status != 4 ? (
+              {order.payment_id ? (
+                <>
+                  <div className={Styles["order-status-container"]}>
+                    <div></div>
+                    <div className={Styles["total-container"]}>
+                      <span>Thanh toán:</span>
+                      {order.payment_id.status === 1 ? (
                         <span style={{ color: "#059669" }}>Đã thanh toán</span>
                       ) : (
-                        <span style={{ color: "#dc2626" }}>
-                          Chưa thanh toán
-                        </span>
+                        <>
+                          <span style={{ color: "#dc2626" }}>
+                            Chưa thanh toán
+                          </span>
+                        </>
                       )}
-                    </>
-                  )}
-                </div>
-              </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={Styles["order-status-container"]}>
+                    <div></div>
+                    <div className={Styles["total-container"]}>
+                      <span>Thanh toán:</span>
+                      {order.paid ? (
+                        <span style={{ color: "#059669" }}>Đã thanh toán</span>
+                      ) : (
+                        <>
+                          {order.payment == "Thanh toán khi nhận hàng" &&
+                          order.status != 0 &&
+                          order.status != 1 &&
+                          order.status != 3 &&
+                          order.status != 4 ? (
+                            <span style={{ color: "#059669" }}>
+                              Đã thanh toán
+                            </span>
+                          ) : (
+                            <span style={{ color: "#dc2626" }}>
+                              Chưa thanh toán
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

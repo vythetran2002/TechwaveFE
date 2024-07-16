@@ -56,7 +56,12 @@ function CartItem(props) {
   };
 
   const handleUpdateCartItem = async () => {
-    const message = await UpdateCartItem(props.item.cart_id, quantity, token);
+    const message = await UpdateCartItem(
+      props.item.cart_id,
+      quantity,
+      props.item.product.price,
+      token
+    );
     if (message) {
       toast.success("Cập nhật đơn hàng thành công");
     }

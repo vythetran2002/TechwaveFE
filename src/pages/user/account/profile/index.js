@@ -21,9 +21,8 @@ import { sendPostRequestWithToken } from "@/api/user/sendPostRequestProfile";
 import { regexPhoneNumber, mailformat } from "@/assets/utils/regex";
 import Cookies from "js-cookie";
 import { GHN_API } from "@/api/GHN/GHN";
-
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 const { TextArea } = Input;
-
 const LocationProvider = new GHN_API();
 
 function Index() {
@@ -204,7 +203,16 @@ function Index() {
   }, [provinceId, districtId]);
 
   if (user.isLoading) {
-    return <>Loading...</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/profile"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
   if (user.isError) {
     return <>Error...</>;

@@ -8,6 +8,7 @@ import useFetchShippingOrders from "@/api/user/useFetchShippingOrders";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -18,7 +19,16 @@ function Index() {
   // const { query } = router;
 
   if (orders.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/shippingOrders"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
 
   if (orders.isError) {

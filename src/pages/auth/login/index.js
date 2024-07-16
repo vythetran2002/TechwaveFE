@@ -1,6 +1,5 @@
 import React from "react";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GoogleIcon from "@mui/icons-material/Google";
+import { useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
 import images from "@/assets/images";
@@ -14,6 +13,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
 
 const LoginScheme = Yup.object().shape({
   email: Yup.string()
@@ -28,6 +28,7 @@ const maxAge = 7200;
 
 function Index() {
   const router = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleLogin = async (data, e) => {
     e.preventDefault();

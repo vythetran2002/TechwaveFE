@@ -1,6 +1,8 @@
 import React, { useState, createContext, useRef, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import Head from "next/head";
+import { NextScript } from "next/document";
+import Script from "next/script";
 import Slider from "@/components/ui/Slider/Slider";
 import ServiceList from "@/components/ui/ServiceList/ServiceList";
 import CateHeading from "@/components/ui/CateHeading/CateHeading";
@@ -41,7 +43,6 @@ function Index() {
   const cateList02 = useFetchProductByCateId(19);
   const cateList03 = useFetchProductByCateId(25);
   const route = useRouter();
-  const [reload, setReload] = useState(false);
 
   //Refs
   const trendingRef = useRef(null);
@@ -147,6 +148,7 @@ function Index() {
         <title>Techwave</title>
       </Head>
       <Layout handleScrollToTrending={handleScrollToTrending} isHomePage={true}>
+        <CozeChat isVisible={true} />
         <Toaster />
         <CategoryList />
         <Slider />
@@ -313,8 +315,8 @@ function Index() {
           handlingOpenDialog={handlingOpenDialog}
           handlingCloseDialog={handlingCloseDialog}
         />
+
         {/* <ChatBotWidget scrollVisible={isVisible} scrollToTop={scrollToTop} /> */}
-        {/* <CozeChat /> */}
       </Layout>
     </>
   );

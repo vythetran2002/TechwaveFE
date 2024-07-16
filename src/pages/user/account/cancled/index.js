@@ -8,6 +8,7 @@ import useFetchCanceledOrders from "@/api/user/useFetchCanceledOrders";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 import useFetchRejectedOrders from "@/api/user/useFetchRejectedOrders";
 function Index() {
   const user = useFetchUserProfile();
@@ -20,7 +21,16 @@ function Index() {
   // const { query } = router;
 
   if (orders.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/cancledOrders"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
 
   if (orders.isError) {

@@ -10,11 +10,13 @@ import useFetchUserPendingProducts from "@/api/user/useFetchPendingOrder";
 import { Empty } from "antd";
 import { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const user = useFetchUserProfile();
   const orders = useFetchUserPendingProducts();
-  // console.log(orders);
+
+  // console.log(orders.data);
   const token = Cookies.get("token");
 
   // const router = useRouter();
@@ -40,7 +42,16 @@ function Index() {
   };
 
   if (orders.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/pendingOrders"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
 
   if (orders.isError) {
@@ -76,7 +87,7 @@ function Index() {
                               token={token}
                               card={item}
                               status={0}
-                              handleMutateCancleOrder={handleMutateCancleOrder}
+                              handleMutateCancleOrder={orders.mutate}
                             />
                           </React.Fragment>
                         );

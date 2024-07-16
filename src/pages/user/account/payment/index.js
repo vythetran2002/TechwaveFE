@@ -42,6 +42,9 @@ import { removeProductFromCart } from "@/assets/utils/payment/handleCheckout/rem
 import { DeleteCartItem } from "@/api/user/deleteCartItem";
 import { UpdateCartItem } from "@/api/user/updateCartItem";
 import { CalculateTotalValue } from "@/assets/utils/payment/CalculateTotalValue";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
+import { recalculateTotalBill } from "@/api/user/payment/calculateTotal";
+import { CalculateTotalValueForSecondCheckout } from "@/api/user/payment/calculateTotal";
 
 function extractCartIds(cartItems) {
   if (cartItems) {
@@ -76,14 +79,14 @@ const { TextArea } = Input;
 
 const LocationProvider = new GHN_API();
 
-const totalArray = [];
-const shipArray = [];
-const discountArray = [];
-
 function Index() {
   const user = useFetchUserProfile();
   const router = useRouter();
   const token = Cookies.get("token");
+
+  const totalArray = [];
+  const shipArray = [];
+  const discountArray = [];
 
   //states
   const [isVoucherProcessed, setIsVoucherProcessed] = useState(false);
@@ -118,7 +121,7 @@ function Index() {
   const [chosenVoucherId, setChosenVoucherId] = useState(null);
   const [techwaveVoucher, setTechwaveVoucher] = useState(null);
   const [zeroQuantityProducts, setZeroQuantityProducts] = useState([]);
-  const [failedProduct, setFailedProduct] = useState();
+  const [failedProduct, setFailedProduct] = useState(null);
   const [successProduct, setSuccessProduct] = useState();
   const [isDisabledCheckoutBtn, setDisabledCheckoutBtn] = useState(false);
 
@@ -227,7 +230,7 @@ function Index() {
           carts: extractCartIds(objectsArray),
         };
         //  console.log(temp2);
-        const message = SendPaymentAmount(temp2, token);
+        // const message = SendPaymentAmount(temp2, token);
         // console.log(message);
       }
       // const message = SendPaymentAmount(
@@ -322,7 +325,22 @@ function Index() {
 
   const handleUpdateCarts = async (listCarts) => {
     listCarts.map(async (item) => {
-      const message = await UpdateCartItem(item.cart_id, item.quantity, token);
+      // If has promotional price
+      if (item.product.promotional_price) {
+        const message = await UpdateCartItem(
+          item.cart_id,
+          item.quantity,
+          item.product.promotional_price,
+          token
+        );
+      } else {
+        const message = await UpdateCartItem(
+          item.cart_id,
+          item.quantity,
+          item.product.price,
+          token
+        );
+      }
     });
   };
 
@@ -339,6 +357,14 @@ function Index() {
     );
     let newInfo = { ...successProduct };
     newInfo.shop = newShopCards;
+    console.log(newInfo);
+    // Thuc hien thay doi body Shop
+    let newShopArray = recalculateTotalBill(newInfo.shop);
+    newInfo.shop = newShopArray;
+    // tinh lai total
+    let newTotal = CalculateTotalValueForSecondCheckout(newInfo.shop);
+    newInfo.totalBill = newTotal;
+    console.log(newInfo);
     if (option == "ship") {
       try {
         const messagePromise = MakeShipPayment(newInfo, token);
@@ -388,6 +414,59 @@ function Index() {
         console.log(error);
       }
     }
+    if (option == "vnpay") {
+      try {
+        let temp2 = {
+          bankCode: null,
+          language: "vn",
+          returnUrl:
+            process.env.NEXT_PUBLIC_LOCAL_URL + "/user/account/transaction",
+          ...newInfo,
+        };
+        // console.log("vnapybody", temp2);
+        const messagePromise = SendPaymentAmount(temp2, token);
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
+        const result = await messagePromise;
+
+        //console.log(result);
+
+        //Validate Result
+        if (result.success) {
+          toast.success("Đặt hàng thành công");
+          router.push(result.data.http);
+        } else {
+          toast.error("Đặt hàng thất bại");
+          showModalPopup();
+          setFailedProduct(result.data);
+          let newFailedProduct = updateCartQuantities(result.data.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Đã xảy ra lỗi");
+      }
+    }
   };
 
   const onFinish = async (values) => {
@@ -409,7 +488,6 @@ function Index() {
     info.ward = info.ward.value;
     console.log("FINALL", info);
     setSuccessProduct(info);
-
     if (option == "ship") {
       try {
         const messagePromise = MakeShipPayment(info, token);
@@ -433,15 +511,18 @@ function Index() {
 
         const result = await messagePromise;
 
+        //console.log(result);
+
+        // Validate result
         if (result.success) {
-          toast.success("Thanh toán thành công");
+          toast.success("Đặt hàng thành công");
           router.push("/user/account/pendingOrder");
         } else {
-          toast.error("Thanh toán thất bại");
+          toast.error("Đặt hàng thất bại");
           showModalPopup();
           setFailedProduct(result.data);
 
-          let newFailedProduct = updateCartQuantities(result.data.cart);
+          let newFailedProduct = updateCartQuantities(result.data?.cart);
           let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
           if (zeroQuantityCarts.length > 0) {
             setDisabledCheckoutBtn(true);
@@ -456,19 +537,61 @@ function Index() {
       }
     }
     if (option == "vnpay") {
-      let temp2 = {
-        bankCode: null,
-        language: "vn",
-        // returnUrl:
-        //   process.env.NEXT_PUBLIC_API_URL + "/user/account/transaction",
-        ...info,
-      };
-      // const message = SendPaymentAmount(temp2, token);
-      // console.log(message);
+      try {
+        let temp2 = {
+          bankCode: null,
+          language: "vn",
+          returnUrl:
+            process.env.NEXT_PUBLIC_LOCAL_URL + "/user/account/transaction",
+          ...info,
+        };
+        // console.log("vnapybody", temp2);
+        const messagePromise = SendPaymentAmount(temp2, token);
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
+        const result = await messagePromise;
+
+        //console.log(result);
+
+        //Validate Result
+        if (result.success) {
+          toast.success("Đặt hàng thành công");
+          router.push(result.data.http);
+        } else {
+          toast.error("Đặt hàng thất bại");
+          showModalPopup();
+          setFailedProduct(result.data);
+          let newFailedProduct = updateCartQuantities(result.data.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
+        }
+      } catch (e) {
+        console.log(error);
+        toast.error("Đã xảy ra lỗi");
+      }
     }
   };
   const onFinishFailed = (errorInfo) => {
-    toast.error("Something is wrong");
+    toast.error("Cần điền đủ thông tin");
   };
 
   useEffect(() => {
@@ -944,17 +1067,35 @@ function Index() {
                 <div className={Styles["price-container"]}>
                   <div className={Styles["price-total-wrapper"]}>
                     <span>Tổng cộng</span>
-                    <span id={Styles["total"]}>
-                      {/* {FormatPrice(calculateArraySum(arrayTotal))} */}
-                      {/* {FormatPrice(
+                    {techwaveVoucher?.result ? (
+                      <>
+                        <span id={Styles["total"]}>
+                          {/* {FormatPrice(calculateArraySum(arrayTotal))} */}
+                          {/* {FormatPrice(
                         CalculateTotalValue(
                           total,
                           shipFee,
                           techwaveVoucher?.result
                         )
                       )} */}
-                      {FormatPrice(total)}
-                    </span>
+                          {FormatPrice(total - techwaveVoucher.result)}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span id={Styles["total"]}>
+                          {/* {FormatPrice(calculateArraySum(arrayTotal))} */}
+                          {/* {FormatPrice(
+                        CalculateTotalValue(
+                          total,
+                          shipFee,
+                          techwaveVoucher?.result
+                        )
+                      )} */}
+                          {FormatPrice(total)}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div
@@ -1114,7 +1255,18 @@ function Index() {
       </>
     );
   } else {
-    return <>Loading</>;
+    return (
+      <>
+        <>
+          <Head>
+            <title>Loading...</title>
+          </Head>
+          <Layout>
+            <FullScreenLoader />
+          </Layout>
+        </>
+      </>
+    );
   }
 }
 

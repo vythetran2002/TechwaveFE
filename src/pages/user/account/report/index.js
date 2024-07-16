@@ -9,6 +9,7 @@ import useFetchUserProfile from "@/api/user/useFetchUserProfile";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import ReportDetailUser from "@/components/ui/ReportDetailUser/ReportDetailUser";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const reports = useFetchAllReport();
@@ -46,63 +47,78 @@ function Index() {
     setRpId(value);
   };
 
-  return (
-    <>
-      <Head>
-        <title>Báo cáo của tôi</title>
-      </Head>
-      <UserLayout user={user} path={"/reports"}>
-        <div className={Styles["profile-right-edit-form-wrapper"]}>
-          <div className={Styles["profile-title-container"]}>
-            <span style={{ fontWeight: "400", fontSize: "20px" }}>
-              Báo cáo của tôi
-            </span>
-            <span>Quản lý danh sách báo cáo</span>
-          </div>
-          <div className={Styles["product-purchase-item-container"]}>
-            <div>
-              {/* 0 : processing
+  if (reports.isLoading) {
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/reports"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
+  }
+  if (reports.isError) {
+    return <>Error</>;
+  } else
+    return (
+      <>
+        <Head>
+          <title>Báo cáo của tôi</title>
+        </Head>
+        <UserLayout user={user} path={"/reports"}>
+          <div className={Styles["profile-right-edit-form-wrapper"]}>
+            <div className={Styles["profile-title-container"]}>
+              <span style={{ fontWeight: "400", fontSize: "20px" }}>
+                Báo cáo của tôi
+              </span>
+              <span>Quản lý danh sách báo cáo</span>
+            </div>
+            <div className={Styles["product-purchase-item-container"]}>
+              <div>
+                {/* 0 : processing
                     1 : proccessed */}
-              {reports.data ? (
-                reports.data ? (
-                  reports.data.map((reportItem, index) => {
-                    return (
-                      <React.Fragment key={"reportItem" + index}>
-                        <ReportItemCard
-                          updateId={updateId}
-                          id={reportItem.report_id}
-                          handleOpenDialog={handleOpenDialog}
-                          status={reportItem.status}
-                          date={reportItem.createAt}
-                          avatar={reportItem.account_report.avatar}
-                          name={reportItem.account_report.username}
-                        />
-                      </React.Fragment>
-                    );
-                  })
+                {reports.data ? (
+                  reports.data ? (
+                    reports.data.map((reportItem, index) => {
+                      return (
+                        <React.Fragment key={"reportItem" + index}>
+                          <ReportItemCard
+                            updateId={updateId}
+                            id={reportItem.report_id}
+                            handleOpenDialog={handleOpenDialog}
+                            status={reportItem.status}
+                            date={reportItem.createAt}
+                            avatar={reportItem.account_report.avatar}
+                            name={reportItem.account_report.username}
+                          />
+                        </React.Fragment>
+                      );
+                    })
+                  ) : (
+                    <>Empty</>
+                  )
                 ) : (
-                  <>Empty</>
-                )
-              ) : (
-                <>Loading</>
-              )}
+                  <>Loading</>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <Dialog
-          fullWidth={true}
-          maxWidth="sm"
-          open={isOpen}
-          onClose={handleCloseDialog}
-        >
-          <DialogContent>
-            <ReportDetailUser id={rpId} />
-          </DialogContent>
-        </Dialog>
-      </UserLayout>
-    </>
-  );
+          <Dialog
+            fullWidth={true}
+            maxWidth="sm"
+            open={isOpen}
+            onClose={handleCloseDialog}
+          >
+            <DialogContent>
+              <ReportDetailUser id={rpId} />
+            </DialogContent>
+          </Dialog>
+        </UserLayout>
+      </>
+    );
 }
 
 export default Index;

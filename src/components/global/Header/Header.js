@@ -32,6 +32,7 @@ import useFetchSearchProduct from "@/api/useFetchSearchProduct";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import SearchItemCard from "@/components/ui/SearchItemCard/SearchItemCard";
 import SearchItemContainer from "@/components/ui/SearchItemContainer.js/SearchItemContainer";
+import { removeCozeScript } from "@/components/ui/CozeChat/CozeChat";
 
 const calculateTotalValue = (arr) => {
   if (arr) {
@@ -353,7 +354,13 @@ function Header(props) {
                   <Link href={"/auth/register"} style={{ cursor: "pointer" }}>
                     Đăng ký
                   </Link>
-                  <Link href={"/auth/login"} style={{ cursor: "pointer" }}>
+                  <Link
+                    href={"/auth/login"}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      removeCozeScript();
+                    }}
+                  >
                     Đăng nhập
                   </Link>
                 </div>

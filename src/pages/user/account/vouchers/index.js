@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import VoucherCard from "@/components/ui/voucher-card/VoucherCard";
 import { useRouter } from "next/router";
 import useFetchVouchersUser from "@/api/user/useFetchVouchersUser";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 function Index() {
   const user = useFetchUserProfile();
@@ -25,7 +26,16 @@ function Index() {
   };
 
   if (orders.isLoading) {
-    return <>Loading</>;
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/vouchers"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
   }
 
   if (orders.isError) {

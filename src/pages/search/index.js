@@ -17,6 +17,7 @@ import toast, { Toaster } from "react-hot-toast";
 import useFetch from "@/api/useFetch";
 import Link from "next/link";
 import useFetchCart from "@/api/user/useFetchCart";
+import CozeChat from "@/components/ui/CozeChat/CozeChat";
 
 function index() {
   const token = Cookies.get("token");
@@ -151,6 +152,7 @@ function index() {
             handlingOpenDialog={handlingOpenDialog}
             handlingCloseDialog={handlingCloseDialog}
           />
+          <CozeChat isVisible={true} />
         </Layout>
       </>
     );

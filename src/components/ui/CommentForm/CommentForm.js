@@ -7,7 +7,7 @@ import { Input, Typography } from "antd";
 import MailOutlineOutlined from "@mui/icons-material/MailOutlineOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import Button from "@mui/material/Button";
+import { Button, Flex } from "antd";
 import e from "cors";
 import Empty from "antd/lib/empty";
 import Image from "next/image";
@@ -52,7 +52,7 @@ function CommentForm(props) {
 
   const handleDeleteImage = () => {
     setAvatarSrc(null);
-    toast.success("Deleted image");
+    toast.success("Xoá ảnh thành công");
   };
 
   const onClickImgUpload = () => {
@@ -85,7 +85,9 @@ function CommentForm(props) {
     toast.promise(promiseResult, {
       loading: "Đang tải lên...",
       success: (result) => {
-        mutate();
+        const imagePath = result.imagePath;
+        //console.log("imagePath:", imagePath);
+        setAvatarSrc(imagePath);
         return "Tải lên thành công!";
       },
       error: "Lỗi tải lên!",
@@ -117,7 +119,11 @@ function CommentForm(props) {
         },
         error: "Something went wrong!",
       });
-      console.log(message);
+      mutate();
+      setValue(null);
+      setCmt("");
+      setAvatarSrc(null);
+      // console.log(message);
       // window.location.reload();
     }
   };
@@ -348,6 +354,7 @@ function CommentForm(props) {
                 }}
                 ref={inputRef}
               />
+              <div></div>
               <button className={Styles["button"]} onClick={onClickImgUpload}>
                 {/* <svg
                   className={Styles["svg"]}
@@ -383,7 +390,16 @@ function CommentForm(props) {
                     height={150}
                     alt=""
                   />
-                  <Button onClick={handleDeleteImage}>Xoá ảnh</Button>
+                  <Button
+                    onClick={handleDeleteImage}
+                    type="primary"
+                    danger
+                    style={{
+                      width: "9%",
+                    }}
+                  >
+                    Xoá ảnh
+                  </Button>
                 </div>
               )}
             </div>
@@ -453,12 +469,10 @@ function CommentForm(props) {
               Vui lòng nhập đầy đủ thông tin
             </span>
             <div className={Styles["submit-container"]}>
-              <Button className={Styles["send-button"]} onClick={handleSubmit}>
+              <Button type="primary" onClick={handleSubmit}>
                 Gửi bình luận
               </Button>
-              <Button className={Styles["reset-button"]} onClick={ResetCmt}>
-                Nhập lại
-              </Button>
+              <Button onClick={ResetCmt}>Nhập lại</Button>
             </div>
           </div>
         )}

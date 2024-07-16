@@ -67,6 +67,7 @@
 }
 .send-button:hover {
   background-color: blue;
+  color: white;
 }
 .reset-button {
   font-family: inherit;

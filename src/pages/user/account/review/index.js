@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import UserReviewCard from "@/components/ui/UserReviewCard/UserReviewCard";
 import useFetchUserReviews from "@/api/user/useFetchUserReviews";
 import Cookies from "js-cookie";
+import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader";
 
 import { Empty } from "antd";
 
@@ -47,49 +48,64 @@ function Index() {
     }
   };
 
-  return (
-    <>
-      <Head>
-        <title>Đánh giá của tôi</title>
-      </Head>
-      <UserLayout user={user} path={"/reviews"}>
-        <Toaster />
-        <div className={Styles["profile-right-edit-form-wrapper"]}>
-          <div className={Styles["profile-title-container"]}>
-            <span style={{ fontWeight: "400", fontSize: "20px" }}>
-              Đánh giá của tôi
-            </span>
-            <span>Quản lý danh sách đánh giá</span>
-          </div>
-          <div className={Styles["follow-shop-item-container"]}>
-            {reviews.isLoading ? (
-              <>Loading</>
-            ) : (
-              <>
-                {reviews.data && reviews.data.length > 0 ? (
-                  reviews.data.map((review) => {
-                    return (
-                      <React.Fragment key={review.review_id}>
-                        <UserReviewCard review={review} />
-                      </React.Fragment>
-                    );
-                  })
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <Empty />
-                  </div>
-                )}
-              </>
-            )}
-            {/* {vendors.data ? (
+  if (reviews.isLoading) {
+    return (
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <UserLayout user={user} path={"/reviews"}>
+          <FullScreenLoader />
+        </UserLayout>
+      </>
+    );
+  }
+  if (reviews.isError) {
+    return <>Error</>;
+  } else
+    return (
+      <>
+        <Head>
+          <title>Đánh giá của tôi</title>
+        </Head>
+        <UserLayout user={user} path={"/reviews"}>
+          <Toaster />
+          <div className={Styles["profile-right-edit-form-wrapper"]}>
+            <div className={Styles["profile-title-container"]}>
+              <span style={{ fontWeight: "400", fontSize: "20px" }}>
+                Đánh giá của tôi
+              </span>
+              <span>Quản lý danh sách đánh giá</span>
+            </div>
+            <div className={Styles["follow-shop-item-container"]}>
+              {reviews.isLoading ? (
+                <>Loading</>
+              ) : (
+                <>
+                  {reviews.data && reviews.data.length > 0 ? (
+                    reviews.data.map((review) => {
+                      return (
+                        <React.Fragment key={review.review_id}>
+                          <UserReviewCard review={review} />
+                        </React.Fragment>
+                      );
+                    })
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Empty />
+                    </div>
+                  )}
+                </>
+              )}
+              {/* {vendors.data ? (
                   vendors.data.length != 0 ? (
                     vendors.data.map((vendor, index) => {
                       return (
@@ -118,11 +134,11 @@ function Index() {
                 ) : (
                   <>Loading</>
                 )} */}
+            </div>
           </div>
-        </div>
-      </UserLayout>
-    </>
-  );
+        </UserLayout>
+      </>
+    );
 }
 
 export default Index;
