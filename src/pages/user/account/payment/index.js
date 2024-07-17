@@ -488,107 +488,107 @@ function Index() {
     info.ward = info.ward.value;
     console.log("FINALL", info);
     setSuccessProduct(info);
-    // if (option == "ship") {
-    //   try {
-    //     const messagePromise = MakeShipPayment(info, token);
+    if (option == "ship") {
+      try {
+        const messagePromise = MakeShipPayment(info, token);
 
-    //     toast.promise(
-    //       messagePromise,
-    //       {
-    //         loading: "Loading ...",
-    //         success: null,
-    //         error: null,
-    //       },
-    //       {
-    //         success: {
-    //           duration: 1,
-    //         },
-    //         error: {
-    //           duration: 1,
-    //         },
-    //       }
-    //     );
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
 
-    //     const result = await messagePromise;
+        const result = await messagePromise;
 
-    //     //console.log(result);
+        //console.log(result);
 
-    //     // Validate result
-    //     if (result.success) {
-    //       toast.success("Đặt hàng thành công");
-    //       router.push("/user/account/pendingOrder");
-    //     } else {
-    //       toast.error("Đặt hàng thất bại");
-    //       showModalPopup();
-    //       setFailedProduct(result.data);
+        // Validate result
+        if (result.success) {
+          toast.success("Đặt hàng thành công");
+          router.push("/user/account/pendingOrder");
+        } else {
+          toast.error("Đặt hàng thất bại");
+          showModalPopup();
+          setFailedProduct(result.data);
 
-    //       let newFailedProduct = updateCartQuantities(result.data?.cart);
-    //       let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
-    //       if (zeroQuantityCarts.length > 0) {
-    //         setDisabledCheckoutBtn(true);
-    //         setZeroQuantityProducts(zeroQuantityCarts);
-    //       } else {
-    //         setDisabledCheckoutBtn(false);
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //     toast.error("Đã xảy ra lỗi");
-    //   }
-    // }
-    // if (option == "vnpay") {
-    //   try {
-    //     let temp2 = {
-    //       bankCode: null,
-    //       language: "vn",
-    //       returnUrl:
-    //         process.env.NEXT_PUBLIC_LOCAL_URL + "/user/account/transaction",
-    //       ...info,
-    //     };
-    //     // console.log("vnapybody", temp2);
-    //     const messagePromise = SendPaymentAmount(temp2, token);
-    //     toast.promise(
-    //       messagePromise,
-    //       {
-    //         loading: "Loading ...",
-    //         success: null,
-    //         error: null,
-    //       },
-    //       {
-    //         success: {
-    //           duration: 1,
-    //         },
-    //         error: {
-    //           duration: 1,
-    //         },
-    //       }
-    //     );
-    //     const result = await messagePromise;
+          let newFailedProduct = updateCartQuantities(result.data?.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Đã xảy ra lỗi");
+      }
+    }
+    if (option == "vnpay") {
+      try {
+        let temp2 = {
+          bankCode: null,
+          language: "vn",
+          returnUrl:
+            process.env.NEXT_PUBLIC_LOCAL_URL + "/user/account/transaction",
+          ...info,
+        };
+        // console.log("vnapybody", temp2);
+        const messagePromise = SendPaymentAmount(temp2, token);
+        toast.promise(
+          messagePromise,
+          {
+            loading: "Loading ...",
+            success: null,
+            error: null,
+          },
+          {
+            success: {
+              duration: 1,
+            },
+            error: {
+              duration: 1,
+            },
+          }
+        );
+        const result = await messagePromise;
 
-    //     //console.log(result);
+        //console.log(result);
 
-    //     //Validate Result
-    //     if (result.success) {
-    //       toast.success("Đặt hàng thành công");
-    //       router.push(result.data.http);
-    //     } else {
-    //       toast.error("Đặt hàng thất bại");
-    //       showModalPopup();
-    //       setFailedProduct(result.data);
-    //       let newFailedProduct = updateCartQuantities(result.data.cart);
-    //       let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
-    //       if (zeroQuantityCarts.length > 0) {
-    //         setDisabledCheckoutBtn(true);
-    //         setZeroQuantityProducts(zeroQuantityCarts);
-    //       } else {
-    //         setDisabledCheckoutBtn(false);
-    //       }
-    //     }
-    //   } catch (e) {
-    //     console.log(error);
-    //     toast.error("Đã xảy ra lỗi");
-    //   }
-    // }
+        //Validate Result
+        if (result.success) {
+          toast.success("Đặt hàng thành công");
+          router.push(result.data.http);
+        } else {
+          toast.error("Đặt hàng thất bại");
+          showModalPopup();
+          setFailedProduct(result.data);
+          let newFailedProduct = updateCartQuantities(result.data.cart);
+          let zeroQuantityCarts = filterZeroQuantityCarts(newFailedProduct);
+          if (zeroQuantityCarts.length > 0) {
+            setDisabledCheckoutBtn(true);
+            setZeroQuantityProducts(zeroQuantityCarts);
+          } else {
+            setDisabledCheckoutBtn(false);
+          }
+        }
+      } catch (e) {
+        console.log(error);
+        toast.error("Đã xảy ra lỗi");
+      }
+    }
   };
   const onFinishFailed = (errorInfo) => {
     toast.error("Cần điền đủ thông tin");
