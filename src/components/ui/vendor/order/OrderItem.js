@@ -20,12 +20,12 @@ function OrderItem(props) {
   };
 
   const handlingAccept = async () => {
-    const message = await AcceptOrder(order.bill_id, props.token);
+    const message = await AcceptOrder(order.shop_bill_id, props.token);
     await mutate();
   };
 
   const handlingReject = async () => {
-    const message = await RejectOrder(order.bill_id, props.token);
+    const message = await RejectOrder(order.shop_bill_id, props.token);
     await mutate();
   };
 

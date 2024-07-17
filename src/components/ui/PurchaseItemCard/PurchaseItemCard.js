@@ -25,7 +25,7 @@ function PurchaseItemCard(props) {
   const router = useRouter();
   const { card, status, handleMutateCancleOrder } = props;
 
-  //console.log("CARRRRDD", card);
+  // console.log("CARRRRDD", card);
 
   const handleClickPay = (value) => {
     router.push(value);
@@ -43,13 +43,13 @@ function PurchaseItemCard(props) {
   const handleReceive = async () => {
     const message = await HandleReceiveOrder(card.shop_bill_id, props.token);
     console.log(message);
-    router.push("/user/account/received");
+    // router.push("/user/account/received");
   };
 
   const handleReceiveVnPay = async () => {
-    const message = await HandleReceiveOrder(card.bill_id, props.token);
+    const message = await HandleReceiveOrder(card.shop_bill_id, props.token);
     // console.log(message);
-    router.push("/user/account/received");
+    // router.push("/user/account/received");
   };
 
   const handleCancle = async () => {
