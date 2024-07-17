@@ -14,11 +14,11 @@ import FullScreenLoader from "@/components/ui/FullScreenLoader/FullScreenLoader"
 function Index() {
   const router = useRouter();
   const { query } = router;
-  console.log(query);
+  // console.log(query);
 
   const result = useFetchTransaction(query);
 
-  console.log(result);
+  // console.log(result);
 
   const handleClickOrderPage = () => {
     router.push("/user/account/pendingOrder");

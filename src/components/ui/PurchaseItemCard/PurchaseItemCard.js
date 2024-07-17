@@ -48,7 +48,7 @@ function PurchaseItemCard(props) {
 
   const handleReceiveVnPay = async () => {
     const message = await HandleReceiveOrder(card.bill_id, props.token);
-    console.log(message);
+    // console.log(message);
     router.push("/user/account/received");
   };
 
@@ -203,50 +203,27 @@ function PurchaseItemCard(props) {
                     <span>{dayjs(card.createAt).format("DD/MM/YYYY")}</span>
                   </div>
                   <div className={Styles["total-bill-container"]}>
-                    {/* <div className={Styles["total-wrapper"]}>
-                      <span>Tổng tiền hàng:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        {FormatPrice("250000")}
-                      </span>
-                    </div>
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Phí vận chuyển:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        {FormatPrice("29000")}
-                      </span>
-                    </div>
-                    {card?.shopDiscount && (
-                      <div className={Styles["total-wrapper"]}>
-                        <span>Giảm giá phí vận chuyển:</span>
-                        <span style={{ color: "#dc2626" }}>
-                          - {FormatPrice(card.totalBill)}
-                        </span>
-                      </div>
+                    {card?.shipFee && (
+                      <>
+                        <div className={Styles["total-wrapper"]}>
+                          <span>Phí vận chuyển:</span>
+                          <span style={{ color: "#dc2626" }}>
+                            {FormatPrice(card?.shipFee)}
+                          </span>
+                        </div>
+                      </>
                     )}
 
-                    {card?.totalBillDiscount && (
-                      <div className={Styles["total-wrapper"]}>
-                        <span>Giảm giá sản phẩm:</span>
-                        <span style={{ color: "#dc2626" }}>
-                          - {FormatPrice(card.totalBill)}
-                        </span>
-                      </div>
+                    {card?.totalVoucherDiscount && (
+                      <>
+                        <div className={Styles["total-wrapper"]}>
+                          <span>Tổng khuyến mãi:</span>
+                          <span style={{ color: "#dc2626" }}>
+                            - {FormatPrice(card?.totalVoucherDiscount)}
+                          </span>
+                        </div>
+                      </>
                     )}
-
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Giảm giá phí vận chuyển</span>
-                      <span style={{ color: "#dc2626" }}>
-                        - {FormatPrice(card.totalBill)}
-                      </span>
-                    </div>
-
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Giảm giá sản phẩm:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        - {FormatPrice(card.totalBill)}
-                      </span>
-                    </div> */}
-
                     <div className={Styles["total-wrapper"]}>
                       <span>Thành tiền:</span>
                       <span style={{ color: "#dc2626" }}>
@@ -460,49 +437,27 @@ function PurchaseItemCard(props) {
                     <span>{dayjs(card.createAt).format("DD/MM/YYYY")}</span>
                   </div>
                   <div className={Styles["total-bill-container"]}>
-                    {/* <div className={Styles["total-wrapper"]}>
-                      <span>Tổng tiền hàng:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        {FormatPrice("250000")}
-                      </span>
-                    </div>
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Phí vận chuyển:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        {FormatPrice("29000")}
-                      </span>
-                    </div>
-                    {card?.shopDiscount && (
-                      <div className={Styles["total-wrapper"]}>
-                        <span>Giảm giá phí vận chuyển:</span>
-                        <span style={{ color: "#dc2626" }}>
-                          - {FormatPrice(card.totalBill)}
-                        </span>
-                      </div>
+                    {card?.shipFee && (
+                      <>
+                        <div className={Styles["total-wrapper"]}>
+                          <span>Phí vận chuyển:</span>
+                          <span style={{ color: "#dc2626" }}>
+                            {FormatPrice(card?.shipFee)}
+                          </span>
+                        </div>
+                      </>
                     )}
 
-                    {card?.totalBillDiscount && (
-                      <div className={Styles["total-wrapper"]}>
-                        <span>Giảm giá sản phẩm:</span>
-                        <span style={{ color: "#dc2626" }}>
-                          - {FormatPrice(card.totalBill)}
-                        </span>
-                      </div>
+                    {card?.totalVoucherDiscount && (
+                      <>
+                        <div className={Styles["total-wrapper"]}>
+                          <span>Tổng khuyến mãi:</span>
+                          <span style={{ color: "#dc2626" }}>
+                            - {FormatPrice(card?.totalVoucherDiscount)}
+                          </span>
+                        </div>
+                      </>
                     )}
-
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Giảm giá phí vận chuyển</span>
-                      <span style={{ color: "#dc2626" }}>
-                        - {FormatPrice(card.totalBill)}
-                      </span>
-                    </div>
-
-                    <div className={Styles["total-wrapper"]}>
-                      <span>Giảm giá sản phẩm:</span>
-                      <span style={{ color: "#dc2626" }}>
-                        - {FormatPrice(card.totalBill)}
-                      </span>
-                    </div> */}
 
                     <div className={Styles["total-wrapper"]}>
                       <span>Thành tiền:</span>

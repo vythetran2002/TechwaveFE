@@ -10,6 +10,8 @@ import Link from "next/link";
 function ChildItem(props) {
   const { data } = props;
 
+  // console.log("data", data);
+
   return (
     <>
       <div className={Styles["item-card-container"]}>
@@ -73,10 +75,21 @@ function ChildItem(props) {
           </div>
         </div>
         <div className={Styles["item-right-container"]}>
-          <div className={Styles["price-container"]}>
-            {/* <span className={Styles.promoPrice}>{FormatPrice(198000)}</span> */}
-            <span className={Styles.price}>{FormatPrice(data.price)}</span>
-          </div>
+          {data.price_desc ? (
+            <div className={Styles["price-container"]}>
+              <span className={Styles.promoPrice}>
+                {FormatPrice(data.price)}
+              </span>
+              <span className={Styles.price}>
+                {FormatPrice(data.price_desc)}
+              </span>
+            </div>
+          ) : (
+            <div className={Styles["price-container"]}>
+              {/* <span className={Styles.promoPrice}>{FormatPrice(198000)}</span> */}
+              <span className={Styles.price}>{FormatPrice(data.price)}</span>
+            </div>
+          )}
         </div>
       </div>
       <Divider />
