@@ -42,14 +42,14 @@ function PurchaseItemCard(props) {
 
   const handleReceive = async () => {
     const message = await HandleReceiveOrder(card.shop_bill_id, props.token);
-    console.log(message);
-    // router.push("/user/account/received");
+    //console.log(message);
+    router.push("/user/account/received");
   };
 
   const handleReceiveVnPay = async () => {
     const message = await HandleReceiveOrder(card.shop_bill_id, props.token);
     // console.log(message);
-    // router.push("/user/account/received");
+    router.push("/user/account/received");
   };
 
   const handleCancle = async () => {
@@ -448,7 +448,7 @@ function PurchaseItemCard(props) {
                       </>
                     )}
 
-                    {card?.totalVoucherDiscount && (
+                    {card?.totalVoucherDiscount != 0 && (
                       <>
                         <div className={Styles["total-wrapper"]}>
                           <span>Tổng khuyến mãi:</span>

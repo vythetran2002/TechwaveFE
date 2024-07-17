@@ -10,7 +10,7 @@ import { Empty, Typography } from "antd";
 function ProductList(props) {
   const { limit, page, token, updateMax } = props;
   const products = useFetchProductsByPage(page, limit, token);
-  console.log(products.data);
+  //console.log(products.data);
 
   useEffect(() => {
     if (products.data) {

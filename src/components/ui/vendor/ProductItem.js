@@ -10,7 +10,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import Link from "next/link";
 import { DeleteProduct } from "@/api/vendor/DeleteProduct";
 import { FormatPrice } from "@/assets/utils/PriceFormat";
-import { Tooltip } from "antd";
+import { Tooltip, Image as AntdImg } from "antd";
 
 function ProductItem(props) {
   const menuRef = useRef(null);
@@ -65,7 +65,7 @@ function ProductItem(props) {
         </div>
         <div className={Styles["list-item-dob-wrapper"]}>
           {props.product.image != null ? (
-            <Image
+            <AntdImg
               src={props.product.image}
               width={140}
               height={140}
@@ -73,7 +73,7 @@ function ProductItem(props) {
               priority
             />
           ) : (
-            <Image
+            <AntdImg
               src={images.nonImg}
               width={140}
               height={140}

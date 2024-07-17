@@ -1,9 +1,9 @@
 const axios = require("axios");
 import toast from "react-hot-toast";
 
-export const DeleteComment = async (id, token) => {
+export const DeleteVendorComment = async (id, token) => {
   const url =
-    process.env.NEXT_PUBLIC_API_URL + "/api/admin/review/delete/" + id;
+    process.env.NEXT_PUBLIC_API_URL + "/api/admin/review/deleteResponse/" + id;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

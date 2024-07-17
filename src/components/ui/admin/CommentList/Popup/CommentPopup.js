@@ -8,6 +8,7 @@ import Image from "next/image";
 import images from "@/assets/images";
 import { Button } from "antd";
 import { DeleteComment } from "@/api/admin/DeleteComment";
+import { DeleteVendorComment } from "@/api/admin/DeleteVendorComment";
 
 const roboto = Roboto({
   weight: ["300", "100", "500", "700"],
@@ -33,8 +34,9 @@ function CommentPopup(props) {
       cmt.data.responses[0].response_id,
       token
     );
+    // console.log(message);
     await handleMutate();
-    props.handleCloseDialog();
+    // props.handleCloseDialog();
   };
 
   if (cmt.isLoading) {
